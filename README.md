@@ -6,7 +6,7 @@ ini laravel template starter versi ke 2 buatan gw, ini pakai laravel 12 starter-
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone git@github.com:iqbalfarhan/templatestarter-v2.git
 cd templatestarter2
 rm -rf .git
 
