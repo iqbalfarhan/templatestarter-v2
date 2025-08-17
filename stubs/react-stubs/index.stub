@@ -1,0 +1,128 @@
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import AppLayout from '@/layouts/app-layout';
+import { {{ Name }} } from '@/types/{{ name }}';
+import { Link } from '@inertiajs/react';
+import { Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
+import { FC, useState } from 'react';
+import {{ Name }}DeleteDialog from './components/{{ name }}-delete-dialog';
+import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
+import {{ Name }}FormSheet from './components/{{ name }}-form-sheet';
+
+type Props = {
+  {{ name }}s: {{ Name }}[];
+};
+
+const {{ Name }}List: FC<Props> = ({ {{ name }}s }) => {
+  const [ids, setIds] = useState<number[]>([]);
+  const [cari, setCari] = useState('');
+
+  return (
+    <AppLayout
+      title="{{ Name }}s"
+      description="Manage your {{ name }}s"
+      actions={
+        <{{ Name }}FormSheet purpose="create">
+          <Button>
+            <Plus />
+            Create new {{ name }}
+          </Button>
+        </{{ Name }}FormSheet>
+      }
+    >
+      <div className="flex gap-2">
+        <Input placeholder="Search {{ name }}s..." value={cari} onChange={(e) => setCari(e.target.value)} />
+        <{{ Name }}FilterSheet>
+          <Button>
+            <Filter />
+            Filter data
+          </Button>
+        </{{ Name }}FilterSheet>
+        {ids.length > 0 && (
+          <>
+            <Button variant={'ghost'} disabled>
+              {ids.length} item selected
+            </Button>
+            <Button>
+              <Edit /> Edit selected
+            </Button>
+            <Button variant={'destructive'}>
+              <Trash2 /> Delete selected
+            </Button>
+          </>
+        )}
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Button variant={'ghost'} size={'icon'} asChild>
+                <Label>
+                  <Checkbox
+                    checked={ids.length === {{ name }}s.length}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setIds({{ name }}s.map(({{ name }}) => {{ name }}.id));
+                      } else {
+                        setIds([]);
+                      }
+                    }}
+                  />
+                </Label>
+              </Button>
+            </TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {{{ name }}s
+            .filter(({{ name }}) => JSON.stringify({{ name }}).toLowerCase().includes(cari.toLowerCase()))
+            .map(({{ name }}) => (
+              <TableRow key={{{ name }}.id}>
+                <TableCell>
+                  <Button variant={'ghost'} size={'icon'} asChild>
+                    <Label>
+                      <Checkbox
+                        checked={ids.includes({{ name }}.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setIds([...ids, {{ name }}.id]);
+                          } else {
+                            setIds(ids.filter((id) => id !== {{ name }}.id));
+                          }
+                        }}
+                      />
+                    </Label>
+                  </Button>
+                </TableCell>
+                <TableCell>{ {{ name }}.name }</TableCell>
+                <TableCell>
+                  <Button variant={'ghost'} size={'icon'}>
+                    <Link href={route('{{ name }}.show', {{ name }}.id)}>
+                      <Folder />
+                    </Link>
+                  </Button>
+                  <{{ Name }}FormSheet purpose="edit" {{ name }}={{{ name }}}>
+                    <Button variant={'ghost'} size={'icon'}>
+                      <Edit />
+                    </Button>
+                  </{{ Name }}FormSheet>
+                  <{{ Name }}DeleteDialog {{ name }}={{{ name }}}>
+                    <Button variant={'ghost'} size={'icon'}>
+                      <Trash2 />
+                    </Button>
+                  </{{ Name }}DeleteDialog>
+                </TableCell>
+              </TableRow>
+            ))}
+        </TableBody>
+      </Table>
+    </AppLayout>
+  );
+};
+
+export default {{ Name }}List;

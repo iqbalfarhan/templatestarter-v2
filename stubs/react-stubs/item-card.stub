@@ -1,0 +1,46 @@
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Edit, Trash2, Folder } from 'lucide-react';
+import { FC } from 'react';
+import { {{ Name }} } from '@/types/{{ name }}';
+import { Link } from '@inertiajs/react';
+import {{ Name }}FormSheet from './{{ name }}-form-sheet';
+import {{ Name }}DeleteDialog from './{{ name }}-delete-dialog';
+
+type Props = {
+  {{ name }}: {{ Name }};
+};
+
+const {{ Name }}ItemCard: FC<Props> = ({ {{ name }} }) => {
+  return (
+    <Card className="flex flex-col justify-between">
+      <CardHeader>
+        <CardTitle>{ {{ name }}.name }</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          ID: { {{ name }}.id }
+        </p>
+      </CardContent>
+      <CardFooter className="flex gap-2">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href={route('{{ name }}.show', {{ name }}.id)}>
+            <Folder />
+          </Link>
+        </Button>
+        <{{ Name }}FormSheet purpose="edit" {{ name }}={ {{ name }} }>
+          <Button variant="ghost" size="icon">
+            <Edit />
+          </Button>
+        </{{ Name }}FormSheet>
+        <{{ Name }}DeleteDialog {{ name }}={ {{ name }} }>
+          <Button variant="ghost" size="icon">
+            <Trash2 />
+          </Button>
+        </{{ Name }}DeleteDialog>
+      </CardFooter>
+    </Card>
+  );
+};
+
+export default {{ Name }}ItemCard;
