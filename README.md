@@ -1,15 +1,29 @@
-# Readme dong
+# Membaca sebelum ngoding pakai templatestarter-v2
 
-ini laravel template starter versi ke 2 buatan gw, ini pakai laravel 12 starter-kit react, udah pakai tailwind 4, shadcn dan reactJS, dan inertiaJS 2.0 juga. gw buat ini biar gw cepet ngerjain project2 kecil. sekali generate, tinggal ngatur2 table dan formnya aja. oiya disini udah pakai fitur RBAC (Role Base Access Controll) pakai [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction) dan udah pakai [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction) biar setting media jadi lebih mudah
+Laravel templatestarter versi ke 2 buatan gw ini, pakai laravel 12 starter-kit react, udah pakai tailwind 4, shadcn dan reactJS, dan inertiaJS 2.0 juga (bawaan dari sononye).
+
+Gw buat ini biar gw cepet ngerjain project2 kecil. sekali generate, tinggal ngatur2 table dan formnya aja. Oiya disini udah pakai fitur:
+
+- RBAC (Role Base Access Controll) pakai [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- Udah pakai [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction) biar setting media jadi lebih gampang
+- Udah ada internal database, pakai [laravel adminer](https://github.com/onecentlin/laravel-adminer)
 
 ## Installation Steps
 
+### 1. Cloning repo
+
 ```bash
 # Clone the repository
-git clone git@github.com:iqbalfarhan/templatestarter-v2.git
-cd templatestarter2
+git clone git@github.com:iqbalfarhan/templatestarter-v2.git nama_project
+cd nama_project
 rm -rf .git
+```
 
+> ganti nama_project jadi nama project lu
+
+### 2. Config awal
+
+```bash
 # Install PHP dependencies
 composer install
 
@@ -20,35 +34,53 @@ pnpm install
 cp .env.example .env
 php artisan key:generate
 
+# Setting database dan env lain di project lu
+# baru lanjut ke bikin database
+
 # Run database migrations and seeders
-php artisan migrate --seed
+php artisan migrate
+php artisan db:seed
 
 # Build assets and start development server
-npm run dev
-php artisan serve
+composer dev
 
-# Access the application at
-http://127.0.0.1:8000
+# Access the application at http://127.0.0.1:8000
 
+```
+
+### 3. Migrate ulang
+
+kalo lu udah punya databasenya, lu bisa jalanin ini untuk reset semua database biar mulai ulang dari 0
+
+```bash
+php artisan migrate:fresh --seed
 ```
 
 ## Development Guide
 
 ### 1. Membuat model
 
-ngebuat model di app starter ini kaya bikin model di laravel kaya biasa aja. pakai flag a biar cepet (digenerating semua sama laravel)
+Ngebuat model di templatestarter-v2 ini gak kaya bikin model di laravel kaya biasa. Gw udah buatin command khusus untuk buat model, factory, seeder, migrateion, store-request, update-request, controller dan nambahin baris Route::apiResource ke file web.php. pake command ini untuk generate file phpnya.
 
 ```
-php artisan make:model NamaModel -a
+php artisan generate:amodel NamaModel
 ```
 
-> -a untuk buat semua perlengkapan model, seperti factory, seeder, migration, store request, update request, controller dan policy
+> Penting! jangan lupa pakai PascalCase untuk nama modelnya ya.
 
-terus tinggal ngatur migration, fillable, dan lainnya terus di migrate. dilanjutkan buat viewnya
+Ini yang lo dapat kalo udah jalanin command ini:
+
+- Model dengan fillable
+- Factory dan seeder
+- Store dan Update request
+- Controller api yang udah diisi methodnya
+- Otomatis nambahin Route::apiResource ke web.php
+
+Kalu udah kelar, lo tinggal ngatur migration, fillable, dan lainnya sesuai dengan kebutuhan fitur, terus di migrate dan jalanin seedernya pakai `php artisan db:seed {FiturSeeder}`. Terus lo tinggal lanjutin buat viewnya.
 
 ### 2. Ngebuat react view
 
-nah disini gw ada tambahin command artisan `php artisan generate:rview` untuk generate full view react:
+Nah disini gw juga nambahin command artisan `php artisan generate:rview` untuk generate full view react:
 
 - index berisi table
 - halaman detail
@@ -61,7 +93,7 @@ nah disini gw ada tambahin command artisan `php artisan generate:rview` untuk ge
 cara ngejalaninnya tinggai jalanin command artisan
 
 ```
-php artisan generate:rview {nama feature}
+php artisan generate:rview {nama fitur}
 // contoh
 php artisan generate:rview project
 ```
@@ -72,3 +104,26 @@ selanjutnya ngatur list menu yang ada di sidebar (file app-sidebar.tsx) cari fil
 // contoh pakai apiResource
 Route::apiResource('project', ProjectController::class);
 ```
+
+### 3. Generate semuanya sekaligus
+
+Nah ini fitur yang gw suka banget, bikin CRUD cuma 2 menit, sekali jalanin commandnya, magic!! lu langsung dapat file php yang digenerate dari amodel dan juga dari rview. jalaninnya gampang tinggal jalanin command:
+
+```bash
+php artisan generate:rmodel NamaFitur
+```
+
+> Penting! jangan lupa pakai PascalCase untuk nama fiturnya ya.
+
+kalu udah lu dapat semua filenya tinggal atur migration, fillable dan relasi table, store dan update request, type di file .d.ts dan tambahin menunya di file app-sidebar.tsx
+
+## Pengembangan
+
+Nantinya gw bakalan nambahin :
+
+- View dan route untuk softDelete
+- Setting Media untuk model
+- View dan control untuk bulk action fiturnya
+- Improvement di view filter data
+- Beberapa perubahan controller yang udah implement permission
+- Login pakai socialite
