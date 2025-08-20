@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class GenerateAModel extends Command
 {
-    protected $signature = 'generate:amodel {name}';
+    protected $signature = 'generate:amodel {name} {--sd|softDelete}';
     protected $description = 'Generate model, factory, seeder, requests, and migration for a given name';
 
     public function handle()
@@ -36,6 +36,8 @@ class GenerateAModel extends Command
                 '{{ names }}' => $names,
                 '{{ Names }}' => $Names,
                 '{{ table }}' => $tableName,
+                '{{ softDeleteImport }}' => $this->option('softDelete') ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
+                '{{ softDeleteTrait }}'  => $this->option('softDelete') ? "use SoftDeletes;\n" : "",
             ]);
         }
 
@@ -47,9 +49,13 @@ class GenerateAModel extends Command
             '{{ Name }}'  => $Name,
             '{{ Names }}' => $Names,
             '{{ table }}' => $tableName,
+            '{{ softDeleteColumn }}' => $this->option('softDelete') ? "\$table->softDeletes();\n" : "",
         ]);
 
         $this->info("✅ {$Name} model + related files generated successfully!");
+        if ($this->option('softDelete')) {
+            $this->info("🗑️  SoftDeletes enabled for {$name}");
+        }
 
         $this->addRoute($name, $Name);
     }

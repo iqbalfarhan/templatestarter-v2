@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+{{ softDeleteImport }}
 
 class {{ Name }} extends Model
 {
     use HasFactory;
+    {{ softDeleteTrait }}
 
-    protected $table = '{{ table }}';
+    //protected $table = '{{ table }}';
 
     protected $fillable = [
         'name',
