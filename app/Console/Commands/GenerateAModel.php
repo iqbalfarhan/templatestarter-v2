@@ -79,29 +79,52 @@ class GenerateAModel extends Command
         $webPath = base_path('routes/web.php');
 
         $useLine   = "use App\\Http\\Controllers\\{$Name}Controller;\n";
-        $routeLine = "Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
+        $routeLine = "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
 
         if (File::exists($webPath)) {
             $content = File::get($webPath);
 
             // ✅ Tambahin use kalau belum ada
             if (!Str::contains($content, "use App\\Http\\Controllers\\{$Name}Controller;")) {
-                // nyisipin tepat setelah baris php opening atau use terakhir
-                if (preg_match('/<\?php\s+/m', $content, $matches)) {
-                    $content = preg_replace('/<\?php\s+/m', "<?php\n\n{$useLine}", $content, 1);
+                // cari posisi terakhir "use " terus sisipin di bawahnya
+                if (preg_match_all('/^use\s.+;$/m', $content, $matches, PREG_OFFSET_CAPTURE)) {
+                    $lastUse = end($matches[0]);
+                    $pos = $lastUse[1] + strlen($lastUse[0]);
+                    $content = substr($content, 0, $pos) . "\n{$useLine}" . substr($content, $pos);
                 } else {
-                    $content = $useLine . $content;
+                    // fallback kalau gak ada use
+                    $content = "<?php\n\n{$useLine}" . $content;
                 }
                 File::put($webPath, $content);
                 $this->info("📌 Added import: {$useLine}");
             }
 
-            // ✅ Append route kalau belum ada
-            if (!Str::contains($content, $routeLine)) {
-                File::append($webPath, $routeLine);
-                $this->info("🌐 Added route to web.php: {$routeLine}");
+            // ✅ Tambahin route ke dalam middleware group
+            if (Str::contains($content, "Route::middleware(['auth', 'verified'])->group(function () {")) {
+                // sisipkan sebelum "});"
+                $content = preg_replace(
+                    "/(Route::middleware\(\['auth', 'verified'\]\)->group\(function\s*\(\)\s*{\n)([\s\S]*?)(^\s*}\);)/m",
+                    "$1$2$routeLine$3",
+                    $content,
+                    1,
+                    $count
+                );
+
+                if ($count > 0) {
+                    File::put($webPath, $content);
+                    $this->info("🌐 Added route to middleware group: {$routeLine}");
+                } else {
+                    $this->warn("⚠️ Could not insert route inside middleware group, fallback to bottom.");
+                    if (!Str::contains($content, $routeLine)) {
+                        File::append($webPath, $routeLine);
+                    }
+                }
             } else {
-                $this->warn("⚠️ Route already exists in web.php");
+                // fallback kalau ga ada group
+                if (!Str::contains($content, $routeLine)) {
+                    File::append($webPath, $routeLine);
+                    $this->info("🌐 Added route to bottom: {$routeLine}");
+                }
             }
         }
     }
