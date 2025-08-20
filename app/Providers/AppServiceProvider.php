@@ -22,67 +22,67 @@ class AppServiceProvider extends ServiceProvider
     {
         // required
         Validator::replacer('required', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' wajib diisi ⚠️';
+            return ucfirst($attribute) . ' wajib diisi.';
         });
 
         // string
         Validator::replacer('string', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa teks ✍️';
+            return ucfirst($attribute) . ' harus berupa teks.';
         });
 
         // max
         Validator::replacer('max', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . " maksimal {$parameters[0]} karakter 📏";
+            return ucfirst($attribute) . " maksimal {$parameters[0]} karakter.";
         });
 
         // min
         Validator::replacer('min', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . " minimal {$parameters[0]} karakter 📏";
+            return ucfirst($attribute) . " minimal {$parameters[0]} karakter.";
         });
 
         // exists
         Validator::replacer('exists', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' tidak ditemukan ❌';
+            return ucfirst($attribute) . ' tidak ditemukan.';
         });
 
         // unique
         Validator::replacer('unique', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' sudah terdaftar 🚫';
+            return ucfirst($attribute) . ' sudah terdaftar';
         });
 
         // boolean
         Validator::replacer('boolean', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus bernilai true atau false ✅❌';
+            return ucfirst($attribute) . ' harus bernilai true atau false';
         });
 
         // image
         Validator::replacer('image', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa gambar 🖼️';
+            return ucfirst($attribute) . ' harus berupa gambar';
         });
 
         // numeric
         Validator::replacer('numeric', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa angka 🔢';
+            return ucfirst($attribute) . ' harus berupa angka';
         });
 
         // confirmed
         Validator::replacer('confirmed', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus sama dengan konfirmasi 🔒';
+            return ucfirst($attribute) . ' harus sama dengan konfirmasi';
         });
 
         // email
         Validator::replacer('email', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa alamat email yang valid 📧';
+            return ucfirst($attribute) . ' harus berupa alamat email yang valid';
         });
 
         // date
         Validator::replacer('date', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa tanggal yang valid 📅';
+            return ucfirst($attribute) . ' harus berupa tanggal yang valid';
         });
 
         // url
         Validator::replacer('url', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa URL yang valid 🌐';
+            return ucfirst($attribute) . ' harus berupa URL yang valid';
         });
 
         // in
@@ -97,27 +97,27 @@ class AppServiceProvider extends ServiceProvider
 
         // array
         Validator::replacer('array', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa list 📋';
+            return ucfirst($attribute) . ' harus berupa list';
         });
 
         // integer
         Validator::replacer('integer', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa bilangan bulat 🔢';
+            return ucfirst($attribute) . ' harus berupa bilangan bulat';
         });
 
         // digits
         Validator::replacer('digits', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . " harus {$parameters[0]} digit 🔢";
+            return ucfirst($attribute) . " harus {$parameters[0]} digit";
         });
 
         // digits_between
         Validator::replacer('digits_between', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . " harus antara {$parameters[0]} dan {$parameters[1]} digit 🔢";
+            return ucfirst($attribute) . " harus antara {$parameters[0]} dan {$parameters[1]} digit";
         });
 
         // file
         Validator::replacer('file', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus berupa file 📂';
+            return ucfirst($attribute) . ' harus berupa file';
         });
 
         // mimes
@@ -127,22 +127,22 @@ class AppServiceProvider extends ServiceProvider
 
         // after
         Validator::replacer('after', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus setelah ' . $parameters[0] . ' 📅';
+            return ucfirst($attribute) . ' harus setelah ' . $parameters[0] . '.';
         });
 
         // before
         Validator::replacer('before', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus sebelum ' . $parameters[0] . ' 📅';
+            return ucfirst($attribute) . ' harus sebelum ' . $parameters[0] . '.';
         });
 
         // after_or_equal
         Validator::replacer('after_or_equal', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus setelah atau sama dengan ' . $parameters[0] . ' 📅';
+            return ucfirst($attribute) . ' harus setelah atau sama dengan ' . $parameters[0] . '.';
         });
 
         // before_or_equal
         Validator::replacer('before_or_equal', function ($message, $attribute, $rule, $parameters) {
-            return ucfirst($attribute) . ' harus sebelum atau sama dengan ' . $parameters[0] . ' 📅';
+            return ucfirst($attribute) . ' harus sebelum atau sama dengan ' . $parameters[0] . '.';
         });
 
         // size
