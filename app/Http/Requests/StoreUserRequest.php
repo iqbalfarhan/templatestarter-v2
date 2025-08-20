@@ -27,14 +27,4 @@ class StoreUserRequest extends FormRequest
             'password' => 'required|confirmed',
         ];
     }
-
-    function messages()
-    {
-        return [
-            'required' => 'The :attribute field is required.',
-            'email' => 'The :attribute field must be a valid email address.',
-            'unique' => 'The :attirbute field must be unique.',
-            'confirmed' => 'The :attribute and confirmation password do not match.',
-        ];
-    }
 }

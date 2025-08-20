@@ -17,11 +17,4 @@ class Store{{ Name }}Request extends FormRequest
             'name' => 'required'
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'required' => 'Atribut :attribute harus diisi',
-        ];
-    }
 }

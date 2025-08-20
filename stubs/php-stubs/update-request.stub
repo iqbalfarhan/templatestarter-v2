@@ -17,11 +17,4 @@ class Update{{ Name }}Request extends FormRequest
             'name' => 'nullable'
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'required' => 'Atribut :attribute harus diisi',
-        ];
-    }
 }

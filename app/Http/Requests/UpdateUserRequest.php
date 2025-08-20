@@ -24,23 +24,9 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'nullable',
-            'email' => [
-                'nullable',
-                'email',
-                Rule::unique('users', 'email')->ignore($this->user), // kalau route model binding
-            ],
+            'email' => 'nullable|email|unique:users,email,'.$this->user->id,
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,name'
-        ];
-    }
-
-    function messages()
-    {
-        return [
-            'email' => 'The :attribute field must be a valid email address.',
-            'unique' => 'The :attribute field must be unique.',
-            'array' => 'The :attribute field must be an array.',
-            'exists' => 'The :attribute field must exist.',
         ];
     }
 }

@@ -26,12 +26,4 @@ class UpdatePermissionRequest extends FormRequest
             'group' => 'nullable',
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'Name is required',
-            'group.required' => 'Group is required',
-        ];
-    }
 }

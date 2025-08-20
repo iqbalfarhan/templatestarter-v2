@@ -26,11 +26,4 @@ class StoreRoleRequest extends FormRequest
             'guard_name' => 'nullable'
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'name.required' => 'Name is required'
-        ];
-    }
 }
