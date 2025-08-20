@@ -60,8 +60,8 @@ class GenerateRView extends Command
                     $content = File::get($stubPath);
                     // Replace placeholder
                     $content = str_replace(
-                        ['{{ name }}', '{{ Name }}'],
-                        [$name, $Name],
+                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}'],
+                        [$name, $Name, Str::plural($name), Str::pluralStudly($Name)],
                         $content
                     );
                 } else {

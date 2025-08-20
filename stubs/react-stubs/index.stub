@@ -13,17 +13,17 @@ import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
 import {{ Name }}FormSheet from './components/{{ name }}-form-sheet';
 
 type Props = {
-  {{ name }}s: {{ Name }}[];
+  {{ names }}: {{ Name }}[];
 };
 
-const {{ Name }}List: FC<Props> = ({ {{ name }}s }) => {
+const {{ Name }}List: FC<Props> = ({ {{ names }} }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
   return (
     <AppLayout
       title="{{ Name }}s"
-      description="Manage your {{ name }}s"
+      description="Manage your {{ names }}"
       actions={
         <{{ Name }}FormSheet purpose="create">
           <Button>
@@ -34,7 +34,7 @@ const {{ Name }}List: FC<Props> = ({ {{ name }}s }) => {
       }
     >
       <div className="flex gap-2">
-        <Input placeholder="Search {{ name }}s..." value={cari} onChange={(e) => setCari(e.target.value)} />
+        <Input placeholder="Search {{ names }}..." value={cari} onChange={(e) => setCari(e.target.value)} />
         <{{ Name }}FilterSheet>
           <Button>
             <Filter />
@@ -62,10 +62,10 @@ const {{ Name }}List: FC<Props> = ({ {{ name }}s }) => {
               <Button variant={'ghost'} size={'icon'} asChild>
                 <Label>
                   <Checkbox
-                    checked={ids.length === {{ name }}s.length}
+                    checked={ids.length === {{ names }}.length}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setIds({{ name }}s.map(({{ name }}) => {{ name }}.id));
+                        setIds({{ names }}.map(({{ name }}) => {{ name }}.id));
                       } else {
                         setIds([]);
                       }
@@ -79,7 +79,7 @@ const {{ Name }}List: FC<Props> = ({ {{ name }}s }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {{{ name }}s
+          {{{ names }}
             .filter(({{ name }}) => JSON.stringify({{ name }}).toLowerCase().includes(cari.toLowerCase()))
             .map(({{ name }}) => (
               <TableRow key={{{ name }}.id}>

@@ -1,0 +1,18 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\{{ Name }};
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class {{ Name }}Factory extends Factory
+{
+    protected $model = {{ Name }}::class;
+
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name(),
+        ];
+    }
+}

@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\Store{{ Name }}Request;
+use App\Http\Requests\Update{{ Name }}Request;
+use App\Models\{{ Name }};
+use Inertia\Inertia;
+
+class {{ Name }}Controller extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        return Inertia::render('{{ name }}/index', [
+            '{{ names }}' => {{ Name }}::get(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Store{{ Name }}Request $request)
+    {
+        $data = $request->validated();
+        {{ Name }}::create($data);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show({{ Name }} ${{ name }})
+    {
+        return Inertia::render('{{ name }}/show', [
+            '{{ name }}' => ${{ name }}
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Update{{ Name }}Request $request, {{ Name }} ${{ name }})
+    {
+        $data = $request->validated();
+        ${{ name }}->update($data);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy({{ Name }} ${{ name }})
+    {
+        ${{ name }}->delete();
+    }
+}
