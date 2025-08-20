@@ -13,7 +13,9 @@ class {{ Name }} extends Model
 
     //protected $table = '{{ table }}';
 
-    protected $fillable = [
-        'name',
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
     ];
 }
