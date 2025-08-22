@@ -49,6 +49,8 @@ class GenerateAModel extends Command
                 '{{ table }}' => $tableName,
                 '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
+                '{{ fillable }}' => $this->generateFillable($fields),
+                '{{ factory }}' => $this->generateFactory($fields),
                 '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
             ]);
         }
