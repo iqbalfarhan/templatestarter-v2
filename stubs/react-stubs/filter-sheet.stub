@@ -9,7 +9,9 @@ import { Check, X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
 
-type Props = PropsWithChildren & {};
+type Props = PropsWithChildren & {
+  query: {[key: string]: string}
+};
 
 const {{ Name }}FilterSheet: FC<Props> = ({ children }) => {
   const [open, setOpen] = useState(false);

@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -14,9 +15,10 @@ import RoleFormSheet from './components/role-form-sheet';
 
 type Props = {
   roles: Role[];
+  query: { [key: string]: string };
 };
 
-const RoleList: FC<Props> = ({ roles }) => {
+const RoleList: FC<Props> = ({ roles, query }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
@@ -47,6 +49,9 @@ const RoleList: FC<Props> = ({ roles }) => {
           <Button>
             <Filter />
             Filter data
+            {Object.values(query).filter((val) => val && val !== '').length > 0 && (
+              <Badge variant="secondary">{Object.values(query).filter((val) => val && val !== '').length}</Badge>
+            )}
           </Button>
         </RoleFilterSheet>
         {ids.length > 0 && (

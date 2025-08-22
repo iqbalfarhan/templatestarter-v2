@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePermissionRequest;
+use App\Http\Requests\UpdatePermissionRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
@@ -12,10 +13,13 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data = Permission::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
+
         return Inertia::render('permission/index', [
-            'permissions' => Permission::orderBy('group')->get()
+            'permissions' => $data->orderBy('group')->get(),
+            'query' => $request->input(),
         ]);
     }
 
@@ -31,24 +35,25 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Permission $permission)
     {
-        //
+        return $permission;
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        //
+        $data = $request->validated();
+        $permission->update($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
     }
 }

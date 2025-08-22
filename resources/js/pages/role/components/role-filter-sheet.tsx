@@ -2,9 +2,8 @@ import FormControl from '@/components/form-control';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { em } from '@/lib/utils';
-import { useForm } from '@inertiajs/react';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { router, useForm } from '@inertiajs/react';
 import { Check, X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
@@ -21,16 +20,28 @@ const RoleFilterSheet: FC<Props> = ({ children }) => {
   const applyFilter = () => {
     get(route('role.index'), {
       preserveScroll: true,
+      preserveState: true,
+      replace: true,
       onSuccess: () => {
         toast.success('Filter applied successfully');
         setOpen(false);
       },
-      onError: (e) => toast.error(em(e)),
     });
   };
 
   const resetFilter = () => {
-    setOpen(false);
+    setData('name', '');
+    router.get(
+      route('role.index'),
+      {
+        name: '',
+      },
+      {
+        preserveScroll: true,
+        preserveState: true,
+        replace: true,
+      },
+    );
   };
 
   return (
@@ -59,11 +70,9 @@ const RoleFilterSheet: FC<Props> = ({ children }) => {
           <Button type="submit" onClick={applyFilter}>
             <Check /> Apply filter
           </Button>
-          <SheetClose asChild>
-            <Button variant={'outline'} onClick={resetFilter}>
-              <X /> Batalin
-            </Button>
-          </SheetClose>
+          <Button variant={'outline'} onClick={resetFilter}>
+            <X /> Reset filter
+          </Button>
         </SheetFooter>
       </SheetContent>
     </Sheet>

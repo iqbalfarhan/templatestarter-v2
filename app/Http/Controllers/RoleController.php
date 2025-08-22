@@ -14,12 +14,15 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data = Role::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
+
         return Inertia::render('role/index', [
-            'roles' => Role::get()->each(function ($role) {
+            'roles' => $data->get()->each(function ($role) {
                 $role->permissions;
-            })
+            }),
+            'query' => $request->input(),
         ]);
     }
 
