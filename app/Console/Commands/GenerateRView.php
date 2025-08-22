@@ -13,7 +13,8 @@ class GenerateRView extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rview {name}';
+    protected $signature = 'generate:rview {name} {--sd|softDelete} {--fields=}';
+
 
     /**
      * The console command description.
@@ -28,14 +29,14 @@ class GenerateRView extends Command
     public function handle()
     {
         $name = strtolower($this->argument('name'));
-        $Name = Str::studly($name); // Capitalized (Project, Snippet, dsb)
+        $Name = Str::studly($name);
+        $Names = Str::plural($name);
         $basePath = resource_path("js/pages/{$name}");
 
-        // Struktur file
+        // Struktur file default
         $files = [
             "index.tsx" => "stubs/react-stubs/index.stub",
             "show.tsx" => "stubs/react-stubs/show.stub",
-            "archived.tsx" => "stubs/react-stubs/archived.stub",
             "components/{$name}-delete-dialog.tsx" => "stubs/react-stubs/delete-dialog.stub",
             "components/{$name}-filter-sheet.tsx" => "stubs/react-stubs/filter-sheet.stub",
             "components/{$name}-form-sheet.tsx" => "stubs/react-stubs/form-sheet.stub",
@@ -45,26 +46,27 @@ class GenerateRView extends Command
             "../../types/{$name}.d.ts" => "stubs/react-stubs/type.stub",
         ];
 
+        // Tambahin archived kalau ada flag --softDelete
+        if ($this->option('softDelete')) {
+            $files["archived.tsx"] = "stubs/react-stubs/archived.stub";
+        }
+
         foreach ($files as $file => $stub) {
             $filePath = $basePath . '/' . $file;
             $dir = dirname($filePath);
 
-            // Pastikan folder ada
             if (!File::exists($dir)) {
                 File::makeDirectory($dir, 0755, true);
                 $this->info("Created directory: {$dir}");
             }
 
-            // Generate file dari stub
             if (!File::exists($filePath)) {
                 $stubPath = base_path($stub);
-
                 if (File::exists($stubPath)) {
                     $content = File::get($stubPath);
-                    // Replace placeholder
                     $content = str_replace(
                         ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}'],
-                        [$name, $Name, Str::plural($name), Str::pluralStudly($Name)],
+                        [$name, $Name, $Names, Str::pluralStudly($Name)],
                         $content
                     );
                 } else {
@@ -78,6 +80,43 @@ class GenerateRView extends Command
             }
         }
 
+        // Tambahin fields ke type.d.ts kalau ada --fields
+        $fieldsOption = $this->option('fields');
+        if ($fieldsOption) {
+            $fields = explode(',', $fieldsOption); // ex: ["title:string","body:text"]
+            $typeLines = [];
+            foreach ($fields as $field) {
+                [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
+                $fieldType = strtolower($fieldType);
+
+                // Mapping fieldType ke TypeScript type
+                $tsType = match ($fieldType) {
+                    'string', 'text' => 'string',
+                    'boolean' => 'boolean',
+                    'integer' => 'number',
+                    'datetime' => 'string',
+                    default => 'string', // fallback
+                };
+
+                $typeLines[] = "  {$fieldName}: {$tsType};";
+            }
+
+            $dtsPath = resource_path("js/types/{$name}.d.ts");
+            if (File::exists($dtsPath)) {
+                $content = File::get($dtsPath);
+                $content = str_replace(
+                    '/* {{ fields }} */',
+                    implode("\n", $typeLines),
+                    $content
+                );
+                File::put($dtsPath, $content);
+                $this->info("Updated type definition: {$dtsPath}");
+            } else {
+                $this->warn("Type file not found: {$dtsPath}");
+            }
+        }
+
         $this->info("React view for '{$name}' generated successfully!");
     }
+
 }
