@@ -11,6 +11,8 @@ import { FC, useState } from 'react';
 import {{ Name }}DeleteDialog from './components/{{ name }}-delete-dialog';
 import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
 import {{ Name }}FormSheet from './components/{{ name }}-form-sheet';
+import {{ Name }}BulkEditSheet from './components/{{ name }}-bulk-edit-sheet';
+import {{ Name }}BulkDeleteDialog from './components/{{ name }}-bulk-delete-dialog';
 
 type Props = {
   {{ names }}: {{ Name }}[];
