@@ -27,12 +27,19 @@ const UserList: FC<Props> = ({ users }) => {
       title="Users"
       description="Manage your users"
       actions={
-        <UserFormSheet purpose="create">
-          <Button>
-            <Plus />
-            Create new user
+        <>
+          <UserFormSheet purpose="create">
+            <Button>
+              <Plus />
+              Create new user
+            </Button>
+          </UserFormSheet>
+          <Button asChild>
+            <Link href={route('user.archived')}>
+              <Trash2 />
+            </Link>
           </Button>
-        </UserFormSheet>
+        </>
       }
     >
       <div className="flex gap-2">

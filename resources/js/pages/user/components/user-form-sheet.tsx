@@ -1,4 +1,5 @@
 import FormControl from '@/components/form-control';
+import SubmitButton from '@/components/submit-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { capitalizeWords, em } from '@/lib/utils';
 import { FormPurpose, User } from '@/types';
 import { useForm, usePage } from '@inertiajs/react';
-import { Check, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -22,7 +23,7 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose }) => {
 
   const [open, setOpen] = useState(false);
 
-  const { data, setData, put, post, reset } = useForm({
+  const { data, setData, put, post, reset, processing } = useForm({
     name: user?.name ?? '',
     email: user?.email ?? '',
     password: user ? undefined : '',
@@ -105,9 +106,7 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose }) => {
           </form>
         </ScrollArea>
         <SheetFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            <Check /> Simpan user
-          </Button>
+          <SubmitButton onClick={handleSubmit} label={`${capitalizeWords(purpose)} user`} loading={processing} disabled={processing} />
           <SheetClose asChild>
             <Button variant={'outline'}>
               <X /> Batalin

@@ -19,7 +19,7 @@ type Props = PropsWithChildren & {
 const {{ Name }}FormSheet: FC<Props> = ({ children, {{ name }}, purpose }) => {
   const [open, setOpen] = useState(false);
 
-  const { data, setData, put, post, reset } = useForm({
+  const { data, setData, put, post, reset, processing } = useForm({
     name: {{ name }}?.name ?? '',
   });
 
@@ -39,6 +39,7 @@ const {{ Name }}FormSheet: FC<Props> = ({ children, {{ name }}, purpose }) => {
         preserveScroll: true,
         onSuccess: () => {
           toast.success('{{ Name }} updated successfully');
+          setOpen(false);
         },
         onError: (e) => toast.error(em(e)),
       });
@@ -67,9 +68,7 @@ const {{ Name }}FormSheet: FC<Props> = ({ children, {{ name }}, purpose }) => {
           </form>
         </ScrollArea>
         <SheetFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            <Check /> Simpan {{ name }}
-          </Button>
+          <SubmitButton onClick={handleSubmit} label={`${capitalizeWords(purpose)} {{ name }}`} loading={processing} disabled={processing} />
           <SheetClose asChild>
             <Button variant={'outline'}>
               <X /> Batalin

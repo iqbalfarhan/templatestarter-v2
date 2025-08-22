@@ -4,10 +4,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { em } from '@/lib/utils';
 import { User } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Filter, Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';
+import { toast } from 'sonner';
 import UserFilterSheet from './components/user-filter-sheet';
 
 type Props = {
@@ -17,6 +19,26 @@ type Props = {
 const ArchivedUserList: FC<Props> = ({ users }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
+
+  const handleRestore = (id: User['id']) => {
+    router.put(
+      route('user.restore', id),
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => toast.success('Data berhasil di restore!'),
+        onError: (e) => toast.error(em(e)),
+      },
+    );
+  };
+
+  const handleForceDelete = (id: User['id']) => {
+    router.delete(route('user.force-delete', id), {
+      preserveScroll: true,
+      onSuccess: () => toast.success('Data berhasil di hapus permanen!'),
+      onError: (e) => toast.error(em(e)),
+    });
+  };
 
   return (
     <AppLayout
@@ -97,15 +119,11 @@ const ArchivedUserList: FC<Props> = ({ users }) => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.roles?.join(', ')}</TableCell>
                 <TableCell>
-                  <Button variant={'ghost'} size={'icon'} asChild>
-                    <Link href={route('user.restore', user.id)} method="put">
-                      <Undo2 />
-                    </Link>
+                  <Button variant={'ghost'} size={'icon'} onClick={() => handleRestore(user.id)}>
+                    <Undo2 />
                   </Button>
-                  <Button variant={'ghost'} size={'icon'} asChild>
-                    <Link href={route('user.force-delete', user.id)} method="delete">
-                      <Trash2 />
-                    </Link>
+                  <Button variant={'ghost'} size={'icon'} onClick={() => handleForceDelete(user.id)}>
+                    <Trash2 />
                   </Button>
                 </TableCell>
               </TableRow>

@@ -1,13 +1,14 @@
 import FormControl from '@/components/form-control';
+import SubmitButton from '@/components/submit-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { em, capitalizeWords } from '@/lib/utils';
+import { capitalizeWords, em } from '@/lib/utils';
 import { FormPurpose } from '@/types';
 import { Role } from '@/types/role';
 import { useForm } from '@inertiajs/react';
-import { Check, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -19,7 +20,7 @@ type Props = PropsWithChildren & {
 const RoleFormSheet: FC<Props> = ({ children, role, purpose }) => {
   const [open, setOpen] = useState(false);
 
-  const { data, setData, put, post, reset } = useForm({
+  const { data, setData, put, post, reset, processing } = useForm({
     name: role?.name ?? '',
   });
 
@@ -67,9 +68,7 @@ const RoleFormSheet: FC<Props> = ({ children, role, purpose }) => {
           </form>
         </ScrollArea>
         <SheetFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            <Check /> Simpan role
-          </Button>
+          <SubmitButton onClick={handleSubmit} label={`${capitalizeWords(purpose)} role`} loading={processing} disabled={processing} />
           <SheetClose asChild>
             <Button variant={'outline'}>
               <X /> Batalin

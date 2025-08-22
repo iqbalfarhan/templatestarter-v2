@@ -4,19 +4,41 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { {{ Name }} } from '@/types/{{ name }}';
-import { Link } from '@inertiajs/react';
+import { em } from '@/lib/utils';
+import { {{ Name }} } from '@/types';
+import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Filter, Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';
+import { toast } from 'sonner';
 import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
 
 type Props = {
   {{ names }}: {{ Name }}[];
 };
 
-const Archived{{ Name }}List: FC<Props> = ({ {{ names }} = [] }) => {
+const Archived{{ Name }}List: FC<Props> = ({ {{ names }} }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
+
+  const handleRestore = (id: {{ Name }}['id']) => {
+    router.put(
+      route('{{ name }}.restore', id),
+      {},
+      {
+        preserveScroll: true,
+        onSuccess: () => toast.success('Data berhasil di restore!'),
+        onError: (e) => toast.error(em(e)),
+      },
+    );
+  };
+
+  const handleForceDelete = (id: {{ Name }}['id']) => {
+    router.delete(route('{{ name }}.force-delete', id), {
+      preserveScroll: true,
+      onSuccess: () => toast.success('Data berhasil di hapus permanen!'),
+      onError: (e) => toast.error(em(e)),
+    });
+  };
 
   return (
     <AppLayout
@@ -67,6 +89,8 @@ const Archived{{ Name }}List: FC<Props> = ({ {{ names }} = [] }) => {
               </Button>
             </TableHead>
             <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role names</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -92,16 +116,14 @@ const Archived{{ Name }}List: FC<Props> = ({ {{ names }} = [] }) => {
                   </Button>
                 </TableCell>
                 <TableCell>{{{ name }}.name}</TableCell>
+                <TableCell>{{{ name }}.email}</TableCell>
+                <TableCell>{{{ name }}.roles?.join(', ')}</TableCell>
                 <TableCell>
-                  <Button variant={'ghost'} size={'icon'} asChild>
-                    <Link href={route('{{ name }}.restore', {{ name }}.id)} method="put">
-                      <Undo2 />
-                    </Link>
+                  <Button variant={'ghost'} size={'icon'} onClick={() => handleRestore({{ name }}.id)}>
+                    <Undo2 />
                   </Button>
-                  <Button variant={'ghost'} size={'icon'} asChild>
-                    <Link href={route('{{ name }}.force-delete', {{ name }}.id)} method="delete">
-                      <Trash2 />
-                    </Link>
+                  <Button variant={'ghost'} size={'icon'} onClick={() => handleForceDelete({{ name }}.id)}>
+                    <Trash2 />
                   </Button>
                 </TableCell>
               </TableRow>
