@@ -17,17 +17,11 @@ class {{ Name }}Controller extends Controller
      */
     public function index(Request $request)
     {
-        /*
         $data = {{ Name }}::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
 
         return Inertia::render('{{ name }}/index', [
             '{{ names }}' => $data->get(),
             'query' => $request->input(),
-        ]);
-        */
-
-        return Inertia::render('{{ name }}/index', [
-            '{{ names }}' => {{ Name }}::get(),
         ]);
     }
 
