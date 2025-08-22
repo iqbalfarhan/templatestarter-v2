@@ -175,6 +175,7 @@ class GenerateAModel extends Command
         ];
 
         $out = [];
+        if (count($fields) == 0) $fields = ['name' => 'string'];
         foreach ($fields as $f => $t) {
             $faker = $fakerMap[$t] ?? 'fake()->word()';
             $out[] = "'$f' => $faker,";
@@ -188,6 +189,7 @@ class GenerateAModel extends Command
         foreach ($fields as $f => $t) {
             $out[] = "\$table->$t('$f');";
         }
+        if(count($fields) == 0) $out[] = "\$table->string('name');";
         if ($softDelete) $out[] = "\$table->softDeletes();";
         $out[] = "\$table->timestamps();";
         return implode("\n            ", $out);
