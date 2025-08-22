@@ -51,7 +51,7 @@ class GenerateAModel extends Command
                 '{{ table }}' => $tableName,
                 '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
-                '{{ softDeleteMethods }}'  => $softDelete ? $this->generateSoftDeleteMethods($softDelete, $Name, $name, $Names) : "",
+                '{{ softDeleteMethods }}'  => $softDelete ? $this->generateSoftDeleteMethods($softDelete, $Name, $name, $names) : "",
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
                 '{{ request }}' => $this->generateRequest($fields),
@@ -76,7 +76,7 @@ class GenerateAModel extends Command
             $this->info("🗑️  SoftDeletes enabled for {$name}");
         }
 
-        $this->addRoute($name, $Name);
+        $this->addRoute($softDelete,$name, $Name);
     }
 
     protected function makeFromStub($filePath, $stubPath, $replacements)
@@ -99,13 +99,21 @@ class GenerateAModel extends Command
         }
     }
 
-    protected function addRoute($name, $Name)
+    protected function addRoute(bool $softDelete, $name, $Name)
     {
         $webPath = base_path('routes/web.php');
 
         $useLine   = "use App\\Http\\Controllers\\{$Name}Controller;\n";
         $routeLine  = "    Route::put('" . Str::camel($name) . "/bulk', [{$Name}Controller::class, 'bulkUpdate'])->name('" . Str::camel($name) . ".bulk.update');\n";
         $routeLine .= "    Route::delete('" . Str::camel($name) . "/bulk', [{$Name}Controller::class, 'bulkDelete'])->name('" . Str::camel($name) . ".bulk.destroy');\n";
+
+        // Tambahin routes kalau pakai softDelete
+        if ($softDelete) {
+            $routeLine .= "    Route::get('" . Str::camel($name) . "/archived', [{$Name}Controller::class, 'archived'])->name('" . Str::camel($name) . ".archived');\n";
+            $routeLine .= "    Route::put('" . Str::camel($name) . "/{" . Str::camel($name) . "}/restore', [{$Name}Controller::class, 'restore'])->name('" . Str::camel($name) . ".restore');\n";
+            $routeLine .= "    Route::delete('" . Str::camel($name) . "/{" . Str::camel($name) . "}/force-delete', [{$Name}Controller::class, 'forceDelete'])->name('" . Str::camel($name) . ".force-delete');\n";
+        }
+
         $routeLine .= "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
 
 
@@ -214,7 +222,7 @@ class GenerateAModel extends Command
         return implode("\n            ", $out);
     }
 
-    protected function generateSoftDeleteMethods(bool $softDelete, string $Name, string $name, string $Names): string
+    protected function generateSoftDeleteMethods(bool $softDelete, string $Name, string $name, string $names): string
     {
         if (!$softDelete) return '';
 
@@ -222,7 +230,7 @@ class GenerateAModel extends Command
             public function archived()
             {
                 return Inertia::render('{$name}/archived', [
-                    '{$Names}' => {$Name}::onlyTrashed()->get(),
+                    '{$names}' => {$Name}::onlyTrashed()->get(),
                 ]);
             }
 

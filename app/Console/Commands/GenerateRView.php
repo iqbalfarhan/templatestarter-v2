@@ -113,7 +113,7 @@ class GenerateRView extends Command
             if (File::exists($dtsPath)) {
                 $content = File::get($dtsPath);
                 $content = str_replace(
-                    '/* {{ fields }} */',
+                    '{{ fields }}',
                     implode("\n", $typeLines),
                     $content
                 );

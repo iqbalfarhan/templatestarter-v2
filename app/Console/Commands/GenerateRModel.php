@@ -12,7 +12,7 @@ class GenerateRModel extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rmodel {name}';
+    protected $signature = 'generate:rmodel {name} {--softDelete} {--fields=}';
 
     /**
      * The console command description.
@@ -29,14 +29,21 @@ class GenerateRModel extends Command
         $name = strtolower($this->argument('name')); // article
         $Name = Str::studly($this->argument('name')); // Article
 
+        $softDelete = $this->option('softDelete');
+        $fields = $this->option('fields');
+
         $this->info("🚀 Running generate:amodel {$Name} ...");
         $this->call('generate:amodel', [
             'name' => $Name,
+            '--softDelete' => $softDelete,
+            '--fields' => $fields,
         ]);
 
         $this->info("🎨 Running generate:rview {$name} ...");
         $this->call('generate:rview', [
             'name' => $name,
+            '--softDelete' => $softDelete,
+            '--fields' => $fields,
         ]);
 
         $this->info("✅ Done! {$Name} model + React view generated successfully!");

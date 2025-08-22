@@ -14,7 +14,7 @@ type Props = {
   {{ names }}: {{ Name }}[];
 };
 
-const Archived{{ Name }}List: FC<Props> = ({ {{ names }} }) => {
+const Archived{{ Name }}List: FC<Props> = ({ {{ names }} = [] }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
