@@ -90,38 +90,42 @@ class GenerateRView extends Command
 
         // Tambahin fields ke type.d.ts kalau ada --fields
         $fieldsOption = $this->option('fields');
-        if ($fieldsOption) {
-            $fields = explode(',', $fieldsOption); // ex: ["title:string","body:text"]
-            $typeLines = [];
-            foreach ($fields as $field) {
-                [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
-                $fieldType = strtolower($fieldType);
+        if (!$fieldsOption) {
+            $fields = ['name:string'];
+        } else {
+            $fields = explode(',', $fieldsOption); // ex: ["title:string"," body:text"]
+            $fields = array_map('trim', $fields); // <-- hapus spasi ekstra
+        }
 
-                // Mapping fieldType ke TypeScript type
-                $tsType = match ($fieldType) {
-                    'string', 'text' => 'string',
-                    'boolean' => 'boolean',
-                    'integer' => 'number',
-                    'datetime' => 'string',
-                    default => 'string', // fallback
-                };
+        $typeLines = [];
+        foreach ($fields as $field) {
+            [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
+            $fieldType = strtolower($fieldType);
 
-                $typeLines[] = "  {$fieldName}: {$tsType};";
-            }
+            // Mapping fieldType ke TypeScript type
+            $tsType = match ($fieldType) {
+                'string', 'text' => 'string',
+                'boolean' => 'boolean',
+                'integer' => 'number',
+                'datetime' => 'string',
+                default => 'string', // fallback
+            };
 
-            $dtsPath = resource_path("js/types/{$name}.d.ts");
-            if (File::exists($dtsPath)) {
-                $content = File::get($dtsPath);
-                $content = str_replace(
-                    '{{ fields }}',
-                    implode("\n", $typeLines),
-                    $content
-                );
-                File::put($dtsPath, $content);
-                $this->info("Updated type definition: {$dtsPath}");
-            } else {
-                $this->warn("Type file not found: {$dtsPath}");
-            }
+            $typeLines[] = "  {$fieldName}: {$tsType};";
+        }
+
+        $dtsPath = resource_path("js/types/{$name}.d.ts");
+        if (File::exists($dtsPath)) {
+            $content = File::get($dtsPath);
+            $content = str_replace(
+                '{{ fields }}',
+                implode("\n", $typeLines),
+                $content
+            );
+            File::put($dtsPath, $content);
+            $this->info("Updated type definition: {$dtsPath}");
+        } else {
+            $this->warn("Type file not found: {$dtsPath}");
         }
 
         $this->info("React view for '{$name}' generated successfully!");

@@ -21,15 +21,25 @@ class GenerateAModel extends Command
         $tableName = Str::snake($Names);             // ex: users
 
         $softDelete = $this->option('softDelete');
-        $fieldsOption = $this->option('fields'); // "title:string,body:text,is_active:boolean"
+        $fieldsOption = $this->option('fields'); // ex: "title:string, body:text , is_active:boolean"
         $fields = [];
 
         if ($fieldsOption) {
             foreach (explode(',', $fieldsOption) as $field) {
-                [$fname, $ftype] = explode(':', $field);
+                // trim setiap field dulu
+                $field = trim($field);
+
+                // pecah name:type, fallback ke 'string' kalau ga ada type
+                [$fname, $ftype] = array_pad(explode(':', $field), 2, 'string');
+
+                // trim lagi supaya bersih
+                $fname = trim($fname);
+                $ftype = trim($ftype);
+
                 $fields[$fname] = $ftype;
             }
         }
+
 
         // Path Laravel bawaan
         $paths = [
