@@ -81,7 +81,7 @@ class GenerateAModel extends Command
         $this->addRoute($softDelete,$name, $Name);
 
         // Generate permissions
-        $this->generatePermissions($softDelete, $Name);
+        $this->generatePermissions($softDelete, $name);
     }
 
     protected function makeFromStub($filePath, $stubPath, $replacements)
@@ -232,6 +232,9 @@ class GenerateAModel extends Command
         if (!$softDelete) return '';
 
         return <<<EOT
+            /**
+             * View archived resource from storage.
+             */
             public function archived()
             {
                 return Inertia::render('{$name}/archived', [
@@ -239,12 +242,18 @@ class GenerateAModel extends Command
                 ]);
             }
 
+            /**
+             * Restore the specified resource from storage.
+             */
             public function restore(\$id)
             {
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
                 \$model->restore();
             }
 
+            /**
+             * Force delete the specified resource from storage.
+             */
             public function forceDelete(\$id)
             {
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);

@@ -57,12 +57,18 @@ class {{ Name }}Controller extends Controller
         ${{ name }}->delete();
     }
 
+    /**
+     * BulkUpdate the specified resource from storage.
+     */
     public function bulkUpdate(BulkUpdate{{ Name }}Request $request)
     {
         $data = $request->validated();
         {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->update($data);
     }
-    
+
+    /**
+     * BulkDelete the specified resource from storage.
+     */
     public function bulkDelete(BulkDelete{{ Name }}Request $request)
     {
         $data = $request->validated();

@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { em, groupBy } from '@/lib/utils';
+import { capitalizeWords, em, groupBy } from '@/lib/utils';
 import { Permission } from '@/types/permission';
 import { Role } from '@/types/role';
 import { Link, useForm } from '@inertiajs/react';
@@ -61,7 +61,7 @@ const ShowRole: FC<Props> = ({ role, permissions }) => {
     >
       <Card>
         <CardHeader>
-          <CardTitle>{role.name}</CardTitle>
+          <CardTitle>{capitalizeWords(role.name)}</CardTitle>
           <CardDescription>
             {role.permissions.length ? role.permissions?.map((permission) => permission.name).join(', ') : 'Belum ada permission'}
           </CardDescription>
