@@ -69,22 +69,5 @@ class {{ Name }}Controller extends Controller
         {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->delete();
     }
 
-    public function archived()
-    {
-        return Inertia::render('{{ name }}/archived', [
-            '{{ names }}' => {{ Name }}::onlyTrashed()->get(),
-        ]);
-    }
-
-    public function restore(${{ name }})
-    {
-        ${{ name }} = {{ Name }}::onlyTrashed()->find(${{ name }});
-        ${{ name }}->restore();
-    }
-
-    public function forceDelete(${{ name }})
-    {
-        ${{ name }} = {{ Name }}::onlyTrashed()->find(${{ name }});
-        ${{ name }}->forceDelete();
-    }
+    {{ softDeleteMethods }}
 }

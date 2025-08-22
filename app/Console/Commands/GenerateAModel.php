@@ -51,6 +51,7 @@ class GenerateAModel extends Command
                 '{{ table }}' => $tableName,
                 '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
+                '{{ softDeleteMethods }}'  => $softDelete ? $this->generateSoftDeleteMethods($softDelete, $Name, $name, $Names) : "",
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
                 '{{ request }}' => $this->generateRequest($fields),
@@ -209,5 +210,32 @@ class GenerateAModel extends Command
         }
         return implode("\n            ", $out);
     }
+
+    protected function generateSoftDeleteMethods(bool $softDelete, string $Name, string $name, string $Names): string
+    {
+        if (!$softDelete) return '';
+
+        return <<<EOT
+            public function archived()
+            {
+                return Inertia::render('{$name}/archived', [
+                    '{$Names}' => {$Name}::onlyTrashed()->get(),
+                ]);
+            }
+
+            public function restore(\$id)
+            {
+                \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
+                \$model->restore();
+            }
+
+            public function forceDelete(\$id)
+            {
+                \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
+                \$model->forceDelete();
+            }
+        EOT;
+    }
+
 
 }
