@@ -54,4 +54,35 @@ class {{ Name }}Controller extends Controller
     {
         ${{ name }}->delete();
     }
+
+    public function bulkUpdate(BulkUpdate{{ Name }}Request $request)
+    {
+        $data = $request->validated();
+        {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->update($data);
+    }
+    
+    public function bulkDelete(BulkDelete{{ Name }}Request $request)
+    {
+        $data = $request->validated();
+        {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->delete();
+    }
+
+    public function archived()
+    {
+        return Inertia::render('{{ name }}/archived', [
+            '{{ names }}' => {{ Name }}::onlyTrashed()->get(),
+        ]);
+    }
+
+    public function restore(${{ name }})
+    {
+        ${{ name }} = {{ Name }}::onlyTrashed()->find(${{ name }});
+        ${{ name }}->restore();
+    }
+
+    public function forceDelete(${{ name }})
+    {
+        ${{ name }} = {{ Name }}::onlyTrashed()->find(${{ name }});
+        ${{ name }}->forceDelete();
+    }
 }

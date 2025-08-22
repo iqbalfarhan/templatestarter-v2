@@ -6,19 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { User } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Filter, Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';
-import UserBulkDeleteDialog from './components/user-bulk-delete.dialog';
-import UserBulkEditSheet from './components/user-bulk-edit-sheet';
-import UserDeleteDialog from './components/user-delete-dialog';
 import UserFilterSheet from './components/user-filter-sheet';
-import UserFormSheet from './components/user-form-sheet';
 
 type Props = {
   users: User[];
 };
 
-const UserList: FC<Props> = ({ users }) => {
+const ArchivedUserList: FC<Props> = ({ users }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
@@ -27,12 +23,12 @@ const UserList: FC<Props> = ({ users }) => {
       title="Users"
       description="Manage your users"
       actions={
-        <UserFormSheet purpose="create">
-          <Button>
-            <Plus />
-            Create new user
-          </Button>
-        </UserFormSheet>
+        <Button variant={'secondary'} asChild>
+          <Link href={route('user.index')}>
+            <ArrowLeft />
+            Kembali ke list
+          </Link>
+        </Button>
       }
     >
       <div className="flex gap-2">
@@ -48,16 +44,6 @@ const UserList: FC<Props> = ({ users }) => {
             <Button variant={'ghost'} disabled>
               {ids.length} item selected
             </Button>
-            <UserBulkEditSheet userIds={ids}>
-              <Button>
-                <Edit /> Edit selected
-              </Button>
-            </UserBulkEditSheet>
-            <UserBulkDeleteDialog userIds={ids}>
-              <Button variant={'destructive'}>
-                <Trash2 /> Delete selected
-              </Button>
-            </UserBulkDeleteDialog>
           </>
         )}
       </div>
@@ -111,21 +97,16 @@ const UserList: FC<Props> = ({ users }) => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.roles?.join(', ')}</TableCell>
                 <TableCell>
-                  <Button variant={'ghost'} size={'icon'}>
-                    <Link href={route('user.show', user.id)}>
-                      <Folder />
+                  <Button variant={'ghost'} size={'icon'} asChild>
+                    <Link href={route('user.restore', user.id)} method="put">
+                      <Undo2 />
                     </Link>
                   </Button>
-                  <UserFormSheet purpose="edit" user={user}>
-                    <Button variant={'ghost'} size={'icon'}>
-                      <Edit />
-                    </Button>
-                  </UserFormSheet>
-                  <UserDeleteDialog user={user}>
-                    <Button variant={'ghost'} size={'icon'}>
+                  <Button variant={'ghost'} size={'icon'} asChild>
+                    <Link href={route('user.force-delete', user.id)} method="delete">
                       <Trash2 />
-                    </Button>
-                  </UserDeleteDialog>
+                    </Link>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -135,4 +116,4 @@ const UserList: FC<Props> = ({ users }) => {
   );
 };
 
-export default UserList;
+export default ArchivedUserList;

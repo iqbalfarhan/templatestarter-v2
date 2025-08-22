@@ -35,9 +35,12 @@ class GenerateRView extends Command
         $files = [
             "index.tsx" => "stubs/react-stubs/index.stub",
             "show.tsx" => "stubs/react-stubs/show.stub",
+            "archived.tsx" => "stubs/react-stubs/archived.stub",
             "components/{$name}-delete-dialog.tsx" => "stubs/react-stubs/delete-dialog.stub",
             "components/{$name}-filter-sheet.tsx" => "stubs/react-stubs/filter-sheet.stub",
             "components/{$name}-form-sheet.tsx" => "stubs/react-stubs/form-sheet.stub",
+            "components/{$name}-bulk-edit-sheet.tsx" => "stubs/react-stubs/bulk-edit-sheet.stub",
+            "components/{$name}-bulk-delete-dialog.tsx" => "stubs/react-stubs/bulk-delete-dialog.stub",
             "components/{$name}-item-card.tsx" => "stubs/react-stubs/item-card.stub",
             "../../types/{$name}.d.ts" => "stubs/react-stubs/type.stub",
         ];

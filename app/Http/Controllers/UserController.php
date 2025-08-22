@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkDeleteUserRequest;
+use App\Http\Requests\BulkUpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
@@ -62,5 +64,36 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+    }
+
+    public function bulkUpdate(BulkUpdateUserRequest $request)
+    {
+        $data = $request->validated();
+        User::whereIn('id', $data['user_ids'])->update($data);
+    }
+    
+    public function bulkDelete(BulkDeleteUserRequest $request)
+    {
+        $data = $request->validated();
+        User::whereIn('id', $data['user_ids'])->delete();
+    }
+
+    public function archived()
+    {
+        return Inertia::render('user/archived', [
+            'users' => User::onlyTrashed()->get(),
+        ]);
+    }
+
+    public function restore($user)
+    {
+        $user = User::onlyTrashed()->find($user);
+        $user->restore();
+    }
+
+    public function forceDelete($user)
+    {
+        $user = User::onlyTrashed()->find($user);
+        $user->forceDelete();
     }
 }

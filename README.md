@@ -117,6 +117,24 @@ php artisan generate:rmodel NamaFitur
 
 kalu udah lu dapat semua filenya tinggal atur migration, fillable dan relasi table, store dan update request, type di file .d.ts dan tambahin menunya di file app-sidebar.tsx
 
+### 4. Route tambahan
+
+Kalo lu pakai bulk action dan soft delete lu bisa nambahin route ini di file web diatas baris apiResource feature lo:
+
+```php
+
+# Route untuk bulk actions
+Route::put('feature/bulk', [FeatureController::class, 'bulkUpdate'])->name('feature.bulk.update');
+Route::delete('feature/bulk', [FeatureController::class, 'bulkDelete'])->name('feature.bulk.destroy');
+
+# Route untuk soft delete
+Route::get('feature/archived', [FeatureController::class, 'archived'])->name('feature.archived');
+Route::put('feature/{feature}/restore', [FeatureController::class, 'restore'])->name('feature.restore');
+Route::delete('feature/{feature}/force-delete', [FeatureController::class, 'forceDelete'])->name('feature.force-delete');
+```
+
+tinggal disesuaiin aja sama yang lu butuhin
+
 ## Pengembangan
 
 Nantinya gw bakalan nambahin :
