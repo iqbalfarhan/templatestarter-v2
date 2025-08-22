@@ -103,7 +103,10 @@ class GenerateAModel extends Command
         $webPath = base_path('routes/web.php');
 
         $useLine   = "use App\\Http\\Controllers\\{$Name}Controller;\n";
-        $routeLine = "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
+        $routeLine  = "    Route::put('" . Str::camel($name) . "/bulk', [{$Name}Controller::class, 'bulkUpdate'])->name('" . Str::camel($name) . ".bulk.update');\n";
+        $routeLine .= "    Route::delete('" . Str::camel($name) . "/bulk', [{$Name}Controller::class, 'bulkDelete'])->name('" . Str::camel($name) . ".bulk.destroy');\n";
+        $routeLine .= "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
+
 
         if (File::exists($webPath)) {
             $content = File::get($webPath);
