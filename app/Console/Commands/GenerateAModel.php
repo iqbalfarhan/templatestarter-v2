@@ -51,6 +51,7 @@ class GenerateAModel extends Command
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
+                '{{ request }}' => $this->generateRequest($fields),
                 '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
             ]);
         }
@@ -160,16 +161,16 @@ class GenerateAModel extends Command
     protected function generateFactory(array $fields): string
     {
         $fakerMap = [
-            'string' => '$this->faker->sentence()',
-            'text' => '$this->faker->paragraph()',
-            'boolean' => '$this->faker->boolean()',
-            'integer' => '$this->faker->randomNumber()',
-            'datetime' => '$this->faker->dateTime()',
+            'string' => 'fake()->sentence()',
+            'text' => 'fake()->paragraph()',
+            'boolean' => 'fake()->boolean()',
+            'integer' => 'fake()->randomNumber()',
+            'datetime' => 'fake()->dateTime()',
         ];
 
         $out = [];
         foreach ($fields as $f => $t) {
-            $faker = $fakerMap[$t] ?? '$this->faker->word()';
+            $faker = $fakerMap[$t] ?? 'fake()->word()';
             $out[] = "'$f' => $faker,";
         }
         return implode("\n            ", $out);
@@ -183,6 +184,24 @@ class GenerateAModel extends Command
         }
         if ($softDelete) $out[] = "\$table->softDeletes();";
         $out[] = "\$table->timestamps();";
+        return implode("\n            ", $out);
+    }
+
+    protected function generateRequest(array $fields): string
+    {
+        $fieldMap = [
+            'string' => 'required|string|max:255',
+            'text' => 'required|string',
+            'boolean' => 'required|boolean',
+            'integer' => 'required|numeric',
+            'datetime' => 'required|string',
+        ];
+
+        $out = [];
+        foreach ($fields as $f => $t) {
+            $field = $fieldMap[$t] ?? 'nullable';
+            $out[] = "'$f' => $field,";
+        }
         return implode("\n            ", $out);
     }
 

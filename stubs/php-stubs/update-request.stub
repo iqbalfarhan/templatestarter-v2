@@ -14,7 +14,7 @@ class Update{{ Name }}Request extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable'
+            {{ request }}
         ];
     }
 }
