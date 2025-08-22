@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::apiResource('role', RoleController::class);
     Route::apiResource('permission', PermissionController::class);
+    Route::apiResource('media', MediaController::class);
 });
 
 require __DIR__.'/settings.php';

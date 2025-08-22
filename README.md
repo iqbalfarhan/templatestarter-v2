@@ -133,6 +133,28 @@ Route::put('feature/{feature}/restore', [FeatureController::class, 'restore'])->
 Route::delete('feature/{feature}/force-delete', [FeatureController::class, 'forceDelete'])->name('feature.force-delete');
 ```
 
+### 5. Upload media gambar dan dokumen
+
+Di template starter v2 ini gw udah install laravel media lobnrary bisa lihat dokumentasinya disini. gini cara makenya di template starter ini. dan ini yang perlu lu siapin untuk pakai ini:
+
+- use interface hasMedia ke model lu
+- use trait InteractsWithMedia ke model lu
+- buat route khusus untuk handle upload
+- buat method khusus untuk terima request upload media lu
+
+```php
+// contoh route untuk terima form
+Route::post('feature/{feature}/upload-media', [FeatureController::class, 'uploadMedia'])->name('feature.upload-media');
+
+// contoh method upload media di controller lu
+public function uploadMedia(UploadFeatureMediaRequest $request, Feature $feature)
+{
+  $data = $request->validated();
+  $feature->addMedia($data['file'])->toMediaCollection();
+}
+
+```
+
 tinggal disesuaiin aja sama yang lu butuhin
 
 ## Pengembangan
@@ -140,6 +162,5 @@ tinggal disesuaiin aja sama yang lu butuhin
 Nantinya gw bakalan nambahin :
 
 - Setting Media untuk model
-- Improvement di view filter data
 - Beberapa perubahan controller yang udah implement permission
 - Login pakai socialite
