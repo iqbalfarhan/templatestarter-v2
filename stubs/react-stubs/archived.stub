@@ -67,8 +67,6 @@ const Archived{{ Name }}List: FC<Props> = ({ {{ names }} }) => {
               </Button>
             </TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role names</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -94,8 +92,6 @@ const Archived{{ Name }}List: FC<Props> = ({ {{ names }} }) => {
                   </Button>
                 </TableCell>
                 <TableCell>{{{ name }}.name}</TableCell>
-                <TableCell>{{{ name }}.email}</TableCell>
-                <TableCell>{{{ name }}.roles?.join(', ')}</TableCell>
                 <TableCell>
                   <Button variant={'ghost'} size={'icon'} asChild>
                     <Link href={route('{{ name }}.restore', {{ name }}.id)} method="put">
