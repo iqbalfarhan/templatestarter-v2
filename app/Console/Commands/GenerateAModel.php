@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class GenerateAModel extends Command
 {
-    protected $signature = 'generate:amodel {name} {--sd|softDelete}';
+    protected $signature = 'generate:amodel {name} {--sd|softDelete} {--fields=}';
     protected $description = 'Generate model, factory, seeder, requests, and migration for a given name';
 
     public function handle()
@@ -18,6 +18,17 @@ class GenerateAModel extends Command
         $Names = Str::pluralStudly($Name);           // ex: Users
         $names = Str::camel($Names);                 // ex: users
         $tableName = Str::snake($Names);             // ex: users
+
+        $softDelete = $this->option('softDelete');
+        $fieldsOption = $this->option('fields'); // "title:string,body:text,is_active:boolean"
+        $fields = [];
+
+        if ($fieldsOption) {
+            foreach (explode(',', $fieldsOption) as $field) {
+                [$fname, $ftype] = explode(':', $field);
+                $fields[$fname] = $ftype;
+            }
+        }
 
         // Path Laravel bawaan
         $paths = [
@@ -36,8 +47,9 @@ class GenerateAModel extends Command
                 '{{ names }}' => $names,
                 '{{ Names }}' => $Names,
                 '{{ table }}' => $tableName,
-                '{{ softDeleteImport }}' => $this->option('softDelete') ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
-                '{{ softDeleteTrait }}'  => $this->option('softDelete') ? "use SoftDeletes;\n" : "",
+                '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
+                '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
+                '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
             ]);
         }
 
@@ -49,11 +61,12 @@ class GenerateAModel extends Command
             '{{ Name }}'  => $Name,
             '{{ Names }}' => $Names,
             '{{ table }}' => $tableName,
-            '{{ softDeleteColumn }}' => $this->option('softDelete') ? "\$table->softDeletes();\n" : "",
+            '{{ softDeleteColumn }}' => $softDelete ? "\$table->softDeletes();\n" : "",
+            '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
         ]);
 
         $this->info("✅ {$Name} model + related files generated successfully!");
-        if ($this->option('softDelete')) {
+        if ($softDelete) {
             $this->info("🗑️  SoftDeletes enabled for {$name}");
         }
 
@@ -133,6 +146,42 @@ class GenerateAModel extends Command
                 }
             }
         }
+    }
+
+    protected function generateFillable(array $fields): string
+    {
+        if (empty($fields)) return '';
+        $items = array_map(fn($f) => "'$f'", array_keys($fields));
+        return implode(",\n        ", $items);
+    }
+
+    protected function generateFactory(array $fields): string
+    {
+        $fakerMap = [
+            'string' => '$this->faker->sentence()',
+            'text' => '$this->faker->paragraph()',
+            'boolean' => '$this->faker->boolean()',
+            'integer' => '$this->faker->randomNumber()',
+            'datetime' => '$this->faker->dateTime()',
+        ];
+
+        $out = [];
+        foreach ($fields as $f => $t) {
+            $faker = $fakerMap[$t] ?? '$this->faker->word()';
+            $out[] = "'$f' => $faker,";
+        }
+        return implode("\n            ", $out);
+    }
+
+    protected function generateMigrationFields(array $fields, bool $softDelete): string
+    {
+        $out = [];
+        foreach ($fields as $f => $t) {
+            $out[] = "\$table->$t('$f');";
+        }
+        if ($softDelete) $out[] = "\$table->softDeletes();";
+        $out[] = "\$table->timestamps();";
+        return implode("\n            ", $out);
     }
 
 }
