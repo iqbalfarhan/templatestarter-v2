@@ -16,9 +16,10 @@ import {{ Name }}BulkDeleteDialog from './components/{{ name }}-bulk-delete-dial
 
 type Props = {
   {{ names }}: {{ Name }}[];
+  query: { [key: string]: string };
 };
 
-const {{ Name }}List: FC<Props> = ({ {{ names }} }) => {
+const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
@@ -40,10 +41,13 @@ const {{ Name }}List: FC<Props> = ({ {{ names }} }) => {
     >
       <div className="flex gap-2">
         <Input placeholder="Search {{ names }}..." value={cari} onChange={(e) => setCari(e.target.value)} />
-        <{{ Name }}FilterSheet>
+        <{{ Name }}FilterSheet query={query}>
           <Button>
             <Filter />
             Filter data
+            {Object.values(query).filter((val) => val && val !== '').length > 0 && (
+              <Badge variant="secondary">{Object.values(query).filter((val) => val && val !== '').length}</Badge>
+            )}
           </Button>
         </{{ Name }}FilterSheet>
         {ids.length > 0 && (
