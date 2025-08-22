@@ -23,6 +23,10 @@ const {{ Name }}FilterSheet: FC<Props> = ({ children }) => {
       preserveScroll: true,
       preserveState: true,
       replace: true,
+      onSuccess: () => {
+        toast.success('Filter applied successfully');
+        setOpen(false);
+      },
     });
   };
 

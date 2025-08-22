@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -16,9 +17,10 @@ import UserFormSheet from './components/user-form-sheet';
 
 type Props = {
   users: User[];
+  query: { [key: string]: string };
 };
 
-const UserList: FC<Props> = ({ users }) => {
+const UserList: FC<Props> = ({ users, query }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
@@ -44,10 +46,13 @@ const UserList: FC<Props> = ({ users }) => {
     >
       <div className="flex gap-2">
         <Input placeholder="Search users..." value={cari} onChange={(e) => setCari(e.target.value)} />
-        <UserFilterSheet>
+        <UserFilterSheet query={query}>
           <Button>
             <Filter />
             Filter data
+            {Object.values(query).filter((val) => val && val !== '').length > 0 && (
+              <Badge variant="secondary">{Object.values(query).filter((val) => val && val !== '').length}</Badge>
+            )}
           </Button>
         </UserFilterSheet>
         {ids.length > 0 && (
