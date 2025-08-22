@@ -190,11 +190,11 @@ class GenerateAModel extends Command
     protected function generateRequest(array $fields): string
     {
         $fieldMap = [
-            'string' => 'required|string|max:255',
-            'text' => 'required|string',
-            'boolean' => 'required|boolean',
-            'integer' => 'required|numeric',
-            'datetime' => 'required|string',
+            'string' => "'required|string|max:255'",
+            'text' => "'required|string'",
+            'boolean' => "'required|boolean'",
+            'integer' => "'required|numeric'",
+            'datetime' => "'required|string'",
         ];
 
         $out = [];
