@@ -33,6 +33,8 @@ class GenerateRView extends Command
         $Names = Str::plural($name);
         $basePath = resource_path("js/pages/{$name}");
 
+        $isSoftDelete = $this->option('softDelete') ?? false;
+
         // Struktur file default
         $files = [
             "index.tsx" => "stubs/react-stubs/index.stub",
@@ -47,7 +49,7 @@ class GenerateRView extends Command
         ];
 
         // Tambahin archived kalau ada flag --softDelete
-        if ($this->option('softDelete')) {
+        if ($isSoftDelete) {
             $files["archived.tsx"] = "stubs/react-stubs/archived.stub";
         }
 
@@ -64,9 +66,15 @@ class GenerateRView extends Command
                 $stubPath = base_path($stub);
                 if (File::exists($stubPath)) {
                     $content = File::get($stubPath);
+
+                    // Archived button inject
+                    $archivedButton = $isSoftDelete
+                        ? "<Button asChild>\n        <Link href={route('{$name}.archived')}>\n            <Trash2 />\n        </Link>\n      </Button>"
+                        : '';
+
                     $content = str_replace(
-                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}'],
-                        [$name, $Name, $Names, Str::pluralStudly($Name)],
+                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}', '{{ archivedButton }}'],
+                        [$name, $Name, $Names, Str::pluralStudly($Name), $archivedButton],
                         $content
                     );
                 } else {
@@ -118,5 +126,6 @@ class GenerateRView extends Command
 
         $this->info("React view for '{$name}' generated successfully!");
     }
+
 
 }

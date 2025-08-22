@@ -27,12 +27,15 @@ const {{ Name }}List: FC<Props> = ({ {{ names }} }) => {
       title="{{ Name }}s"
       description="Manage your {{ names }}"
       actions={
-        <{{ Name }}FormSheet purpose="create">
-          <Button>
-            <Plus />
-            Create new {{ name }}
-          </Button>
-        </{{ Name }}FormSheet>
+        <>
+          <{{ Name }}FormSheet purpose="create">
+            <Button>
+              <Plus />
+              Create new {{ name }}
+            </Button>
+          </{{ Name }}FormSheet>
+          {{ archivedButton }}
+        </>
       }
     >
       <div className="flex gap-2">
