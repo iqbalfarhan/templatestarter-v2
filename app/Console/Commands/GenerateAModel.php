@@ -206,6 +206,7 @@ class GenerateAModel extends Command
         ];
 
         $out = [];
+        if (count($fields) == 0) $fields = ['name' => 'string'];
         foreach ($fields as $f => $t) {
             $field = $fieldMap[$t] ?? 'nullable';
             $out[] = "'$f' => $field,";
