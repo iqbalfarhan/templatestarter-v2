@@ -119,7 +119,7 @@ kalu udah lu dapat semua filenya tinggal atur migration, fillable dan relasi tab
 
 ### 4. Route tambahan
 
-Kalo lu pakai bulk action dan soft delete lu bisa nambahin route ini di file web diatas baris apiResource feature lo:
+Kalo lu pakai bulk action dan soft delete dan gagal di generate otomatis, lu bisa nambahin route ini di file web diatas baris apiResource feature lo:
 
 ```php
 
@@ -139,9 +139,7 @@ tinggal disesuaiin aja sama yang lu butuhin
 
 Nantinya gw bakalan nambahin :
 
-- View dan route untuk softDelete
 - Setting Media untuk model
-- View dan control untuk bulk action fiturnya
 - Improvement di view filter data
 - Beberapa perubahan controller yang udah implement permission
 - Login pakai socialite
