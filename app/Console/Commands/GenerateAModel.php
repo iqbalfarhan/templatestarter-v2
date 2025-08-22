@@ -37,6 +37,8 @@ class GenerateAModel extends Command
             "database/seeders/{$Name}Seeder.php" => "stubs/php-stubs/seeder.stub",
             "app/Http/Requests/Store{$Name}Request.php" => "stubs/php-stubs/store-request.stub",
             "app/Http/Requests/Update{$Name}Request.php" => "stubs/php-stubs/update-request.stub",
+            "app/Http/Requests/BulkUpdate{$Name}Request.php" => "stubs/php-stubs/bulk-update-request.stub",
+            "app/Http/Requests/BulkDelete{$Name}Request.php" => "stubs/php-stubs/bulk-delete-request.stub",
             "app/Http/Controllers/{$Name}Controller.php" => "stubs/php-stubs/controller.stub",
         ];
 

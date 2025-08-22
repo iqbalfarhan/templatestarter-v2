@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Store{{ Name }}Request;
 use App\Http\Requests\Update{{ Name }}Request;
+use App\Http\Requests\BulkUpdate{{ Name }}Request;
+use App\Http\Requests\BulkDelete{{ Name }}Request;
 use App\Models\{{ Name }};
 use Inertia\Inertia;
 
