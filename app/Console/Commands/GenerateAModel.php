@@ -248,32 +248,32 @@ class GenerateAModel extends Command
 
         return <<<EOT
         /**
-         * View archived resource from storage.
-         */
-        public function archived()
-        {
-            return Inertia::render('{$name}/archived', [
-                '{$names}' => {$Name}::onlyTrashed()->get(),
-            ]);
-        }
+             * View archived resource from storage.
+             */
+            public function archived()
+            {
+                return Inertia::render('{$name}/archived', [
+                    '{$names}' => {$Name}::onlyTrashed()->get(),
+                ]);
+            }
 
-        /**
-         * Restore the specified resource from storage.
-         */
-        public function restore(\$id)
-        {
-            \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
-            \$model->restore();
-        }
+            /**
+             * Restore the specified resource from storage.
+             */
+            public function restore(\$id)
+            {
+                \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
+                \$model->restore();
+            }
 
-        /**
-         * Force delete the specified resource from storage.
-         */
-        public function forceDelete(\$id)
-        {
-            \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
-            \$model->forceDelete();
-        }
+            /**
+             * Force delete the specified resource from storage.
+             */
+            public function forceDelete(\$id)
+            {
+                \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
+                \$model->forceDelete();
+            }
         EOT;
     }
 
@@ -322,14 +322,14 @@ class GenerateAModel extends Command
 
         return <<<EOT
         /**
-         * Register media conversions.
-         */
-        public function registerMediaConversions(?Media \$media = null): void
-        {
-            \$this->addMediaConversion('preview')
-                ->fit(Fit::Contain, 300, 300)
-                ->nonQueued();
-        }
+             * Register media conversions.
+             */
+            public function registerMediaConversions(?Media \$media = null): void
+            {
+                \$this->addMediaConversion('preview')
+                    ->fit(Fit::Contain, 300, 300)
+                    ->nonQueued();
+            }
         EOT;
     }
 
