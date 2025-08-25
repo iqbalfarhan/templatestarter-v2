@@ -55,12 +55,6 @@ const Archived{{ Name }}List: FC<Props> = ({ {{ names }} }) => {
     >
       <div className="flex gap-2">
         <Input placeholder="Search {{ names }}..." value={cari} onChange={(e) => setCari(e.target.value)} />
-        <{{ Name }}FilterSheet>
-          <Button>
-            <Filter />
-            Filter data
-          </Button>
-        </{{ Name }}FilterSheet>
         {ids.length > 0 && (
           <>
             <Button variant={'ghost'} disabled>

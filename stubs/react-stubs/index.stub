@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { {{ Name }} } from '@/types/{{ name }}';
 import { Link } from '@inertiajs/react';
-import { Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
+import { Edit, Filter, Folder, FolderArchive, Plus, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import {{ Name }}DeleteDialog from './components/{{ name }}-delete-dialog';
 import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
