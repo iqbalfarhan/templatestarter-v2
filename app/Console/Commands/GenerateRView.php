@@ -13,7 +13,7 @@ class GenerateRView extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rview {name} {--sd|softDelete} {--fields=}';
+    protected $signature = 'generate:rview {name} {--s|softDelete} {--fields=}';
 
 
     /**
