@@ -12,7 +12,7 @@ class GenerateRModel extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rmodel {name} {--softDelete} {--fields=}';
+    protected $signature = 'generate:rmodel {name} {--softDelete} {--fields=} {--m|media}';
 
     /**
      * The console command description.
@@ -31,12 +31,14 @@ class GenerateRModel extends Command
 
         $softDelete = $this->option('softDelete');
         $fields = $this->option('fields');
+        $media = $this->option('media');
 
         $this->info("🚀 Running generate:amodel {$Name} ...");
         $this->call('generate:amodel', [
             'name' => $Name,
             '--softDelete' => $softDelete,
             '--fields' => $fields,
+            '--media' => $media,
         ]);
 
         $this->info("🎨 Running generate:rview {$name} ...");
