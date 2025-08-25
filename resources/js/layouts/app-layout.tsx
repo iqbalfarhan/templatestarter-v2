@@ -26,7 +26,7 @@ export default ({
 }: AppLayoutProps) => (
   <AppLayoutTemplate breadcrumbs={breadcrumbs}>
     <Head title={title} />
-    <div className="flex h-full flex-1 flex-col gap-4 space-y-4 overflow-x-auto rounded-xl p-6">
+    <div className="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-4 space-y-4 overflow-x-auto rounded-xl p-6">
       <div className="flex items-start justify-between">
         <Heading title={title} description={description} />
         {actions && <div className="ml-auto flex items-center gap-2">{actions}</div>}
