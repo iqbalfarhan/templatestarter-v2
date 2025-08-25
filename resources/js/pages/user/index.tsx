@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import AppLayout from '@/layouts/app-layout';
 import { User } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
+import { Edit, Filter, Folder, FolderArchive, Plus, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import UserBulkDeleteDialog from './components/user-bulk-delete.dialog';
 import UserBulkEditSheet from './components/user-bulk-edit-sheet';
@@ -36,9 +36,9 @@ const UserList: FC<Props> = ({ users, query }) => {
               Create new user
             </Button>
           </UserFormSheet>
-          <Button asChild>
+          <Button size={'icon'} variant={'destructive'} asChild>
             <Link href={route('user.archived')}>
-              <Trash2 />
+              <FolderArchive />
             </Link>
           </Button>
         </>
