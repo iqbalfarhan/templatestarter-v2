@@ -27,14 +27,5 @@ class {{ Name }} extends Model {{ hasMediaImplement }}
         'updated_at',
     ];
 
-    /*
-    public function registerMediaConversions(?Media $media = null): void
-    {
-        $this->addMediaConversion('preview')
-            ->fit(Fit::Contain, 300, 300)
-            ->nonQueued();
-    }
-    */
-
     {{ hasMediaMethods }}
 }
