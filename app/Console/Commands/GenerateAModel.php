@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Permission;
 
 class GenerateAModel extends Command
 {
-    protected $signature = 'generate:amodel {name} {--sd|softDelete} {--fields=}';
+    protected $signature = 'generate:amodel {name} {--sd|softDelete} {--fields=} {--m|media}';
     protected $description = 'Generate model, factory, seeder, requests, and migration for a given name';
 
     public function handle()
@@ -21,6 +21,7 @@ class GenerateAModel extends Command
         $tableName = Str::snake($Names);             // ex: users
 
         $softDelete = $this->option('softDelete');
+        $withMedia = $this->option('media');
         $fieldsOption = $this->option('fields'); // ex: "title:string, body:text , is_active:boolean"
         $fields = [];
 
@@ -63,6 +64,10 @@ class GenerateAModel extends Command
                 '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
                 '{{ softDeleteMethods }}'  => $softDelete ? $this->generateSoftDeleteMethods($softDelete, $Name, $name, $names) : "",
+                '{{ hasMediaImport }}' => $this->generateHasMediaImports($withMedia),
+                '{{ hasMediaTrait }}' => $withMedia ? "use InteractsWithMedia;\n" : "",
+                '{{ hasMediaMethods }}' => $withMedia ? $this->generateHasMediaMethods($withMedia) : "",
+                '{{ hasMediaImplement }}' => $withMedia ? "implements HasMedia" : "",
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
                 '{{ request }}' => $this->generateRequest($fields),
@@ -297,6 +302,35 @@ class GenerateAModel extends Command
         }
 
         $this->info("🔑 Permissions created: " . implode(', ', $permissions));
+    }
+
+    protected function generateHasMediaImports(bool $withMedia)
+    {
+        if (!$withMedia) return '';
+
+        return <<<EOT
+            use Spatie\Image\Enums\Fit;
+            use Spatie\MediaLibrary\HasMedia;
+            use Spatie\MediaLibrary\InteractsWithMedia;
+            use Spatie\MediaLibrary\MediaCollections\Models\Media;
+        EOT;
+    }
+
+    protected function generateHasMediaMethods(bool $withMedia): string
+    {
+        if (!$withMedia) return '';
+
+        return <<<EOT
+            /**
+             * Register media conversions.
+             */
+            public function registerMediaConversions(): void
+            {
+                \$this->addMediaConversion('preview')
+                    ->fit(Fit::Contain, 300, 300)
+                    ->nonQueued();
+            }
+        EOT;
     }
 
 }

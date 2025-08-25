@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+{{ hasMediaImport }}
 {{ softDeleteImport }}
 
-class {{ Name }} extends Model
+class {{ Name }} extends Model {{ hasMediaImplement }}
 {
     use HasFactory;
     {{ softDeleteTrait }}
+    {{ hasMediaTrait }}
 
     //protected $table = '{{ table }}';
 
@@ -33,4 +35,6 @@ class {{ Name }} extends Model
             ->nonQueued();
     }
     */
+
+    {{ hasMediaMethods }}
 }
