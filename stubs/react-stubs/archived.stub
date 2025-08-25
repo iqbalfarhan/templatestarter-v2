@@ -7,10 +7,9 @@ import AppLayout from '@/layouts/app-layout';
 import { em } from '@/lib/utils';
 import { {{ Name }} } from '@/types/{{ name }}';
 import { Link, router } from '@inertiajs/react';
-import { ArrowLeft, Filter, Trash2, Undo2 } from 'lucide-react';
+import { ArrowLeft, Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import { toast } from 'sonner';
-import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
 
 type Props = {
   {{ names }}: {{ Name }}[];

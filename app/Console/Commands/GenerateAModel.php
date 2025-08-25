@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Permission;
 
 class GenerateAModel extends Command
 {
-    protected $signature = 'generate:amodel {name} {--sd|softDelete} {--fields=} {--m|media}';
+    protected $signature = 'generate:amodel {name} {--s|softDelete} {--fields=} {--m|media}';
     protected $description = 'Generate model, factory, seeder, requests, and migration for a given name';
 
     public function handle()

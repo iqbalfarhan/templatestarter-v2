@@ -12,7 +12,7 @@ class GenerateRModel extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rmodel {name} {--softDelete} {--fields=} {--m|media}';
+    protected $signature = 'generate:rmodel {name} {--s|softDelete} {--fields=} {--m|media}';
 
     /**
      * The console command description.
