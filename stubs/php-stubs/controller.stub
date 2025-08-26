@@ -17,11 +17,20 @@ class {{ Name }}Controller extends Controller
      */
     public function index(Request $request)
     {
-        $data = {{ Name }}::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
+        $data = {{ Name }}::query()
+            //->with([])
+            ->when($request->name, function($q, $v){
+                $q->where('name', $v);
+            });
 
         return Inertia::render('{{ name }}/index', [
             '{{ names }}' => $data->get(),
             'query' => $request->input(),
+            'permissions => [
+                'canAdd' => $this->user->can("create {{ name }}"),
+                'canUpdate' => $this->user->can("update {{ name }}"),
+                'canDelete' => $this->user->can("delete {{ name }}"),
+            ]
         ]);
     }
 
@@ -39,8 +48,14 @@ class {{ Name }}Controller extends Controller
      */
     public function show({{ Name }} ${{ name }})
     {
+        if(!$this->user->can('show {{ name }}')) return abort(403);
+
         return Inertia::render('{{ name }}/show', [
-            '{{ name }}' => ${{ name }}
+            '{{ name }}' => ${{ name }},
+            'permissions => [
+                'canUpdate' => $this->user->can("update {{ name }}"),
+                'canDelete' => $this->user->can("delete {{ name }}"),
+            ]
         ]);
     }
 

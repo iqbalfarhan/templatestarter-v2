@@ -24,18 +24,22 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
+  const { permissions } = usePage<SharedData>().props;
+
   return (
     <AppLayout
       title="{{ Name }}s"
       description="Manage your {{ names }}"
       actions={
         <>
-          <{{ Name }}FormSheet purpose="create">
-            <Button>
-              <Plus />
-              Create new {{ name }}
-            </Button>
-          </{{ Name }}FormSheet>
+          {permissions?.canAdd && (
+            <{{ Name }}FormSheet purpose="create">
+              <Button>
+                <Plus />
+                Create new {{ name }}
+              </Button>
+            </{{ Name }}FormSheet>
+          )}
           {{ archivedButton }}
         </>
       }
@@ -115,21 +119,27 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
                 </TableCell>
                 <TableCell>{ {{ name }}.name }</TableCell>
                 <TableCell>
-                  <Button variant={'ghost'} size={'icon'}>
-                    <Link href={route('{{ name }}.show', {{ name }}.id)}>
-                      <Folder />
-                    </Link>
-                  </Button>
-                  <{{ Name }}FormSheet purpose="edit" {{ name }}={{{ name }}}>
+                  {permissions?.canShow && (
                     <Button variant={'ghost'} size={'icon'}>
-                      <Edit />
+                      <Link href={route('{{ name }}.show', {{ name }}.id)}>
+                        <Folder />
+                      </Link>
                     </Button>
-                  </{{ Name }}FormSheet>
-                  <{{ Name }}DeleteDialog {{ name }}={{{ name }}}>
-                    <Button variant={'ghost'} size={'icon'}>
-                      <Trash2 />
-                    </Button>
-                  </{{ Name }}DeleteDialog>
+                  )}
+                  {permissions?.canUpdate && (
+                    <{{ Name }}FormSheet purpose="edit" {{ name }}={{{ name }}}>
+                      <Button variant={'ghost'} size={'icon'}>
+                        <Edit />
+                      </Button>
+                    </{{ Name }}FormSheet>
+                  )}
+                  {permissions?.canDelete && (
+                    <{{ Name }}DeleteDialog {{ name }}={{{ name }}}>
+                      <Button variant={'ghost'} size={'icon'}>
+                        <Trash2 />
+                      </Button>
+                    </{{ Name }}DeleteDialog>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
