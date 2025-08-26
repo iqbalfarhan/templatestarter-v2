@@ -28,6 +28,7 @@ class {{ Name }}Controller extends Controller
             'query' => $request->input(),
             'permissions' => [
                 'canAdd' => $this->user->can("create {{ name }}"),
+                'canShow' => $this->user->can("show {{ name }}"),
                 'canUpdate' => $this->user->can("update {{ name }}"),
                 'canDelete' => $this->user->can("delete {{ name }}"),
             ]
