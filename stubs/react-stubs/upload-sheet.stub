@@ -52,9 +52,15 @@ const {{ Name }}UploadMediaSheet: FC<Props> = ({ {{ name }}, children }) => {
           >
             <FormControl label="Pilih file">
               <Input type="file" onChange={(e) => setData('file', e.target.files?.[0])} accept="image/*" />
+              {data.file && <img src={URL.createObjectURL(data.file)} />}
             </FormControl>
 
-            {data.file && <img src={URL.createObjectURL(data.file)} />}
+            <div className="grid grid-cols-3 gap-1">
+              {{{ name }}.media?.map((media) => (
+                <img key={media.id} src={media.preview_url} alt={media.name} className="aspect-square w-full object-cover" />
+              ))}
+            </div>
+
           </form>
         </ScrollArea>
         <SheetFooter>
