@@ -19,7 +19,7 @@ class {{ Name }}Controller extends Controller
     public function index(Request $request)
     {
         $data = {{ Name }}::query()
-            //->with([])
+            //->with(['media'])
             ->when($request->name, function($q, $v){
                 $q->where('name', $v);
             });

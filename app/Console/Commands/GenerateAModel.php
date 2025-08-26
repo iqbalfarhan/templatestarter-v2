@@ -102,7 +102,7 @@ class GenerateAModel extends Command
         }
 
         // Add router to web.php
-        $this->addRoute($softDelete,$name, $Name);
+        $this->addRoute($softDelete, $withMedia, $name, $Name);
 
         // Generate permissions
         $this->generatePermissions($softDelete, $name);
@@ -128,7 +128,7 @@ class GenerateAModel extends Command
         }
     }
 
-    protected function addRoute(bool $softDelete, $name, $Name)
+    protected function addRoute(bool $softDelete, bool $withMedia, $name, $Name)
     {
         $webPath = base_path('routes/web.php');
 
@@ -141,6 +141,10 @@ class GenerateAModel extends Command
             $routeLine .= "    Route::get('" . Str::camel($name) . "/archived', [{$Name}Controller::class, 'archived'])->name('" . Str::camel($name) . ".archived');\n";
             $routeLine .= "    Route::put('" . Str::camel($name) . "/{" . Str::camel($name) . "}/restore', [{$Name}Controller::class, 'restore'])->name('" . Str::camel($name) . ".restore');\n";
             $routeLine .= "    Route::delete('" . Str::camel($name) . "/{" . Str::camel($name) . "}/force-delete', [{$Name}Controller::class, 'forceDelete'])->name('" . Str::camel($name) . ".force-delete');\n";
+        }
+        
+        if($withMedia) {
+            $routeLine .= "    Route::put('" . Str::camel($name) . "/{" . Str::camel($name) . "}/upload-media', [{$Name}Controller::class, 'uploadMedia'])->name('" . Str::camel($name) . ".upload-media');\n";
         }
 
         $routeLine .= "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";

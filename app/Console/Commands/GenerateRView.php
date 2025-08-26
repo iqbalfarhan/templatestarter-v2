@@ -86,7 +86,7 @@ class GenerateRView extends Command
                     $uploadButton = $withMedia
                         ? <<<EOT
                         <{$Name}UploadMediaSheet {$name}={{$name}}>
-                            <Button variant={'ghost'} size={'icon'} asChild>
+                            <Button variant={'ghost'} size={'icon'}>
                                 <Image />
                             </Button>
                         </{$Name}UploadMediaSheet>
