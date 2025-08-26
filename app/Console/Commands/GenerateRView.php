@@ -78,7 +78,7 @@ class GenerateRView extends Command
                         : '';
 
                     $uploadButton = $withMedia
-                        ? "<Button variant={'primary'} size={'icon'} asChild>\n        <Link href={route('{$name}.upload')}>\n            <Upload />\n        </Link>\n      </Button>"
+                        ? "<Button variant={'ghost'} size={'icon'} asChild>\n<Image />\n</Button>"
                         : '';
 
                     $content = str_replace(
