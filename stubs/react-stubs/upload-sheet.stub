@@ -28,6 +28,7 @@ const {{ Name }}UploadMediaSheet: FC<Props> = ({ {{ name }}, children }) => {
       onSuccess: () => {
         toast.success('Media uploaded successfully');
         setData('file', undefined);
+        setOpen(false);
       },
       onError: (e) => toast.error(em(e)),
     });
