@@ -16,8 +16,8 @@ class PermissionSeeder extends Seeder
     {
         $permissionGroups = [
             "settings" => [
-                "manage user" => ['superadmin'],
-                "manage role" => ['superadmin'],
+                "menu user" => ['superadmin'],
+                "menu role" => ['superadmin'],
                 "open adminer" => ['superadmin'],
             ],
             "dashboard" => [
