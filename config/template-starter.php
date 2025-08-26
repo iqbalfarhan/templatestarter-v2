@@ -43,6 +43,6 @@ return [
     |
     */
 
-	'with-landingpage' => false
+	'with-landingpage' => env('WITH_LANDINGPAGE', true),
 
 ];
