@@ -2,14 +2,47 @@
 
 return [
 
-	// Default roles for the application
+	/*
+    |--------------------------------------------------------------------------
+    | Default role lists
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default roles that are assigned to new users.
+    | The value provided here should match one of the roles present in the
+    | list of "default-roles" configured below.
+    |
+    */
+	
 	'default-roles' => [
 		'superadmin',
 		'admin',
 		'user',
 	],
 
-	// Default role assigned to new users
+	/*
+    |--------------------------------------------------------------------------
+    | Default role for new users
+    |--------------------------------------------------------------------------
+    |
+    | This option defines the default role that is assigned to new users.
+    | The value provided here should match one of the roles present in the
+    | list of "default-roles" configured below.
+    |
+    */
+
 	'default-role' => 'user',
+
+	/*
+    |--------------------------------------------------------------------------
+    | Is Landing Page Enabled
+    |--------------------------------------------------------------------------
+    |
+    | This option defines whether the landing page feature is enabled or not.
+    | If set to true, users will see the landing page when they visit the site.
+    | If set to false, users will be redirected to the dashboard.
+    |
+    */
+
+	'with-landingpage' => false
 
 ];

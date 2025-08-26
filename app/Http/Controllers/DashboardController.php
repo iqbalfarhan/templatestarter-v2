@@ -14,7 +14,7 @@ class DashboardController extends Controller
 
     public function documentation()
     {
-        return Inertia::render('documentation', [
+        return Inertia::render('dashboard/documentation', [
             'title' => 'App documentation',
             'content' => file_get_contents(base_path('README.md')),
         ]);
