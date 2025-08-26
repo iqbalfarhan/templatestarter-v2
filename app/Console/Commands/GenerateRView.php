@@ -74,11 +74,23 @@ class GenerateRView extends Command
 
                     // Archived button inject
                     $archivedButton = $isSoftDelete
-                        ? "<Button variant={'destructive'} size={'icon'} asChild>\n        <Link href={route('{$name}.archived')}>\n            <FolderArchive />\n        </Link>\n      </Button>"
+                        ? <<<EOT
+                        <Button variant={'destructive'} size={'icon'} asChild>
+                            <Link href={route('{$name}.archived')}>
+                                <FolderArchive />
+                            </Link>
+                        </Button>
+                        EOT
                         : '';
 
                     $uploadButton = $withMedia
-                        ? "<Button variant={'ghost'} size={'icon'} asChild>\n<Image />\n</Button>"
+                        ? <<<EOT
+                        <{$Name}UploadMediaSheet {$name}={{$name}}>
+                            <Button variant={'ghost'} size={'icon'} asChild>
+                                <Image />
+                            </Button>
+                        </{$Name}UploadMediaSheet>
+                        EOT
                         : '';
 
                     $content = str_replace(

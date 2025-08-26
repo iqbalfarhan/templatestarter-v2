@@ -15,6 +15,7 @@ import {{ Name }}FilterSheet from './components/{{ name }}-filter-sheet';
 import {{ Name }}FormSheet from './components/{{ name }}-form-sheet';
 import {{ Name }}BulkEditSheet from './components/{{ name }}-bulk-edit-sheet';
 import {{ Name }}BulkDeleteDialog from './components/{{ name }}-bulk-delete-dialog';
+import {{ Name }}UploadMediaSheet from './components/{{ name }}-upload-sheet';
 
 type Props = {
   {{ names }}: {{ Name }}[];
