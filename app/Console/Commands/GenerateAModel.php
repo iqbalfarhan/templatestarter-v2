@@ -144,7 +144,7 @@ class GenerateAModel extends Command
         }
         
         if($withMedia) {
-            $routeLine .= "    Route::put('" . Str::camel($name) . "/{" . Str::camel($name) . "}/upload-media', [{$Name}Controller::class, 'uploadMedia'])->name('" . Str::camel($name) . ".upload-media');\n";
+            $routeLine .= "    Route::post('" . Str::camel($name) . "/{" . Str::camel($name) . "}/upload-media', [{$Name}Controller::class, 'uploadMedia'])->name('" . Str::camel($name) . ".upload-media');\n";
         }
 
         $routeLine .= "    Route::apiResource('" . Str::camel($name) . "', {$Name}Controller::class);\n";
