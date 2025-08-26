@@ -40,12 +40,13 @@ class GenerateRModel extends Command
             '--fields' => $fields,
             '--media' => $media,
         ]);
-
+        
         $this->info("🎨 Running generate:rview {$name} ...");
         $this->call('generate:rview', [
             'name' => $name,
             '--softDelete' => $softDelete,
             '--fields' => $fields,
+            '--media' => $media,
         ]);
 
         $this->info("✅ Done! {$Name} model + React view generated successfully!");
