@@ -13,11 +13,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            "superadmin",
-            "admin",
-            "user",
-        ];
+        $roles = config('template-starter.default-roles');
 
         foreach ($roles as $role) {
             Role::updateOrCreate(['name' => $role]);

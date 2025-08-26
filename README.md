@@ -135,12 +135,11 @@ Route::delete('feature/{feature}/force-delete', [FeatureController::class, 'forc
 
 ### 5. Upload media gambar dan dokumen
 
-Di template starter v2 ini gw udah install laravel media lobnrary bisa lihat dokumentasinya disini. gini cara makenya di template starter ini. dan ini yang perlu lu siapin untuk pakai ini:
+Di template starter v2 ini gw udah install laravel media lobnrary bisa lihat dokumentasinya di web resminya [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction). gini cara makenya di template starter ini, tinggal nambahin flag `-m` atau `--media`.
 
-- use interface hasMedia ke model lu
-- use trait InteractsWithMedia ke model lu
-- buat route khusus untuk handle upload
-- buat method khusus untuk terima request upload media lu
+```
+php artisan generate:rmodel Feature -m
+```
 
 ```php
 // contoh route untuk terima form
