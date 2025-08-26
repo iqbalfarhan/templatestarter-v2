@@ -9,6 +9,7 @@ use App\Http\Requests\BulkDelete{{ Name }}Request;
 use App\Models\{{ Name }};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+{{ hasMediaControllerMethodsImport }}
 
 class {{ Name }}Controller extends Controller
 {
@@ -96,4 +97,6 @@ class {{ Name }}Controller extends Controller
     }
 
     {{ softDeleteMethods }}
+    
+    {{ hasMediaControllerMethods }}
 }

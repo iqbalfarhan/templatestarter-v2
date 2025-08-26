@@ -54,6 +54,10 @@ class GenerateAModel extends Command
             "app/Http/Controllers/{$Name}Controller.php" => "stubs/php-stubs/controller.stub",
         ];
 
+        if ($withMedia) {
+            $paths["app/Http/Requests/Upload{$Name}MediaRequest.php"] = "stubs/php-stubs/upload-request.stub";
+        }
+
         foreach ($paths as $file => $stub) {
             $this->makeFromStub($file, $stub, [
                 '{{ name }}'  => $name,
@@ -61,13 +65,18 @@ class GenerateAModel extends Command
                 '{{ names }}' => $names,
                 '{{ Names }}' => $Names,
                 '{{ table }}' => $tableName,
+                // soft delete
                 '{{ softDeleteImport }}' => $softDelete ? "use Illuminate\\Database\\Eloquent\\SoftDeletes;\n" : "",
                 '{{ softDeleteTrait }}'  => $softDelete ? "use SoftDeletes;\n" : "",
                 '{{ softDeleteMethods }}'  => $softDelete ? $this->generateSoftDeleteMethods($softDelete, $Name, $name, $names) : "",
+                // has media
                 '{{ hasMediaImport }}' => $this->generateHasMediaImports($withMedia),
                 '{{ hasMediaTrait }}' => $withMedia ? "use InteractsWithMedia;\n" : "",
                 '{{ hasMediaMethods }}' => $withMedia ? $this->generateHasMediaMethods($withMedia) : "",
                 '{{ hasMediaImplement }}' => $withMedia ? "implements HasMedia" : "",
+                '{{ hasMediaControllerMethods }}' => $withMedia ? $this->generateHasMediaControllerMethods($withMedia, $name, $Name) : "",
+                '{{ hasMediaControllerMethodsImport }}' => $withMedia ? "use App\\Http\\Requests\\Upload{$Name}MediaRequest;\n" : "",
+                // fillable, factory, request, migration
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
                 '{{ request }}' => $this->generateRequest($fields),
@@ -313,6 +322,22 @@ class GenerateAModel extends Command
         use Spatie\MediaLibrary\HasMedia;
         use Spatie\MediaLibrary\InteractsWithMedia;
         use Spatie\MediaLibrary\MediaCollections\Models\Media;
+        EOT;
+    }
+
+    protected function generateHasMediaControllerMethods(bool $withMedia, string $name, string $Name)
+    {
+        if (!$withMedia) return '';
+
+        return <<<EOT
+        /**
+             * Register media conversions.
+             */
+            public function uploadMedia(Upload{$Name}MediaRequest \$request, {$Name} \${$name})
+            {
+                \$data = \$request->validated();
+                \${$name}->addMedia(\$data['file'])->toMediaCollection();
+            }
         EOT;
     }
 

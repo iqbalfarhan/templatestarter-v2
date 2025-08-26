@@ -13,7 +13,7 @@ class GenerateRView extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rview {name} {--s|softDelete} {--fields=}';
+    protected $signature = 'generate:rview {name} {--s|softDelete} {--fields=} {--m|media}';
 
 
     /**
@@ -34,6 +34,7 @@ class GenerateRView extends Command
         $basePath = resource_path("js/pages/{$name}");
 
         $isSoftDelete = $this->option('softDelete') ?? false;
+        $withMedia = $this->option('media') ?? false;
 
         // Struktur file default
         $files = [
@@ -51,6 +52,10 @@ class GenerateRView extends Command
         // Tambahin archived kalau ada flag --softDelete
         if ($isSoftDelete) {
             $files["archived.tsx"] = "stubs/react-stubs/archived.stub";
+        }
+
+        if ($withMedia) {
+            $files["components/{$name}-upload-sheet.tsx"] = "stubs/react-stubs/upload-sheet.stub";
         }
 
         foreach ($files as $file => $stub) {
@@ -72,9 +77,13 @@ class GenerateRView extends Command
                         ? "<Button variant={'destructive'} size={'icon'} asChild>\n        <Link href={route('{$name}.archived')}>\n            <FolderArchive />\n        </Link>\n      </Button>"
                         : '';
 
+                    $uploadButton = $withMedia
+                        ? "<Button variant={'primary'} size={'icon'} asChild>\n        <Link href={route('{$name}.upload')}>\n            <Upload />\n        </Link>\n      </Button>"
+                        : '';
+
                     $content = str_replace(
-                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}', '{{ archivedButton }}'],
-                        [$name, $Name, $Names, Str::pluralStudly($Name), $archivedButton],
+                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}', '{{ archivedButton }}', '{{ uploadButton }}'],
+                        [$name, $Name, $Names, Str::pluralStudly($Name), $archivedButton, $uploadButton],
                         $content
                     );
                 } else {
