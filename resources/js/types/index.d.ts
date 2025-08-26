@@ -30,6 +30,7 @@ export interface SharedData {
   auth: Auth;
   ziggy: Config & { location: string };
   sidebarOpen: boolean;
+  permissions?: Record<string, boolean>;
   [key: string]: unknown;
 }
 
