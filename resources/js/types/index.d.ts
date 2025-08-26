@@ -47,3 +47,19 @@ export interface User {
 }
 
 export type FormPurpose = 'create' | 'edit' | 'duplicate';
+
+export type Media = {
+  id: number;
+  collection_name: string;
+  name: string;
+  file_name: string;
+  mime_type: string;
+  disk: string;
+  conversions_disk: string;
+  size: number;
+  order_column: number;
+  created_at: string;
+  updated_at: string;
+  original_url: string;
+  preview_url: string;
+};
