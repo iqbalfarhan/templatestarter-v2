@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use function Laravel\Prompts\textarea;
 
 class GenerateRModel extends Command
 {
@@ -42,14 +43,15 @@ class GenerateRModel extends Command
             options: ['soft delete', 'media']
         );
 
-        $kolom = text(
+        $kolom = textarea(
             label: 'Kolom apa aja yang mau di buat?',
-            placeholder: 'E.g. name:string, age:integer',
+            placeholder: 'E.g. name:string',
             required: true,
-            hint: 'gunakan format name:type, name:type'
+            default: 'name:string',
+            hint: 'gunakan format name:type; name:type pisahkan pakai enter'
         );
 
-        $name = strtolower($feature); // article
+        $name = Str::snake($feature); // article
         $Name = Str::studly($feature); // Article
 
         $softDelete = in_array('soft delete', $opsi);
