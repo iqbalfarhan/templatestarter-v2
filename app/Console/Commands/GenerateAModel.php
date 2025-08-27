@@ -256,13 +256,13 @@ class GenerateAModel extends Command
     {
         if (!$softDelete) return '';
 
-        return <<<'PHP'
+        return <<<PHP
         /**
              * View archived resource from storage.
              */
             public function archived()
             {
-                \$this->pass("archived {{ name }}");
+                \$this->pass("archived {$name}");
 
                 return Inertia::render('{$name}/archived', [
                     '{$names}' => {$Name}::onlyTrashed()->get(),
@@ -274,7 +274,7 @@ class GenerateAModel extends Command
              */
             public function restore(\$id)
             {
-                \$this->pass("restore {{ name }}");
+                \$this->pass("restore {$name}");
 
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
                 \$model->restore();
@@ -285,7 +285,7 @@ class GenerateAModel extends Command
              */
             public function forceDelete(\$id)
             {
-                \$this->pass("force delete {{ name }}");
+                \$this->pass("force delete {$name}");
 
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
                 \$model->forceDelete();
@@ -309,13 +309,13 @@ class GenerateAModel extends Command
     {
         if (!$withMedia) return '';
 
-        return <<<'PHP'
+        return <<<PHP
         /**
              * Register media conversions.
              */
             public function uploadMedia(Upload{$Name}MediaRequest \$request, {$Name} \${$name})
             {
-                \$this->pass("update {{ name }}");
+                \$this->pass("update {$name}");
 
                 \$data = \$request->validated();
                 \${$name}->addMedia(\$data['file'])->toMediaCollection();
@@ -331,9 +331,9 @@ class GenerateAModel extends Command
         /**
              * Register media conversions.
              */
-            public function registerMediaConversions(?Media \$media = null): void
+            public function registerMediaConversions(?Media $media = null): void
             {
-                \$this->addMediaConversion('preview')
+                $this->addMediaConversion('preview')
                     ->fit(Fit::Contain, 300, 300)
                     ->nonQueued();
             }

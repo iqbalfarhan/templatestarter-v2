@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 class GenerateRModel extends Command
 {
@@ -12,7 +15,8 @@ class GenerateRModel extends Command
      *
      * @var string
      */
-    protected $signature = 'generate:rmodel {name} {--s|softDelete} {--fields=} {--m|media}';
+    // protected $signature = 'generate:rmodel {name} {--s|softDelete} {--fields=} {--m|media}';
+    protected $signature = 'generate:rmodel';
 
     /**
      * The console command description.
@@ -26,12 +30,31 @@ class GenerateRModel extends Command
      */
     public function handle()
     {
-        $name = strtolower($this->argument('name')); // article
-        $Name = Str::studly($this->argument('name')); // Article
+        $feature = text(
+            label: 'Nama fitur yang mau lo buat',
+            placeholder: 'E.g. Customer',
+            required: true,
+            hint: 'input singular ya jangan plural soalnya bakal buat nama model'
+        );
 
-        $softDelete = $this->option('softDelete');
-        $fields = $this->option('fields');
-        $media = $this->option('media');
+        $opsi = multiselect(
+            label: 'Option apa aja nih yang mau di pakai?',
+            options: ['soft delete', 'media']
+        );
+
+        $kolom = text(
+            label: 'Kolom apa aja yang mau di buat?',
+            placeholder: 'E.g. name:string, age:integer',
+            required: true,
+            hint: 'gunakan format name:type, name:type'
+        );
+
+        $name = strtolower($feature); // article
+        $Name = Str::studly($feature); // Article
+
+        $softDelete = in_array('soft delete', $opsi);
+        $fields = $kolom;
+        $media = in_array('media', $opsi);
 
         $this->info("🚀 Running generate:amodel {$Name} ...");
         $this->call('generate:amodel', [
