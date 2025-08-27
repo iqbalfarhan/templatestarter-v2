@@ -114,7 +114,7 @@ class GenerateRView extends Command
         if (!$fieldsOption) {
             $fields = ['name:string'];
         } else {
-            $fields = explode(PHP_EOL, $fieldsOption); // ex: ["title:string"," body:text"]
+            $fields = explode(',', $fieldsOption); // ex: ["title:string"," body:text"]
             $fields = array_map('trim', $fields); // <-- hapus spasi ekstra
         }
 

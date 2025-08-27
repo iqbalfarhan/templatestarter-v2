@@ -40,7 +40,8 @@ class GenerateRModel extends Command
 
         $opsi = multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
-            options: ['soft delete', 'media']
+            options: ['soft delete', 'media', 'module php', 'view react'],
+            default: ['module php', 'view react']
         );
 
         $kolom = textarea(
@@ -55,14 +56,14 @@ class GenerateRModel extends Command
         $Name = Str::studly($feature); // Article
 
         $softDelete = in_array('soft delete', $opsi);
-        $fields = $kolom;
+        $fields = explode(PHP_EOL, $kolom);
         $media = in_array('media', $opsi);
 
         $this->info("🚀 Running generate:amodel {$Name} ...");
         $this->call('generate:amodel', [
             'name' => $Name,
             '--softDelete' => $softDelete,
-            '--fields' => $fields,
+            '--fields' => implode(',', $fields),
             '--media' => $media,
         ]);
         
@@ -70,7 +71,7 @@ class GenerateRModel extends Command
         $this->call('generate:rview', [
             'name' => $name,
             '--softDelete' => $softDelete,
-            '--fields' => $fields,
+            '--fields' => implode(',', $fields),
             '--media' => $media,
         ]);
 

@@ -26,7 +26,7 @@ class GenerateAModel extends Command
         $fields = [];
 
         if ($fieldsOption) {
-            foreach (explode(PHP_EOL, $fieldsOption) as $field) {
+            foreach (explode(',', $fieldsOption) as $field) {
                 // trim setiap field dulu
                 $field = trim($field);
 
