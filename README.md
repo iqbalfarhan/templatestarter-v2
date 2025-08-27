@@ -48,7 +48,11 @@ composer dev
 
 ```
 
-### 3. Migrate ulang
+### 3. File configurasi
+
+File confignya lo bisa temuin di folder config nama filenya template-starter.php
+
+### 4. Migrate ulang
 
 kalo lu udah punya databasenya, lu bisa jalanin ini untuk reset semua database biar mulai ulang dari 0
 

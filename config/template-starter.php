@@ -45,4 +45,17 @@ return [
 
 	'with-landingpage' => env('WITH_LANDINGPAGE', true),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Is Landing Page Enabled
+    |--------------------------------------------------------------------------
+    |
+    | This option defines whether the landing page feature is enabled or not.
+    | If set to true, users will see the landing page when they visit the site.
+    | If set to false, users will be redirected to the dashboard.
+    |
+    */
+
+    'generated-react-files-path' => env('GENERATED_REACT_FILES_PATH', resource_path('js/pages')),
+
 ];

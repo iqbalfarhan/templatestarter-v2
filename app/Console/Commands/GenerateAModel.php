@@ -103,9 +103,6 @@ class GenerateAModel extends Command
 
         // Add router to web.php
         $this->addRoute($softDelete, $withMedia, $name, $Name);
-
-        // Generate permissions
-        $this->generatePermissions($softDelete, $name);
     }
 
     protected function makeFromStub($filePath, $stubPath, $replacements)
@@ -259,12 +256,14 @@ class GenerateAModel extends Command
     {
         if (!$softDelete) return '';
 
-        return <<<EOT
+        return <<<'PHP'
         /**
              * View archived resource from storage.
              */
             public function archived()
             {
+                \$this->pass("archived {{ name }}");
+
                 return Inertia::render('{$name}/archived', [
                     '{$names}' => {$Name}::onlyTrashed()->get(),
                 ]);
@@ -275,6 +274,8 @@ class GenerateAModel extends Command
              */
             public function restore(\$id)
             {
+                \$this->pass("restore {{ name }}");
+
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
                 \$model->restore();
             }
@@ -284,72 +285,49 @@ class GenerateAModel extends Command
              */
             public function forceDelete(\$id)
             {
+                \$this->pass("force delete {{ name }}");
+
                 \$model = {$Name}::onlyTrashed()->findOrFail(\$id);
                 \$model->forceDelete();
             }
-        EOT;
-    }
-
-    protected function generatePermissions(bool $softDelete, string $name)
-    {
-        $permissions = [
-            "menu {$name}",
-            "index {$name}",
-            "show {$name}",
-            "create {$name}",
-            "update {$name}",
-            "delete {$name}",
-        ];
-
-        if ($softDelete) {
-            $permissions[] = "archived {$name}";
-            $permissions[] = "restore {$name}";
-            $permissions[] = "force delete {$name}";
-        }
-
-        foreach ($permissions as $permit) {
-            Permission::updateOrCreate([
-                'group' => $name,
-                'name' => $permit,
-            ]);
-        }
-
-        $this->info("🔑 Permissions created: " . implode(', ', $permissions));
+        PHP;
     }
 
     protected function generateHasMediaImports(bool $withMedia)
     {
         if (!$withMedia) return '';
 
-        return <<<EOT
+        return <<<'PHP'
         use Spatie\Image\Enums\Fit;
         use Spatie\MediaLibrary\HasMedia;
         use Spatie\MediaLibrary\InteractsWithMedia;
         use Spatie\MediaLibrary\MediaCollections\Models\Media;
-        EOT;
+        PHP;
     }
 
-    protected function generateHasMediaControllerMethods(bool $withMedia, string $name, string $Name)
+    protected function generateHasMediaControllerMethods(bool $withMedia, string $name, string $Name): string
     {
         if (!$withMedia) return '';
 
-        return <<<EOT
+        return <<<'PHP'
         /**
              * Register media conversions.
              */
             public function uploadMedia(Upload{$Name}MediaRequest \$request, {$Name} \${$name})
             {
+                \$this->pass("update {{ name }}");
+
                 \$data = \$request->validated();
                 \${$name}->addMedia(\$data['file'])->toMediaCollection();
             }
-        EOT;
+        PHP;
     }
 
     protected function generateHasMediaMethods(bool $withMedia): string
     {
         if (!$withMedia) return '';
 
-        return <<<EOT
+        return <<<'PHP'
         /**
              * Register media conversions.
              */
@@ -359,7 +337,7 @@ class GenerateAModel extends Command
                     ->fit(Fit::Contain, 300, 300)
                     ->nonQueued();
             }
-        EOT;
+        PHP;
     }
 
 }

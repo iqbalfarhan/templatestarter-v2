@@ -18,6 +18,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->pass('index user');
+
         $data = User::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
 
         return Inertia::render('user/index', [
@@ -27,7 +29,7 @@ class UserController extends Controller
                 ];
             }),
             'query' => $request->input(),
-            'roles' => Role::pluck('name')
+            'roles' => Role::whereNot('name', "superadmin")->pluck('name')
         ]);
     }
 
@@ -36,6 +38,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        $this->pass('create user');
+
         $data = $request->validated();
         User::create($data);
     }
@@ -45,6 +49,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $this->pass('show user');
+
         return Inertia::render('user/show', [
             'user' => $user
         ]);
@@ -55,6 +61,8 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        $this->pass('update user');
+
         $data = $request->validated();
         $user->update($data);
 
@@ -66,23 +74,31 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->pass('delete user');
+
         $user->delete();
     }
 
     public function bulkUpdate(BulkUpdateUserRequest $request)
     {
+        $this->pass('update user');
+
         $data = $request->validated();
         User::whereIn('id', $data['user_ids'])->update($data);
     }
     
     public function bulkDelete(BulkDeleteUserRequest $request)
     {
+        $this->pass('delete user');
+
         $data = $request->validated();
         User::whereIn('id', $data['user_ids'])->delete();
     }
 
     public function archived()
     {
+        $this->pass('archived user');
+
         return Inertia::render('user/archived', [
             'users' => User::onlyTrashed()->get(),
         ]);
@@ -90,12 +106,16 @@ class UserController extends Controller
 
     public function restore($user)
     {
+        $this->pass('restore user');
+
         $user = User::onlyTrashed()->find($user);
         $user->restore();
     }
 
     public function forceDelete($user)
     {
+        $this->pass('force delete user');
+
         $user = User::onlyTrashed()->find($user);
         $user->forceDelete();
     }

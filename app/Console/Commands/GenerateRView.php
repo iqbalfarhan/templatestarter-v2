@@ -31,7 +31,7 @@ class GenerateRView extends Command
         $name = strtolower($this->argument('name'));
         $Name = Str::studly($name);
         $Names = Str::plural($name);
-        $basePath = resource_path("js/pages/{$name}");
+        $basePath = config("template-starter.generated-react-files-path") . "/{$name}";
 
         $isSoftDelete = $this->option('softDelete') ?? false;
         $withMedia = $this->option('media') ?? false;

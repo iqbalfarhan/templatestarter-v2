@@ -18,6 +18,8 @@ class {{ Name }}Controller extends Controller
      */
     public function index(Request $request)
     {
+        $this->pass("index {{ name }}");
+        
         $data = {{ Name }}::query()
             //->with(['media'])
             ->when($request->name, function($q, $v){
@@ -41,6 +43,8 @@ class {{ Name }}Controller extends Controller
      */
     public function store(Store{{ Name }}Request $request)
     {
+        $this->pass("create {{ name }}");
+
         $data = $request->validated();
         {{ Name }}::create($data);
     }
@@ -50,7 +54,11 @@ class {{ Name }}Controller extends Controller
      */
     public function show({{ Name }} ${{ name }})
     {
-        if(!$this->user->can('show {{ name }}')) return abort(403);
+        $this->pass("show {{ name }}");
+
+        if ($this->user->cannot('show {{ name }}', {{ Name }}::class)) {
+            return abort(403);
+        }
 
         return Inertia::render('{{ name }}/show', [
             '{{ name }}' => ${{ name }},
@@ -66,6 +74,8 @@ class {{ Name }}Controller extends Controller
      */
     public function update(Update{{ Name }}Request $request, {{ Name }} ${{ name }})
     {
+        $this->pass("update {{ name }}");
+
         $data = $request->validated();
         ${{ name }}->update($data);
     }
@@ -75,6 +85,8 @@ class {{ Name }}Controller extends Controller
      */
     public function destroy({{ Name }} ${{ name }})
     {
+        $this->pass("delete {{ name }}");
+
         ${{ name }}->delete();
     }
 
@@ -83,6 +95,8 @@ class {{ Name }}Controller extends Controller
      */
     public function bulkUpdate(BulkUpdate{{ Name }}Request $request)
     {
+        $this->pass("update {{ name }}");
+
         $data = $request->validated();
         {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->update($data);
     }
@@ -92,6 +106,8 @@ class {{ Name }}Controller extends Controller
      */
     public function bulkDelete(BulkDelete{{ Name }}Request $request)
     {
+        $this->pass("delete {{ name }}");
+
         $data = $request->validated();
         {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->delete();
     }
