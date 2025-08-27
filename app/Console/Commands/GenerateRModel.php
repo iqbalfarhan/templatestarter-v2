@@ -32,16 +32,16 @@ class GenerateRModel extends Command
     public function handle()
     {
         $feature = text(
-            label: 'Nama fitur yang mau lo buat',
+            label: 'Nama Model atau type yang mau lo buat',
             placeholder: 'E.g. Customer',
             required: true,
-            hint: 'input singular ya jangan plural soalnya bakal buat nama model'
         );
 
         $opsi = multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
-            options: ['soft delete', 'media', 'module php', 'view react'],
-            default: ['module php', 'view react']
+            options: ['soft delete', 'media'],
+            default: ['soft delete', 'media'],
+            hint: 'Pilihlah pilihan yang mau di pakai, soft delete akan nambahin fitur soft delete di model dan controller, media akan nambahin fitur upload media'
         );
 
         $kolom = textarea(
@@ -49,7 +49,7 @@ class GenerateRModel extends Command
             placeholder: 'E.g. name:string',
             required: true,
             default: 'name:string',
-            hint: 'gunakan format name:type; name:type pisahkan pakai enter'
+            hint: 'gunakan format name:type. Pisahin pakai enter'
         );
 
         $name = Str::snake($feature); // article
