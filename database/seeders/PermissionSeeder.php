@@ -26,10 +26,10 @@ class PermissionSeeder extends Seeder
 
         foreach ($permissionGroups as $group => $permissions) {
             foreach ($permissions as $permissionName => $roles) {
-                $permission = Permission::firstOrCreate([
+                $permission = Permission::updateOrCreate([
                     'name'  => $permissionName,
                     'group' => $group,
-                ]);
+                ], []);
                 
                 if ($roles === ["*"]) {
                     $roles = Role::all()->pluck('name')->toArray();

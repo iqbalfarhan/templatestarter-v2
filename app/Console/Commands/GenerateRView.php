@@ -153,7 +153,9 @@ class GenerateRView extends Command
 
         $importLines = '';
         if (!empty($imports)) {
-            $importLines = 'import { ' . implode(', ', $imports) . " } from \"./\";\n\n";
+            $importLines = collect($imports)
+                ->map(fn($model) => 'import { ' . $model . ' } from "./' . Str::kebab($model) . '";')
+                ->implode("\n") . "\n\n";
         }
 
         $dtsPath = resource_path("js/types/{$name}.d.ts");
