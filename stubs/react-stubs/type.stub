@@ -1,3 +1,5 @@
+{{ imports }}
+
 export type {{ Name }} = {
   id: number;
 {{ fields }}

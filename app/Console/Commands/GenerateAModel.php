@@ -224,12 +224,29 @@ class GenerateAModel extends Command
     protected function generateMigrationFields(array $fields, bool $softDelete): string
     {
         $out = [];
+
         foreach ($fields as $f => $t) {
-            $out[] = "\$table->$t('$f');";
+            if ($t === 'fk') {
+                $foreignTableName = Str::plural(Str::lower(Str::replace('_id', '', $f)));
+                $out[] = "\$table->foreignId('$f')->constrained('$foreignTableName')->cascadeOnDelete();";
+            } elseif ($t === 'nfk') {
+                $foreignTableName = Str::plural(Str::lower(Str::replace('_id', '', $f)));
+                $out[] = "\$table->foreignId('$f')->nullable()->constrained('$foreignTableName')->nullOnDelete();";
+            } else {
+                $out[] = "\$table->$t('$f');";
+            }
         }
-        if(count($fields) == 0) $out[] = "\$table->string('name');";
-        if ($softDelete) $out[] = "\$table->softDeletes();";
+
+        if (empty($fields)) {
+            $out[] = "\$table->string('name');";
+        }
+
+        if ($softDelete) {
+            $out[] = "\$table->softDeletes();";
+        }
+
         $out[] = "\$table->timestamps();";
+
         return implode("\n            ", $out);
     }
 

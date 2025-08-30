@@ -119,25 +119,52 @@ class GenerateRView extends Command
         }
 
         $typeLines = [];
+        $imports = [];
+
         foreach ($fields as $field) {
             [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
             $fieldType = strtolower($fieldType);
 
-            // Mapping fieldType ke TypeScript type
             $tsType = match ($fieldType) {
                 'string', 'text' => 'string',
                 'boolean' => 'boolean',
                 'integer' => 'number',
                 'datetime' => 'string',
-                default => 'string', // fallback
+                default => 'string',
             };
 
-            $typeLines[] = "  {$fieldName}: {$tsType};";
+            if (in_array($fieldType, ['fk', 'nfk'])) {
+                $related = Str::studly(Str::replaceLast('_id', '', $fieldName)); // student_id -> Student
+                $propName = Str::replaceLast('_id', '', $fieldName);
+
+                if ($fieldType === 'fk') {
+                    $typeLines[] = "  {$propName}: {$related};";
+                } else {
+                    $typeLines[] = "  {$propName}?: {$related};";
+                }
+
+                $imports[] = $related;
+            } else {
+                $typeLines[] = "  {$fieldName}: {$tsType};";
+            }
+        }
+
+        $imports = array_unique($imports);
+
+        $importLines = '';
+        if (!empty($imports)) {
+            $importLines = 'import { ' . implode(', ', $imports) . " } from \"./\";\n\n";
         }
 
         $dtsPath = resource_path("js/types/{$name}.d.ts");
+
         if (File::exists($dtsPath)) {
             $content = File::get($dtsPath);
+            $content = str_replace(
+                '{{ imports }}',
+                $importLines,
+                $content
+            );
             $content = str_replace(
                 '{{ fields }}',
                 implode("\n", $typeLines),
@@ -149,7 +176,6 @@ class GenerateRView extends Command
             $this->warn("Type file not found: {$dtsPath}");
         }
 
-        $this->info("React view for '{$name}' generated successfully!");
     }
 
 
