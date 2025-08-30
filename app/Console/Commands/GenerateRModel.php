@@ -17,7 +17,7 @@ class GenerateRModel extends Command
      * @var string
      */
     // protected $signature = 'generate:rmodel {name} {--s|softDelete} {--fields=} {--m|media}';
-    protected $signature = 'generate:rmodel';
+    protected $signature = 'generate:rmodel {name?}';
 
     /**
      * The console command description.
@@ -31,16 +31,16 @@ class GenerateRModel extends Command
      */
     public function handle()
     {
-        $feature = text(
-            label: 'Nama Model atau type yang mau lo buat',
-            placeholder: 'E.g. Customer',
-            required: true,
-        );
+        $feature = $this->argument('name')
+            ?: text(
+                label: 'Nama Model atau type yang mau lo buat',
+                placeholder: 'E.g. Customer',
+                required: true,
+            );
 
         $opsi = multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
             options: ['soft delete', 'media'],
-            default: ['soft delete', 'media'],
             hint: 'Pilihlah pilihan yang mau di pakai, soft delete akan nambahin fitur soft delete di model dan controller, media akan nambahin fitur upload media'
         );
 
