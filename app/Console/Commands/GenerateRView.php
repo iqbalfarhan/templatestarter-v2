@@ -134,12 +134,18 @@ class GenerateRView extends Command
             };
 
             if (in_array($fieldType, ['fk', 'nfk'])) {
-                $related = Str::studly(Str::replaceLast('_id', '', $fieldName)); // student_id -> Student
+                $related = Str::studly(Str::replaceLast('_id', '', $fieldName)); // post_id -> Post
                 $propName = Str::replaceLast('_id', '', $fieldName);
 
                 if ($fieldType === 'fk') {
+                    // foreign key kolom (selalu required)
+                    $typeLines[] = "  {$fieldName}: {$related}['id'];";
+                    // relasi
                     $typeLines[] = "  {$propName}: {$related};";
                 } else {
+                    // foreign key kolom (optional)
+                    $typeLines[] = "  {$fieldName}?: {$related}['id'];";
+                    // relasi optional
                     $typeLines[] = "  {$propName}?: {$related};";
                 }
 
