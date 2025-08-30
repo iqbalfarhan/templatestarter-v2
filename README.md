@@ -1,25 +1,30 @@
-# Membaca sebelum ngoding pakai templatestarter-v2
+# iqbalfarhan/templatestarter-v2
 
-Laravel templatestarter versi ke 2 buatan gw ini, pakai laravel 12 starter-kit react, udah pakai tailwind 4, shadcn dan reactJS, dan inertiaJS 2.0 juga (bawaan dari sononye).
+Starter kit **Laravel 12 + React** (Inertia v2, Tailwind v4, Shadcn UI) buat bikin project kecil lebih cepat ⚡.
+Sekali generate, langsung dapet **Model + CRUD API + React View** → tinggal atur table & form aja.
 
-Gw buat ini biar gw cepet ngerjain project2 kecil. sekali generate, tinggal ngatur2 table dan formnya aja. Oiya disini udah pakai fitur:
+---
 
-- RBAC (Role Base Access Controll) pakai [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
-- Udah pakai [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction) biar setting media jadi lebih gampang
-- Udah ada internal database, pakai [laravel adminer](https://github.com/onecentlin/laravel-adminer)
+## ✨ Fitur Utama
 
-## Installation Steps
+- 🚀 Auto generate CRUD (Model, Migration, Controller, Request, React View)
+- 🔒 Role Based Access Control (RBAC) via [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- 📸 Media handling pakai [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction)
+- 🛠 Internal DB management dengan [laravel-adminer](https://github.com/onecentlin/laravel-adminer)
+- 🎨 Sudah include Tailwind v4 + Shadcn + React + Inertia v2
 
-### 1. Cloning repo
+---
+
+## 🚀 Installation Steps
+
+### 1. Create project
 
 ```bash
-# Clone the repository
-git clone git@github.com:iqbalfarhan/templatestarter-v2.git nama_project
+composer create-project iqbalfarhan/templatestarter-v2 nama_project
 cd nama_project
-rm -rf .git
 ```
 
-> ganti nama_project jadi nama project lu
+> Ganti `nama_project` sesuai nama project lu.
 
 ### 2. Config awal
 
@@ -30,140 +35,147 @@ composer install
 # Install Node.js dependencies
 pnpm install
 
-# Copy environment file and configure your database
+# Copy env & generate key
 cp .env.example .env
 php artisan key:generate
 
-# Setting database dan env lain di project lu
-# baru lanjut ke bikin database
-
-# Run database migrations and seeders
+# Setting database di .env lalu bikin database
+# Run migrations & seeders
 php artisan migrate
 php artisan db:seed
 
-# Build assets and start development server
+# Build assets & start dev server
 composer dev
 
-# Access the application at http://127.0.0.1:8000
-
+# Access app at http://127.0.0.1:8000
 ```
 
-### 3. File configurasi
+### 3. File konfigurasi
 
-File confignya lo bisa temuin di folder config nama filenya template-starter.php
+Cek file `config/template-starter.php` untuk pengaturan:
+
+- `default-roles` → default role aplikasi (`['superadmin', 'admin', 'user']`)
+- `default-role` → role default user baru (misal `user`)
+- `with-landingpage` → aktifkan / matiin landing page
+- `generated-react-files-path` → path hasil generate file React
+
+> ⚠️ `default-role` harus salah satu dari `default-roles`
 
 ### 4. Migrate ulang
 
-kalo lu udah punya databasenya, lu bisa jalanin ini untuk reset semua database biar mulai ulang dari 0
+Kalau ubah config ditengah development:
 
 ```bash
 php artisan migrate:fresh --seed
 ```
 
-## Development Guide
+---
 
-### 1. Membuat model
+## 🛠 Development Guide
 
-Ngebuat model di templatestarter-v2 ini gak kaya bikin model di laravel kaya biasa. Gw udah buatin command khusus untuk buat model, factory, seeder, migrateion, store-request, update-request, controller dan nambahin baris Route::apiResource ke file web.php. pake command ini untuk generate file phpnya.
+### 1. Membuat Model
 
-```
+Gunakan command khusus:
+
+```bash
 php artisan generate:amodel NamaModel
 ```
 
-> Penting! jangan lupa pakai PascalCase untuk nama modelnya ya.
+Ini otomatis bikin:
 
-Ini yang lo dapat kalo udah jalanin command ini:
+- Model (dengan fillable)
+- Factory & Seeder
+- StoreRequest & UpdateRequest
+- Controller API full method
+- Route::apiResource di `web.php`
 
-- Model dengan fillable
-- Factory dan seeder
-- Store dan Update request
-- Controller api yang udah diisi methodnya
-- Otomatis nambahin Route::apiResource ke web.php
+> Penting: gunakan **PascalCase** untuk nama model.
 
-Kalu udah kelar, lo tinggal ngatur migration, fillable, dan lainnya sesuai dengan kebutuhan fitur, terus di migrate dan jalanin seedernya pakai `php artisan db:seed {FiturSeeder}`. Terus lo tinggal lanjutin buat viewnya.
+---
 
-### 2. Ngebuat react view
+### 2. Membuat React View
 
-Nah disini gw juga nambahin command artisan `php artisan generate:rview` untuk generate full view react:
+Generate full React view dengan:
 
-- index berisi table
-- halaman detail
-- component dialog delete data
-- component sheet untuk create dan edit
-- component sheet untuk filter data
-- component item
-- type untuk model ini
-
-cara ngejalaninnya tinggai jalanin command artisan
-
-```
-php artisan generate:rview {nama fitur}
-// contoh
+```bash
+php artisan generate:rview {nama_fitur}
+# contoh
 php artisan generate:rview project
 ```
 
-selanjutnya ngatur list menu yang ada di sidebar (file app-sidebar.tsx) cari filenya pakai `Ctrl+p` aja biar cepet dan setting route di web.php. di web.php biar cepet pakai `apiResource` aja biar langsung jadi
+Yang dibuat:
 
-```
-// contoh pakai apiResource
+- Index (table)
+- Detail page
+- Dialog delete
+- Sheet create & edit
+- Sheet filter
+- Item component
+- Type untuk model
+
+Tambahkan menu di `app-sidebar.tsx` + route di `web.php`:
+
+```php
 Route::apiResource('project', ProjectController::class);
 ```
 
-### 3. Generate semuanya sekaligus
+---
 
-Nah ini fitur yang gw suka banget, bikin CRUD cuma 2 menit, sekali jalanin commandnya, magic!! lu langsung dapat file php yang digenerate dari amodel dan juga dari rview. jalaninnya gampang tinggal jalanin command:
+### 3. Generate All Sekaligus
+
+Satu command untuk generate model + view:
 
 ```bash
 php artisan generate:rmodel NamaFitur
 ```
 
-> Penting! jangan lupa pakai PascalCase untuk nama fiturnya ya.
+Akan muncul pertanyaan:
 
-kalu udah lu dapat semua filenya tinggal atur migration, fillable dan relasi table, store dan update request, type di file .d.ts dan tambahin menunya di file app-sidebar.tsx
+- SoftDelete?
+- Media?
 
-### 4. Route tambahan
+Lalu input field model dalam format `field:datatype` (enter untuk baris baru):
 
-Kalo lu pakai bulk action dan soft delete dan gagal di generate otomatis, lu bisa nambahin route ini di file web diatas baris apiResource feature lo:
-
-```php
-
-# Route untuk bulk actions
-Route::put('feature/bulk', [FeatureController::class, 'bulkUpdate'])->name('feature.bulk.update');
-Route::delete('feature/bulk', [FeatureController::class, 'bulkDelete'])->name('feature.bulk.destroy');
-
-# Route untuk soft delete
-Route::get('feature/archived', [FeatureController::class, 'archived'])->name('feature.archived');
-Route::put('feature/{feature}/restore', [FeatureController::class, 'restore'])->name('feature.restore');
-Route::delete('feature/{feature}/force-delete', [FeatureController::class, 'forceDelete'])->name('feature.force-delete');
+```txt
+name:string
+content:text
+published:boolean
+published_at:datetime
+category_id:fk
 ```
 
-### 5. Upload media gambar dan dokumen
+> ❌ Jangan kasih enter kosong di akhir input field
 
-Di template starter v2 ini gw udah install laravel media lobnrary bisa lihat dokumentasinya di web resminya [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction). gini cara makenya di template starter ini, tinggal nambahin flag `-m` atau `--media`.
+| datatype | type.d.ts | migration | description                        |
+| -------- | --------- | --------- | ---------------------------------- |
+| integer  | number    | integer   | angka                              |
+| string   | string    | string    | varchar/string                     |
+| text     | string    | text      | text panjang                       |
+| date     | string    | date      | tanggal                            |
+| datetime | string    | datetime  | tanggal & waktu                    |
+| boolean  | boolean   | boolean   | true/false                         |
+| fk       | Object    | foreignId | relasi belongsTo (wajib)           |
+| nfk      | Object    | foreignId | relasi belongsTo nullable/optional |
 
-```
-php artisan generate:rmodel Feature -m
-```
+---
 
-```php
-// contoh route untuk terima form
-Route::post('feature/{feature}/upload-media', [FeatureController::class, 'uploadMedia'])->name('feature.upload-media');
+## 🧭 Roadmap
 
-// contoh method upload media di controller lu
-public function uploadMedia(UploadFeatureMediaRequest $request, Feature $feature)
-{
-  $data = $request->validated();
-  $feature->addMedia($data['file'])->toMediaCollection();
-}
+- [x] Auto generate model, view, rmodel
+- [x] RBAC dengan Spatie
+- [ ] Login via Socialite
+- [ ] Auto generate menu sidebar
+- [ ] API Pagination + Search ready
 
-```
+---
 
-tinggal disesuaiin aja sama yang lu butuhin
+## 💡 Tips
 
-## Pengembangan
+- Kalau ada perubahan config roles → jalankan `php artisan migrate:fresh --seed`
+- Untuk dev cepat → tambahin menu di `app-sidebar.tsx` langsung setelah generate
 
-Nantinya gw bakalan nambahin :
+---
 
-- Setting Media untuk model
-- Beberapa perubahan controller yang udah implement permission
-- Login pakai socialite
+## 📜 License
+
+MIT License © [Iqbal Farhan](https://github.com/iqbalfarhan)
