@@ -31,7 +31,7 @@ class RoleSeeder extends Seeder
 
         foreach ($permissions as $permit) {
             Permission::updateOrCreate([
-                'group' => "{{ name }}",
+                'group' => "role",
                 'name' => $permit,
             ]);
         }
