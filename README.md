@@ -159,6 +159,32 @@ category_id:fk
 
 ---
 
+### 3. Generate permission
+
+Generate permission dengan:
+
+```bash
+php artisan generate:permission {nama_fitur}
+```
+
+Contoh:
+
+```bash
+php artisan generate:permission user
+```
+
+Akan otomatis bikin permission untuk user.
+
+atau kalau mau lebih lazy lagi, lu bisa pake flag `--all` untuk generate semua permission dari semua model di `app/Models`:
+
+```bash
+php artisan generate:permission --all
+```
+
+ini akan otomatis bikin permission untuk semua model di `app/Models`. ini juga udah ngeceka apakah model tersebut pakai SoftDeletes atau tidak, jadi kalau pakai SoftDeletes akan otomatis bikin permission 'archived', 'restore', 'force delete' untuk soft delete.
+
+---
+
 ## 🧭 Roadmap
 
 - [x] Auto generate model, view, rmodel
