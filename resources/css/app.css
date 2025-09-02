@@ -5,6 +5,7 @@
 
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';
+@plugin 'tailwind-scrollbar-hide';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -170,7 +171,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply scrollbar-hide border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;

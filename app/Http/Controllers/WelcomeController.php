@@ -18,4 +18,11 @@ class WelcomeController extends BaseController
     {
         return Inertia::render('welcome/index');
     }
+    
+    public function about()
+    {
+        return Inertia::render('welcome/about', [
+            'content' => file_get_contents(base_path('README.md')),
+        ]);
+    }
 }

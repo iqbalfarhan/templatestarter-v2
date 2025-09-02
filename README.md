@@ -1,4 +1,4 @@
-# iqbalfarhan/templatestarter-v2
+# iqbalfarhan: laravel template starter v2
 
 Starter kit **Laravel 12 + React** (Inertia v2, Tailwind v4, Shadcn UI) buat bikin project kecil lebih cepat ⚡.
 Sekali generate, langsung dapet **Model + CRUD API + React View** → tinggal atur table & form aja.
