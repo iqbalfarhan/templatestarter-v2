@@ -205,3 +205,15 @@ ini akan otomatis bikin permission untuk semua model di `app/Models`. ini juga u
 ## 📜 License
 
 MIT License © [Iqbal Farhan](https://github.com/iqbalfarhan)
+
+---
+
+## ☕ Dukung Gue
+
+Kalau lo merasa package ini bermanfaat, lo bisa support gue lewat donasi seikhlasnya 🙏
+Donasi berapapun sangat berarti buat bantu gue terus ngembangin project ini. lu bisa klik disini :
+
+[![Donate via Saweria](https://img.shields.io/badge/Donate-Saweria-yellow?style=for-the-badge)](https://saweria.co/iqbalfarhan08)
+[![Donate via DANA](https://img.shields.io/badge/Donate-DANA-blue?style=for-the-badge)](https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012012022050160996242)
+
+Makasih banyak sebelumnya! ❤️
