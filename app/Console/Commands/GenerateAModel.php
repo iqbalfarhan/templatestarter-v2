@@ -41,21 +41,20 @@ class GenerateAModel extends Command
             }
         }
 
-
         // Path Laravel bawaan
         $paths = [
-            "app/Models/{$Name}.php" => resource_path("stubs/php-stubs/model.stub"),
-            "database/factories/{$Name}Factory.php" => resource_path("stubs/php-stubs/factory.stub"),
-            "database/seeders/{$Name}Seeder.php" => resource_path("stubs/php-stubs/seeder.stub"),
-            "app/Http/Requests/Store{$Name}Request.php" => resource_path("stubs/php-stubs/store-request.stub"),
-            "app/Http/Requests/Update{$Name}Request.php" => resource_path("stubs/php-stubs/update-request.stub"),
-            "app/Http/Requests/BulkUpdate{$Name}Request.php" => resource_path("stubs/php-stubs/bulk-update-request.stub"),
-            "app/Http/Requests/BulkDelete{$Name}Request.php" => resource_path("stubs/php-stubs/bulk-delete-request.stub"),
-            "app/Http/Controllers/{$Name}Controller.php" => resource_path("stubs/php-stubs/controller.stub"),
+            "app/Models/{$Name}.php" => "resources/stubs/php-stubs/model.stub",
+            "database/factories/{$Name}Factory.php" => "resources/stubs/php-stubs/factory.stub",
+            "database/seeders/{$Name}Seeder.php" => "resources/stubs/php-stubs/seeder.stub",
+            "app/Http/Requests/Store{$Name}Request.php" => "resources/stubs/php-stubs/store-request.stub",
+            "app/Http/Requests/Update{$Name}Request.php" => "resources/stubs/php-stubs/update-request.stub",
+            "app/Http/Requests/BulkUpdate{$Name}Request.php" => "resources/stubs/php-stubs/bulk-update-request.stub",
+            "app/Http/Requests/BulkDelete{$Name}Request.php" => "resources/stubs/php-stubs/bulk-delete-request.stub",
+            "app/Http/Controllers/{$Name}Controller.php" => "resources/stubs/php-stubs/controller.stub",
         ];
 
         if ($withMedia) {
-            $paths["app/Http/Requests/Upload{$Name}MediaRequest.php"] = "stubs/php-stubs/upload-request.stub";
+            $paths["app/Http/Requests/Upload{$Name}MediaRequest.php"] = "resources/stubs/php-stubs/upload-request.stub";
         }
 
         foreach ($paths as $file => $stub) {
@@ -87,7 +86,7 @@ class GenerateAModel extends Command
         // Migration
         $migrationName = date('Y_m_d_His') . "_create_{$tableName}_table.php";
         $migrationPath = database_path("migrations/{$migrationName}");
-        $this->makeFromStub($migrationPath, "stubs/php-stubs/migration.stub", [
+        $this->makeFromStub($migrationPath, "resources/stubs/php-stubs/migration.stub", [
             '{{ name }}'  => $name,
             '{{ Name }}'  => $Name,
             '{{ Names }}' => $Names,

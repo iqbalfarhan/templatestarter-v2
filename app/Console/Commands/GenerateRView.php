@@ -38,24 +38,24 @@ class GenerateRView extends Command
 
         // Struktur file default
         $files = [
-            "index.tsx" => resource_path("stubs/react-stubs/index.stub"),
-            "show.tsx" => resource_path("stubs/react-stubs/show.stub"),
-            "components/{$name}-delete-dialog.tsx" => resource_path("stubs/react-stubs/delete-dialog.stub"),
-            "components/{$name}-filter-sheet.tsx" => resource_path("stubs/react-stubs/filter-sheet.stub"),
-            "components/{$name}-form-sheet.tsx" => resource_path("stubs/react-stubs/form-sheet.stub"),
-            "components/{$name}-bulk-edit-sheet.tsx" => resource_path("stubs/react-stubs/bulk-edit-sheet.stub"),
-            "components/{$name}-bulk-delete-dialog.tsx" => resource_path("stubs/react-stubs/bulk-delete-dialog.stub"),
-            "components/{$name}-item-card.tsx" => resource_path("stubs/react-stubs/item-card.stub"),
-            "../../types/{$name}.d.ts" => resource_path("stubs/react-stubs/type.stub"),
+            "index.tsx" => "resources/stubs/react-stubs/index.stub",
+            "show.tsx" => "resources/stubs/react-stubs/show.stub",
+            "components/{$name}-delete-dialog.tsx" => "resources/stubs/react-stubs/delete-dialog.stub",
+            "components/{$name}-filter-sheet.tsx" => "resources/stubs/react-stubs/filter-sheet.stub",
+            "components/{$name}-form-sheet.tsx" => "resources/stubs/react-stubs/form-sheet.stub",
+            "components/{$name}-bulk-edit-sheet.tsx" => "resources/stubs/react-stubs/bulk-edit-sheet.stub",
+            "components/{$name}-bulk-delete-dialog.tsx" => "resources/stubs/react-stubs/bulk-delete-dialog.stub",
+            "components/{$name}-item-card.tsx" => "resources/stubs/react-stubs/item-card.stub",
+            "../../types/{$name}.d.ts" => "resources/stubs/react-stubs/type.stub",
         ];
 
         // Tambahin archived kalau ada flag --softDelete
         if ($isSoftDelete) {
-            $files["archived.tsx"] = resource_path("stubs/react-stubs/archived.stub");
+            $files["archived.tsx"] = "resources/stubs/react-stubs/archived.stub";
         }
 
         if ($withMedia) {
-            $files["components/{$name}-upload-sheet.tsx"] = resource_path("stubs/react-stubs/upload-sheet.stub");
+            $files["components/{$name}-upload-sheet.tsx"] = "resources/stubs/react-stubs/upload-sheet.stub";
         }
 
         foreach ($files as $file => $stub) {
@@ -164,7 +164,7 @@ class GenerateRView extends Command
                 ->implode("\n") . "\n\n";
         }
 
-        $dtsPath = resource_path("js/types/{$name}.d.ts");
+        $dtsPath = "resources/js/types/{$name}.d.ts";
 
         if (File::exists($dtsPath)) {
             $content = File::get($dtsPath);
