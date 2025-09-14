@@ -1,6 +1,6 @@
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { User } from '@/types';
+import { User } from '@/types/user';
 import { FC } from 'react';
 
 type Props = {

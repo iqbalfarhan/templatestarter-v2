@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
             'menus' => [
                 "user" => $user?->can('menu user'),
                 "role" => $user?->can('menu role'),
-                "adminer" => $user?->can('open adminer'),
+                "adminer" => $user?->can('menu adminer'),
             ],
             'ziggy' => fn (): array => [
                 ...(new Ziggy)->toArray(),

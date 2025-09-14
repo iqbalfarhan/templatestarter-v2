@@ -47,9 +47,16 @@ class RoleController extends Controller
     {
         $this->pass('show role');
 
+        // dd($role->load('permissions')->toArray());
+
         return Inertia::render('role/show', [
             'role' => $role->load('permissions'),
-            'permissions' => Permission::get()
+            'permits' => Permission::get(),
+            'permissions' => [
+                'canEdit' => $this->user->can('edit role'),
+                'canAddPermission' => $this->user->can('create permission'),
+                'canResyncPermission' => $this->user->can('resync permission'),
+            ]
         ]);
     }
 

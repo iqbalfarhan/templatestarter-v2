@@ -20,16 +20,16 @@ class UserController extends Controller
     {
         $this->pass('index user');
 
-        $data = User::query()->when($request->name, fn($q, $v) => $q->where('name', 'like', "%$v%"));
+        $data = User::query()
+            ->with(['media', 'roles'])
+            ->when($request->name, function($q, $v) {
+                $q->where('name', $v);
+            });
 
         return Inertia::render('user/index', [
-            'users' => $data->get()->map(function ($user) {
-                return $user->only(['id', 'name', 'email']) + [
-                    'roles' => $user->getRoleNames(),
-                ];
-            }),
+            'users' => $data->get(),
             'query' => $request->input(),
-            'roles' => Role::whereNot('name', "superadmin")->pluck('name')
+            'roles' => Role::whereNot('name', "superadmin")->get()
         ]);
     }
 

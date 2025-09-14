@@ -14,7 +14,7 @@ export default function HeadingSmall({ title, description, actions }: Props) {
         {description && <p className="text-sm text-muted-foreground">{description}</p>}
       </header>
 
-      {actions}
+      <div className="flex flex-col gap-2 md:flex-row">{actions}</div>
     </div>
   );
 }

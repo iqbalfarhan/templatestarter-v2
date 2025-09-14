@@ -19,21 +19,5 @@ class RoleSeeder extends Seeder
         foreach ($roles as $role) {
             Role::updateOrCreate(['name' => $role]);
         }
-
-        $permissions = [
-            "menu role",
-            "index role",
-            "show role",
-            "create role",
-            "update role",
-            "delete role",
-        ];
-
-        foreach ($permissions as $permit) {
-            Permission::updateOrCreate([
-                'group' => "role",
-                'name' => $permit,
-            ]);
-        }
     }
 }

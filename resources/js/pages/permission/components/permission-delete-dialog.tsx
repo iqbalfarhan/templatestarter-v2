@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { em } from '@/lib/utils';
-import { Permission } from '@/types/permission';
+import { Permission } from '@/types/role';
 import { router } from '@inertiajs/react';
 import { Trash2 } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';

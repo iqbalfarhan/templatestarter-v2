@@ -177,4 +177,7 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+  .masonry {
+    @apply gap-6 space-y-6 md:columns-2 lg:columns-3 xl:columns-4;
+  }
 }

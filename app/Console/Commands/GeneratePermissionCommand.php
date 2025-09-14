@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Spatie\Permission\Models\Permission;
 use Str;
 
@@ -109,6 +110,10 @@ class GeneratePermissionCommand extends Command
         }
 
         $this->info("🚀 Permission generation completed!");
+        
+        Artisan::call("db:seed PermissionSeeder");
+
+        $this->info("🚀 Additional permission generation completed!");
     }
 
     protected function modelUsesSoftDeletes(string $modelClass): bool

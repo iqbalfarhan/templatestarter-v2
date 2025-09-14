@@ -114,7 +114,7 @@ const RoleList: FC<Props> = ({ roles, query }) => {
                   </Button>
                 </TableCell>
                 <TableCell>{role.name}</TableCell>
-                <TableCell>{role.permissions.length} permissions</TableCell>
+                <TableCell>{role.permissions?.length} permissions</TableCell>
                 <TableCell>
                   <Button variant={'ghost'} size={'icon'}>
                     <Link href={route('role.show', role.id)}>

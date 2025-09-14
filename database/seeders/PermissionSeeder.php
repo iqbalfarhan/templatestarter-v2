@@ -14,15 +14,7 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissionGroups = [
-            "settings" => [
-                "open adminer" => ['superadmin'],
-            ],
-            "dashboard" => [
-                "profile" => ["*"],
-                "documentation" => ["*"]
-            ]
-        ];
+        $permissionGroups = config("template-starter.additional_permissions");
 
         foreach ($permissionGroups as $group => $permissions) {
             foreach ($permissions as $permissionName => $roles) {
@@ -35,12 +27,14 @@ class PermissionSeeder extends Seeder
                     $roles = Role::all()->pluck('name')->toArray();
                 }
 
-                foreach ($roles as $roleName) {
-                    $role = Role::where('name', $roleName)->first();
-                    if ($role) {
-                        $role->givePermissionTo($permission);
-                    }
-                }
+                $permission->syncRoles($roles);
+
+                // foreach ($roles as $roleName) {
+                //     $role = Role::where('name', $roleName)->first();
+                //     if ($role) {
+                //         $role->givePermissionTo($permission);
+                //     }
+                // }
             }
         }
     }

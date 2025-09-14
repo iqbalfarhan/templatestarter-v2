@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { User } from '@/types';
+import { User } from '@/types/user';
 import { Link } from '@inertiajs/react';
 import { Edit, Filter, Folder, FolderArchive, Plus, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
@@ -121,7 +121,7 @@ const UserList: FC<Props> = ({ users, query }) => {
                 </TableCell>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.roles?.join(', ')}</TableCell>
+                <TableCell>{user.roles?.flatMap((r) => r.name)?.join(', ')}</TableCell>
                 <TableCell>
                   <Button variant={'ghost'} size={'icon'}>
                     <Link href={route('user.show', user.id)}>

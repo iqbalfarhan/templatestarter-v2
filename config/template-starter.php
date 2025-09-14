@@ -58,4 +58,27 @@ return [
 
     'generated-react-files-path' => env('GENERATED_REACT_FILES_PATH', resource_path('js/pages')),
 
+    'additional_permissions' => [
+        "settings" => [
+            "menu adminer" => ['superadmin'],
+        ],
+        "role_permission" => [
+            "menu role" => ['superadmin'],
+            "index role" => ['superadmin'],
+            "show role" => ['superadmin'],
+            "create role" => ['superadmin'],
+            "update role" => ['superadmin'],
+            "delete role" => ['superadmin'],
+            "index permission" => ['superadmin'],
+            "create permission" => ['superadmin'],
+            "update permission" => ['superadmin'],
+            "delete permission" => ['superadmin'],
+            "resync permission" => ['superadmin'],
+        ],
+        "dashboard" => [
+            "profile" => ["*"],
+            "documentation" => ["*"]
+        ]
+    ]
+
 ];

@@ -7,7 +7,9 @@ import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { capitalizeWords, em } from '@/lib/utils';
-import { FormPurpose, User } from '@/types';
+import { FormPurpose } from '@/types';
+import { Role } from '@/types/role';
+import { User } from '@/types/user';
 import { useForm, usePage } from '@inertiajs/react';
 import { X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
@@ -19,7 +21,7 @@ type Props = PropsWithChildren & {
 };
 
 const UserFormSheet: FC<Props> = ({ children, user, purpose }) => {
-  const { roles } = usePage<{ roles: string[] }>().props;
+  const { roles } = usePage<{ roles: Role[] }>().props;
 
   const [open, setOpen] = useState(false);
 
@@ -28,7 +30,7 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose }) => {
     email: user?.email ?? '',
     password: user ? undefined : '',
     password_confirmation: user ? undefined : '',
-    roles: user?.roles ?? [],
+    roles: user?.roles?.flatMap((r) => r.name) ?? [],
   });
 
   const handleSubmit = () => {
@@ -93,12 +95,12 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose }) => {
             <FormControl label="Select role">
               <div className="grid">
                 {roles.map((r) => (
-                  <Label className="flex h-8 items-center gap-2">
+                  <Label key={r.id} className="flex h-8 items-center gap-2">
                     <Checkbox
-                      checked={data.roles?.includes(r)}
-                      onCheckedChange={(c) => setData('roles', c ? [...data.roles, r] : data.roles.filter((role) => role !== r))}
+                      checked={data.roles?.includes(r.name)}
+                      onCheckedChange={(c) => setData('roles', c ? [...data.roles, r.name] : data.roles.filter((role) => role !== r.name))}
                     />
-                    {r}
+                    {r.name}
                   </Label>
                 ))}
               </div>

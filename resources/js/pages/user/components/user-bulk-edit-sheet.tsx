@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { em } from '@/lib/utils';
-import { User } from '@/types';
+import { User } from '@/types/user';
 import { useForm } from '@inertiajs/react';
 import { Check, X } from 'lucide-react';
 import { FC, PropsWithChildren } from 'react';

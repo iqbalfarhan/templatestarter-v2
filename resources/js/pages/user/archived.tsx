@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { em } from '@/lib/utils';
-import { User } from '@/types';
+import { User } from '@/types/user';
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';

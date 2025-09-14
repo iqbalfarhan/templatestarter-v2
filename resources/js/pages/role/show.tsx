@@ -5,10 +5,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { capitalizeWords, em, groupBy } from '@/lib/utils';
-import { Permission } from '@/types/permission';
-import { Role } from '@/types/role';
-import { Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Check, Edit, Plus } from 'lucide-react';
+import { SharedData } from '@/types';
+import { Permission, Role } from '@/types/role';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import { ArrowLeft, Check, Edit, Plus, RefreshCcw } from 'lucide-react';
 import { FC } from 'react';
 import { toast } from 'sonner';
 import PermissionFormSheet from '../permission/components/permission-form-sheet';
@@ -16,14 +16,16 @@ import RoleFormSheet from './components/role-form-sheet';
 
 type Props = {
   role: Role;
-  permissions: Permission[];
+  permits: Permission[];
 };
 
-const ShowRole: FC<Props> = ({ role, permissions }) => {
-  const groupPermissions = groupBy(permissions, 'group');
+const ShowRole: FC<Props> = ({ role, permits }) => {
+  const { permissions } = usePage<SharedData>().props;
+
+  const groupPermissions = groupBy(permits, 'group');
 
   const { data, setData, put } = useForm({
-    permissions: role.permissions.map((permission) => permission.name),
+    permissions: (role.permissions ?? []).map((permission) => permission.name),
   });
 
   const handleSubmit = () => {
@@ -63,7 +65,7 @@ const ShowRole: FC<Props> = ({ role, permissions }) => {
         <CardHeader>
           <CardTitle>{capitalizeWords(role.name)}</CardTitle>
           <CardDescription>
-            {role.permissions.length ? role.permissions?.map((permission) => permission.name).join(', ') : 'Belum ada permission'}
+            {(role.permissions ?? []).length ? role.permissions?.map((permission) => permission.name).join(', ') : 'Belum ada permission'}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -73,25 +75,34 @@ const ShowRole: FC<Props> = ({ role, permissions }) => {
         description="Pilih permission yang ingin digunakan unruk role ini"
         actions={
           <>
-            <PermissionFormSheet purpose="create">
-              <Button variant={'secondary'}>
-                <Plus /> Tambah permission
+            {permissions?.canResyncPermission && (
+              <Button variant={'secondary'} asChild>
+                <Link method="post" href={route('permission.resync')}>
+                  <RefreshCcw /> Resycn permissions
+                </Link>
               </Button>
-            </PermissionFormSheet>
+            )}
+            {permissions?.canAddPermission && (
+              <PermissionFormSheet purpose="create">
+                <Button variant={'secondary'}>
+                  <Plus /> Tambah permission
+                </Button>
+              </PermissionFormSheet>
+            )}
           </>
         }
       />
 
-      <div className="grid grid-cols-4 gap-6">
-        {Object.entries(groupPermissions).map(([group, permissions]) => (
-          <Card key={group}>
+      <div className="masonry">
+        {Object.entries(groupPermissions).map(([group, permits]) => (
+          <Card key={group} className="break-inside-avoid">
             <CardHeader>
               <CardTitle>{group.charAt(0).toUpperCase() + group.slice(1)}</CardTitle>
-              <CardDescription>{permissions.length} permissions</CardDescription>
+              <CardDescription>{permits.length} permits</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid">
-                {permissions.map((permission) => (
+                {permits.map((permission) => (
                   <Label key={permission.id} className="flex h-8 items-center gap-2">
                     <Checkbox
                       defaultChecked={data.permissions.includes(permission.name)}

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { User } from '@/types';
+import { User } from '@/types/user';
 import { Link } from '@inertiajs/react';
 import { Edit, Folder, Trash2 } from 'lucide-react';
 import { FC } from 'react';

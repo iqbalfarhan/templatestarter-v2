@@ -20,7 +20,7 @@ const UserFilterSheet: FC<Props> = ({ children, query }) => {
   });
 
   const applyFilter = () => {
-    get(route('user.index'), {
+    get('', {
       preserveScroll: true,
       preserveState: true,
       replace: true,
@@ -34,7 +34,7 @@ const UserFilterSheet: FC<Props> = ({ children, query }) => {
   const resetFilter = () => {
     setData('name', '');
     router.get(
-      route('user.index'),
+      '',
       {
         name: '',
       },

@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
+import { User } from './user.dts';
 
 export interface Auth {
   user: User;
@@ -32,18 +33,6 @@ export interface SharedData {
   sidebarOpen: boolean;
   permissions?: Record<string, boolean>;
   [key: string]: unknown;
-}
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  avatar?: string;
-  roles?: string[];
-  email_verified_at: string | null;
-  created_at: string;
-  updated_at: string;
-  [key: string]: unknown; // This allows for additional properties...
 }
 
 export type FormPurpose = 'create' | 'edit' | 'duplicate';

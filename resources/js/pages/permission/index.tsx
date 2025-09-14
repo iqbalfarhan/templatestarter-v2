@@ -6,9 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { groupBy } from '@/lib/utils';
-import { Permission } from '@/types/permission';
-import { Link } from '@inertiajs/react';
-import { ArrowLeft, Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
+import { SharedData } from '@/types';
+import { Permission } from '@/types/role';
+import { Link, usePage } from '@inertiajs/react';
+import { ArrowLeft, Edit, Filter, Folder, Plus, RefreshCcw, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import PermissionBulkDeleteDialog from './components/permission-bulk-delete-dialog';
 import PermissionBulkEditSheet from './components/permission-bulk-edit-sheet';
@@ -17,20 +18,21 @@ import PermissionFilterSheet from './components/permission-filter-sheet';
 import PermissionFormSheet from './components/permission-form-sheet';
 
 type Props = {
-  permissions: Permission[];
+  permits: Permission[];
   query: { [key: string]: string };
 };
 
-const PermissionList: FC<Props> = ({ permissions, query }) => {
+const PermissionList: FC<Props> = ({ permits, query }) => {
+  const { permissions } = usePage<SharedData>().props;
   const [ids, setIds] = useState<number[]>([]);
   const [cari, setCari] = useState('');
 
-  const permissionGroup = groupBy(permissions, 'group');
+  const permissionGroup = groupBy(permits, 'group');
 
   return (
     <AppLayout
       title="Permissions"
-      description="Manage your permissions"
+      description="Manage your permits"
       actions={
         <>
           <Button asChild variant={'secondary'}>
@@ -39,17 +41,26 @@ const PermissionList: FC<Props> = ({ permissions, query }) => {
               Kembali ke list role
             </Link>
           </Button>
-          <PermissionFormSheet purpose="create">
-            <Button>
-              <Plus />
-              Create new permission
+          {permissions?.canResync && (
+            <Button variant={'secondary'} asChild>
+              <Link method="post" href={route('permission.resync')}>
+                <RefreshCcw /> Resycn permits
+              </Link>
             </Button>
-          </PermissionFormSheet>
+          )}
+          {permissions?.canAdd && (
+            <PermissionFormSheet purpose="create">
+              <Button>
+                <Plus />
+                Create new permission
+              </Button>
+            </PermissionFormSheet>
+          )}
         </>
       }
     >
       <div className="flex gap-2">
-        <Input placeholder="Search permissions..." value={cari} onChange={(e) => setCari(e.target.value)} />
+        <Input placeholder="Search permits..." value={cari} onChange={(e) => setCari(e.target.value)} />
         <PermissionFilterSheet query={query}>
           <Button>
             <Filter />
@@ -84,10 +95,10 @@ const PermissionList: FC<Props> = ({ permissions, query }) => {
               <Button variant={'ghost'} size={'icon'} asChild>
                 <Label>
                   <Checkbox
-                    checked={ids.length === permissions.length}
+                    checked={ids.length === permits.length}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setIds(permissions.map((permission) => permission.id));
+                        setIds(permits.map((permission) => permission.id));
                       } else {
                         setIds([]);
                       }
@@ -104,8 +115,8 @@ const PermissionList: FC<Props> = ({ permissions, query }) => {
         <TableBody>
           {Object.entries(permissionGroup)
             .filter((permission) => JSON.stringify(permission).toLowerCase().includes(cari.toLowerCase()))
-            .map(([group, permissions]) =>
-              permissions.map((permission) => (
+            .map(([group, permits]) =>
+              permits.map((permission) => (
                 <TableRow key={permission.id}>
                   <TableCell>
                     <Button variant={'ghost'} size={'icon'} asChild>
@@ -126,21 +137,27 @@ const PermissionList: FC<Props> = ({ permissions, query }) => {
                   <TableCell>{group}</TableCell>
                   <TableCell>{permission.name}</TableCell>
                   <TableCell>
-                    <Button variant={'ghost'} size={'icon'}>
-                      <Link href={route('permission.show', permission.id)}>
-                        <Folder />
-                      </Link>
-                    </Button>
-                    <PermissionFormSheet purpose="edit" permission={permission}>
+                    {permissions?.canAdd && (
                       <Button variant={'ghost'} size={'icon'}>
-                        <Edit />
+                        <Link href={route('permission.show', permission.id)}>
+                          <Folder />
+                        </Link>
                       </Button>
-                    </PermissionFormSheet>
-                    <PermissionDeleteDialog permission={permission}>
-                      <Button variant={'ghost'} size={'icon'}>
-                        <Trash2 />
-                      </Button>
-                    </PermissionDeleteDialog>
+                    )}
+                    {permissions?.canAdd && (
+                      <PermissionFormSheet purpose="edit" permission={permission}>
+                        <Button variant={'ghost'} size={'icon'}>
+                          <Edit />
+                        </Button>
+                      </PermissionFormSheet>
+                    )}
+                    {permissions?.canAdd && (
+                      <PermissionDeleteDialog permission={permission}>
+                        <Button variant={'ghost'} size={'icon'}>
+                          <Trash2 />
+                        </Button>
+                      </PermissionDeleteDialog>
+                    )}
                   </TableCell>
                 </TableRow>
               )),

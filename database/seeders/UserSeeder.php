@@ -24,24 +24,5 @@ class UserSeeder extends Seeder
         User::factory(5)->create()->each(function ($user) {
             $user->assignRole('user');
         });
-
-        $permissions = [
-            "menu user",
-            "index user",
-            "show user",
-            "create user",
-            "update user",
-            "delete user",
-            "archived user",
-            "restore user",
-            "force delete user",
-        ];
-
-        foreach ($permissions as $permit) {
-            Permission::updateOrCreate([
-                'group' => "user",
-                'name' => $permit,
-            ]);
-        }
     }
 }

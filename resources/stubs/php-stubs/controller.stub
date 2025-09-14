@@ -56,10 +56,6 @@ class {{ Name }}Controller extends Controller
     {
         $this->pass("show {{ name }}");
 
-        if ($this->user->cannot('show {{ name }}', {{ Name }}::class)) {
-            return abort(403);
-        }
-
         return Inertia::render('{{ name }}/show', [
             '{{ name }}' => ${{ name }},
             'permissions' => [

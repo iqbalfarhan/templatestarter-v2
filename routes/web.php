@@ -24,8 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::apiResource('user', UserController::class);
 
     Route::apiResource('role', RoleController::class);
+    Route::post('permission/resync', [PermissionController::class, 'resync'])->name('permission.resync');
     Route::apiResource('permission', PermissionController::class);
-    Route::apiResource('media', MediaController::class);
+    Route::apiResource('doc', MediaController::class);
 });
 
 require __DIR__.'/settings.php';
