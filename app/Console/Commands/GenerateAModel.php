@@ -78,6 +78,7 @@ class GenerateAModel extends Command
                 // fillable, factory, request, migration
                 '{{ fillable }}' => $this->generateFillable($fields),
                 '{{ factory }}' => $this->generateFactory($fields),
+                '{{ factoryImport }}' => $this->generateFactoryImport($fields),
                 '{{ request }}' => $this->generateRequest($fields),
                 '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
             ]);
@@ -208,16 +209,34 @@ class GenerateAModel extends Command
             'text' => 'fake()->paragraph()',
             'boolean' => 'fake()->boolean()',
             'integer' => 'fake()->randomNumber()',
-            'datetime' => 'fake()->dateTime()',
+            'datetime' => 'fake()->dateTime()'
         ];
 
         $out = [];
         if (count($fields) == 0) $fields = ['name' => 'string'];
         foreach ($fields as $f => $t) {
             $faker = $fakerMap[$t] ?? 'fake()->word()';
-            $out[] = "'$f' => $faker,";
+            if (in_array($t, ['fk', 'nfk'])) {
+                $modelName = Str::studly(Str::singular(Str::replaceLast('_id', '', $f)));
+                $out[] = "'$f' => $modelName::pluck('id')->random(),";
+            }
+            else{
+                $out[] = "'$f' => $faker,";
+            }
         }
         return implode("\n            ", $out);
+    }
+
+    protected function generateFactoryImport(array $fields): string
+    {
+        $out = [];
+        foreach ($fields as $f => $t) {
+            if (in_array($t, ['fk', 'nfk'])) {
+                $modelName = Str::studly(Str::singular(Str::replaceLast('_id', '', $f)));
+                $out[] = "use App\Models\\$modelName;";
+            }
+        }
+        return implode("\n", $out);
     }
 
     protected function generateMigrationFields(array $fields, bool $softDelete): string
