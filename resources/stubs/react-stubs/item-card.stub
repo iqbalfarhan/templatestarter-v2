@@ -1,17 +1,15 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Edit, Trash2, Folder } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FC } from 'react';
 import { {{ Name }} } from '@/types/{{ name }}';
-import { Link } from '@inertiajs/react';
 
 type Props = {
   {{ name }}: {{ Name }};
+  className?: string;
 };
 
-const {{ Name }}ItemCard: FC<Props> = ({ {{ name }} }) => {
+const {{ Name }}ItemCard: FC<Props> = ({ {{ name }}, className }) => {
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className={className}>
       <CardHeader>
         <CardTitle>{ {{ name }}.name }</CardTitle>
         <CardDescription>

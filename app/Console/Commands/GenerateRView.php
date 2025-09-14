@@ -133,6 +133,10 @@ class GenerateRView extends Command
                 default => 'string',
             };
 
+            if ($withMedia) {
+                $typeLines[] = "  media: Media[];";
+            }
+
             if (in_array($fieldType, ['fk', 'nfk'])) {
                 $related = Str::studly(Str::replaceLast('_id', '', $fieldName)); // post_id -> Post
                 $propName = Str::replaceLast('_id', '', $fieldName);
@@ -161,8 +165,13 @@ class GenerateRView extends Command
         if (!empty($imports)) {
             $importLines = collect($imports)
                 ->map(fn($model) => 'import { ' . $model . ' } from "./' . Str::kebab($model) . '";')
-                ->implode("\n") . "\n\n";
+                ->implode("\n");
         }
+        if($withMedia){
+            $importLines .= "\nimport { Media } from '.';\n";
+        }
+
+        $importLines .= "\n\n";
 
         $dtsPath = "resources/js/types/{$name}.d.ts";
 
