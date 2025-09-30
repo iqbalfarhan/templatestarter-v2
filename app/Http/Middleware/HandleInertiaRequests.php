@@ -40,6 +40,8 @@ class HandleInertiaRequests extends Middleware
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
         $user = $request->user();
 
+        $enableAdminerMenu = config('template-starter.enable_adminer_menu', false);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -51,7 +53,7 @@ class HandleInertiaRequests extends Middleware
             'menus' => [
                 "user" => $user?->can('menu user'),
                 "role" => $user?->can('menu role'),
-                "adminer" => $user?->can('menu adminer'),
+                "adminer" => $enableAdminerMenu ? $user?->can('menu adminer') : false,
                 // add feature name here
                 // example:
                 // "customer" => $user?->can('menu customer'),

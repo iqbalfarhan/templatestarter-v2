@@ -79,6 +79,8 @@ return [
             "profile" => ["*"],
             "documentation" => ["*"]
         ]
-    ]
+    ],
+
+    'enable_adminer_menu' => false
 
 ];

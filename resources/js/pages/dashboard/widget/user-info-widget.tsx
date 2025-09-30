@@ -1,9 +1,7 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SharedData } from '@/types';
-import { Link, usePage } from '@inertiajs/react';
-import { Settings } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
 
 const UserInfoWidget = () => {
   const {
@@ -11,7 +9,7 @@ const UserInfoWidget = () => {
   } = usePage<SharedData>().props;
 
   return (
-    <Card>
+    <Card onClick={() => router.visit(route('profile.edit'))} className="cursor-pointer">
       <div className="flex justify-between">
         <CardHeader>
           <Avatar className="size-10">
@@ -22,14 +20,6 @@ const UserInfoWidget = () => {
           <CardTitle>{user.name}</CardTitle>
           <CardDescription>{user.email}</CardDescription>
         </CardHeader>
-        <CardFooter>
-          <Button variant="outline" asChild>
-            <Link href={route('profile.edit')}>
-              <Settings />
-              Edit profile
-            </Link>
-          </Button>
-        </CardFooter>
       </div>
     </Card>
   );
