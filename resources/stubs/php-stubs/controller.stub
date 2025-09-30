@@ -97,7 +97,7 @@ class {{ Name }}Controller extends Controller
         $ids = $data['{{ name }}_ids'];
         unset($data['{{ name }}_ids']);
 
-        {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->update($data);
+        {{ Name }}::whereIn('id', $ids)->update($data);
     }
 
     /**
