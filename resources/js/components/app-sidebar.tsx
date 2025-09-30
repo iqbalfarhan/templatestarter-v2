@@ -45,10 +45,10 @@ export function AppSidebar() {
           items={[
             ...mainNavItems,
             // {
-            //   title: '',
-            //   href: '',
+            //   title: 'feature',
+            //   href: route('feature.index'),
             //   icon: BookOpen,
-            //   available: menus.featurename,
+            //   available: menus.feature,
             // },
           ]}
           label="Dashboard"
