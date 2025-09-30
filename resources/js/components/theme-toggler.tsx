@@ -1,4 +1,5 @@
 import { useAppearance } from '@/hooks/use-appearance';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { FC } from 'react';
 import { Button } from './ui/button';
@@ -8,21 +9,24 @@ type Props = {
   width?: 'fit' | 'full';
 };
 
-const ThemeToggler: FC<Props> = ({ width = 'fit' }) => {
+const ThemeToggler: FC<Props> = () => {
   const { appearance, updateAppearance } = useAppearance();
+  const mobile = useIsMobile();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={`w-${width}`} asChild>
-        <Button variant={'outline'}>
+      <DropdownMenuTrigger asChild>
+        <Button variant={'outline'} size={mobile ? 'icon' : 'default'}>
           {appearance === 'light' && <Sun />}
           {appearance === 'dark' && <Moon />}
           {appearance === 'system' && <Monitor />}
-          <span className="hidden md:block">
-            {appearance === 'light' && 'Terang'}
-            {appearance === 'dark' && 'Gelap'}
-            {appearance === 'system' && 'Sistem'}
-          </span>
+          {!mobile && (
+            <span>
+              {appearance === 'light' && 'Terang'}
+              {appearance === 'dark' && 'Gelap'}
+              {appearance === 'system' && 'Sistem'}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

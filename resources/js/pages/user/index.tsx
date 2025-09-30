@@ -36,9 +36,10 @@ const UserList: FC<Props> = ({ users, query }) => {
               Create new user
             </Button>
           </UserFormSheet>
-          <Button size={'icon'} variant={'destructive'} asChild>
+          <Button variant={'destructive'} asChild>
             <Link href={route('user.archived')}>
               <FolderArchive />
+              Archived
             </Link>
           </Button>
         </>

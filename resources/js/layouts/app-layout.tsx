@@ -46,7 +46,7 @@ export default ({
                         <EllipsisVertical />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent side="bottom" align="end">
+                    <DropdownMenuContent side="bottom" align="end" className="flex flex-col gap-1.5">
                       <>{actions}</>
                     </DropdownMenuContent>
                   </DropdownMenu>
