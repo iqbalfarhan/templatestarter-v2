@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Database, KeySquare, LayoutGrid, Users } from 'lucide-react';
+import { BookOpen, Database, KeySquare, LayoutGrid, Settings, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -72,6 +72,25 @@ export function AppSidebar() {
               href: '/adminer',
               icon: Database,
               available: menus.adminer,
+            },
+            {
+              title: 'Pengaturan profile',
+              href: '',
+              icon: Settings,
+              items: [
+                {
+                  title: 'Edit profile',
+                  href: route('profile.edit'),
+                },
+                {
+                  title: 'Ganti password',
+                  href: route('password.edit'),
+                },
+                {
+                  title: 'Appearance',
+                  href: route('appearance'),
+                },
+              ],
             },
           ]}
           label="Settings"

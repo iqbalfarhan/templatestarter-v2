@@ -25,6 +25,10 @@ export interface NavItem {
   available?: boolean;
 }
 
+export type NestedNavItem = NavItem & {
+  items?: NavItem[];
+};
+
 export interface SharedData {
   name: string;
   quote: { message: string; author: string };
