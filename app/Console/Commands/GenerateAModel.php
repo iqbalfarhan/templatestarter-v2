@@ -5,14 +5,13 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Permission;
 
 class GenerateAModel extends Command
 {
     protected $signature = 'generate:amodel {name} {--s|softDelete} {--fields=} {--m|media}';
     protected $description = 'Generate model, factory, seeder, requests, and migration for a given name';
 
-    public function handle()
+    public function handle(): int
     {
         $Name = Str::studly($this->argument('name')); // ex: User
         $name = Str::camel($Name);                   // ex: user
@@ -41,7 +40,7 @@ class GenerateAModel extends Command
             }
         }
 
-        // Path Laravel bawaan
+        // Base Laravel paths for generated artifacts
         $paths = [
             "app/Models/{$Name}.php" => "resources/stubs/php-stubs/model.stub",
             "database/factories/{$Name}Factory.php" => "resources/stubs/php-stubs/factory.stub",
@@ -101,11 +100,13 @@ class GenerateAModel extends Command
             $this->info("🗑️  SoftDeletes enabled for {$name}");
         }
 
-        // Add router to web.php
+        // Add routes to routes/web.php
         $this->addRoute($softDelete, $withMedia, $name, $Name);
+
+        return self::SUCCESS;
     }
 
-    protected function makeFromStub($filePath, $stubPath, $replacements)
+    protected function makeFromStub(string $filePath, string $stubPath, array $replacements): void
     {
         $dir = dirname($filePath);
         if (!File::exists($dir)) {
@@ -125,7 +126,7 @@ class GenerateAModel extends Command
         }
     }
 
-    protected function addRoute(bool $softDelete, bool $withMedia, $name, $Name)
+    protected function addRoute(bool $softDelete, bool $withMedia, string $name, string $Name): void
     {
         $webPath = base_path('routes/web.php');
 
@@ -150,24 +151,24 @@ class GenerateAModel extends Command
         if (File::exists($webPath)) {
             $content = File::get($webPath);
 
-            // ✅ Tambahin use kalau belum ada
+            // Add missing controller import if needed
             if (!Str::contains($content, "use App\\Http\\Controllers\\{$Name}Controller;")) {
-                // cari posisi terakhir "use " terus sisipin di bawahnya
+                // Insert after the last existing use statement
                 if (preg_match_all('/^use\s.+;$/m', $content, $matches, PREG_OFFSET_CAPTURE)) {
                     $lastUse = end($matches[0]);
                     $pos = $lastUse[1] + strlen($lastUse[0]);
                     $content = substr($content, 0, $pos) . "\n{$useLine}" . substr($content, $pos);
                 } else {
-                    // fallback kalau gak ada use
+                    // Fallback: prepend if there is no use block
                     $content = "<?php\n\n{$useLine}" . $content;
                 }
                 File::put($webPath, $content);
                 $this->info("📌 Added import: {$useLine}");
             }
 
-            // ✅ Tambahin route ke dalam middleware group
+            // Add routes inside the auth + verified middleware group when present
             if (Str::contains($content, "Route::middleware(['auth', 'verified'])->group(function () {")) {
-                // sisipkan sebelum "});"
+                // Insert before the group's closing bracket
                 $content = preg_replace(
                     "/(Route::middleware\(\['auth', 'verified'\]\)->group\(function\s*\(\)\s*{\n)([\s\S]*?)(^\s*}\);)/m",
                     "$1$2$routeLine$3",
@@ -186,7 +187,7 @@ class GenerateAModel extends Command
                     }
                 }
             } else {
-                // fallback kalau ga ada group
+                // Fallback when the group is not found
                 if (!Str::contains($content, $routeLine)) {
                     File::append($webPath, $routeLine);
                     $this->info("🌐 Added route to bottom: {$routeLine}");

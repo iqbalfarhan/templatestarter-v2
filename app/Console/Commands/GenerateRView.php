@@ -26,17 +26,45 @@ class GenerateRView extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
-        $name = strtolower($this->argument('name'));
+        $name = strtolower(strval($this->argument('name')));
         $Name = Str::studly($name);
         $Names = Str::plural($name);
-        $basePath = config("template-starter.generated-react-files-path") . "/{$name}";
+        $basePath = rtrim(strval(config("template-starter.generated-react-files-path")), '/'). "/{$name}";
 
-        $isSoftDelete = $this->option('softDelete') ?? false;
-        $withMedia = $this->option('media') ?? false;
+        $isSoftDelete = boolval($this->option('softDelete'));
+        $withMedia = boolval($this->option('media'));
 
-        // Struktur file default
+        $files = $this->buildFilesArray($name, $Name, $isSoftDelete, $withMedia);
+
+        foreach ($files as $file => $stub) {
+            $filePath = $basePath . '/' . $file;
+
+            [$archivedButton, $uploadButton] = $this->buildButtons($isSoftDelete, $withMedia, $name, $Name);
+
+            $replacements = [
+                '{{ name }}' => $name,
+                '{{ Name }}' => $Name,
+                '{{ names }}' => $Names,
+                '{{ Names }}' => Str::pluralStudly($Name),
+                '{{ archivedButton }}' => $archivedButton,
+                '{{ uploadButton }}' => $uploadButton,
+            ];
+
+            $this->makeFromStub($filePath, $stub, $replacements);
+        }
+
+        $parsedFields = $this->parseFieldsOption($this->option('fields'));
+        [$typeLines, $imports] = $this->generateTypeLines($parsedFields, $withMedia);
+        $importLines = $this->buildImportLines($imports, $withMedia);
+        $this->updateTypeDefinition($name, $importLines, $typeLines);
+
+        return self::SUCCESS;
+    }
+
+    protected function buildFilesArray(string $name, string $Name, bool $isSoftDelete, bool $withMedia): array
+    {
         $files = [
             "index.tsx" => "resources/stubs/react-stubs/index.stub",
             "show.tsx" => "resources/stubs/react-stubs/show.stub",
@@ -49,7 +77,6 @@ class GenerateRView extends Command
             "../../types/{$name}.d.ts" => "resources/stubs/react-stubs/type.stub",
         ];
 
-        // Tambahin archived kalau ada flag --softDelete
         if ($isSoftDelete) {
             $files["archived.tsx"] = "resources/stubs/react-stubs/archived.stub";
         }
@@ -58,73 +85,79 @@ class GenerateRView extends Command
             $files["components/{$name}-upload-sheet.tsx"] = "resources/stubs/react-stubs/upload-sheet.stub";
         }
 
-        foreach ($files as $file => $stub) {
-            $filePath = $basePath . '/' . $file;
-            $dir = dirname($filePath);
+        return $files;
+    }
 
-            if (!File::exists($dir)) {
-                File::makeDirectory($dir, 0755, true);
-                $this->info("Created directory: {$dir}");
+    protected function makeFromStub(string $filePath, string $stubPath, array $replacements): void
+    {
+        $dir = dirname($filePath);
+        if (!File::exists($dir)) {
+            File::makeDirectory($dir, 0755, true);
+            $this->info("Created directory: {$dir}");
+        }
+
+        if (!File::exists($filePath)) {
+            $stubFullPath = base_path($stubPath);
+            if (File::exists($stubFullPath)) {
+                $content = File::get($stubFullPath);
+                $content = str_replace(array_keys($replacements), array_values($replacements), $content);
+            } else {
+                $content = "// " . ($replacements['{{ Name }}'] ?? 'Generated') . ' - ' . basename($filePath);
             }
 
-            if (!File::exists($filePath)) {
-                $stubPath = base_path($stub);
-                if (File::exists($stubPath)) {
-                    $content = File::get($stubPath);
+            File::put($filePath, $content);
+            $this->info("Created file: {$filePath}");
+        } else {
+            $this->warn("File already exists: {$filePath}");
+        }
+    }
 
-                    // Archived button inject
-                    $archivedButton = $isSoftDelete
-                        ? <<<EOT
+    protected function buildButtons(bool $isSoftDelete, bool $withMedia, string $name, string $Name): array
+    {
+        $archivedButton = $isSoftDelete
+            ? <<<EOT
                         <Button variant={'destructive'} size={'icon'} asChild>
                             <Link href={route('{$name}.archived')}>
                                 <FolderArchive />
                             </Link>
                         </Button>
                         EOT
-                        : '';
+            : '';
 
-                    $uploadButton = $withMedia
-                        ? <<<EOT
+        $uploadButton = $withMedia
+            ? <<<EOT
                         <{$Name}UploadMediaSheet {$name}={{$name}}>
                             <Button variant={'ghost'} size={'icon'}>
                                 <Image />
                             </Button>
                         </{$Name}UploadMediaSheet>
                         EOT
-                        : '';
+            : '';
 
-                    $content = str_replace(
-                        ['{{ name }}', '{{ Name }}', '{{ names }}', '{{ Names }}', '{{ archivedButton }}', '{{ uploadButton }}'],
-                        [$name, $Name, $Names, Str::pluralStudly($Name), $archivedButton, $uploadButton],
-                        $content
-                    );
-                } else {
-                    $content = "// {$Name} - " . basename($filePath);
-                }
+        return [$archivedButton, $uploadButton];
+    }
 
-                File::put($filePath, $content);
-                $this->info("Created file: {$filePath}");
-            } else {
-                $this->warn("File already exists: {$filePath}");
-            }
-        }
-
-        // Tambahin fields ke type.d.ts kalau ada --fields
-        $fieldsOption = $this->option('fields');
+    protected function parseFieldsOption($fieldsOption): array
+    {
         if (!$fieldsOption) {
-            $fields = ['name:string'];
-        } else {
-            $fields = explode(',', $fieldsOption); // ex: ["title:string"," body:text"]
-            $fields = array_map('trim', $fields); // <-- hapus spasi ekstra
+            return [['name', 'string']];
         }
 
+        $raw = array_map('trim', explode(',', strval($fieldsOption)));
+        $parsed = [];
+        foreach ($raw as $field) {
+            [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
+            $parsed[] = [trim($fieldName), strtolower(trim($fieldType))];
+        }
+        return $parsed;
+    }
+
+    protected function generateTypeLines(array $parsedFields, bool $withMedia): array
+    {
         $typeLines = [];
         $imports = [];
 
-        foreach ($fields as $field) {
-            [$fieldName, $fieldType] = array_pad(explode(':', $field), 2, 'string');
-            $fieldType = strtolower($fieldType);
-
+        foreach ($parsedFields as [$fieldName, $fieldType]) {
             $tsType = match ($fieldType) {
                 'string', 'text' => 'string',
                 'boolean' => 'boolean',
@@ -138,18 +171,14 @@ class GenerateRView extends Command
             }
 
             if (in_array($fieldType, ['fk', 'nfk'])) {
-                $related = Str::studly(Str::replaceLast('_id', '', $fieldName)); // post_id -> Post
+                $related = Str::studly(Str::replaceLast('_id', '', $fieldName));
                 $propName = Str::replaceLast('_id', '', $fieldName);
 
                 if ($fieldType === 'fk') {
-                    // foreign key kolom (selalu required)
                     $typeLines[] = "  {$fieldName}: {$related}['id'];";
-                    // relasi
                     $typeLines[] = "  {$propName}: {$related};";
                 } else {
-                    // foreign key kolom (optional)
                     $typeLines[] = "  {$fieldName}?: {$related}['id'];";
-                    // relasi optional
                     $typeLines[] = "  {$propName}?: {$related};";
                 }
 
@@ -159,40 +188,35 @@ class GenerateRView extends Command
             }
         }
 
-        $imports = array_unique($imports);
+        return [$typeLines, array_values(array_unique($imports))];
+    }
 
+    protected function buildImportLines(array $imports, bool $withMedia): string
+    {
         $importLines = '';
         if (!empty($imports)) {
             $importLines = collect($imports)
                 ->map(fn($model) => 'import { ' . $model . ' } from "./' . Str::kebab($model) . '";')
                 ->implode("\n");
         }
-        if($withMedia){
+        if ($withMedia) {
             $importLines .= "\nimport { Media } from '.';\n";
         }
+        return $importLines . "\n\n";
+    }
 
-        $importLines .= "\n\n";
-
+    protected function updateTypeDefinition(string $name, string $importLines, array $typeLines): void
+    {
         $dtsPath = "resources/js/types/{$name}.d.ts";
-
         if (File::exists($dtsPath)) {
             $content = File::get($dtsPath);
-            $content = str_replace(
-                '{{ imports }}',
-                $importLines,
-                $content
-            );
-            $content = str_replace(
-                '{{ fields }}',
-                implode("\n", $typeLines),
-                $content
-            );
+            $content = str_replace('{{ imports }}', $importLines, $content);
+            $content = str_replace('{{ fields }}', implode("\n", $typeLines), $content);
             File::put($dtsPath, $content);
             $this->info("Updated type definition: {$dtsPath}");
         } else {
             $this->warn("Type file not found: {$dtsPath}");
         }
-
     }
 
 

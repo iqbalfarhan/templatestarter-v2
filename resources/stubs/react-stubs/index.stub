@@ -62,12 +62,12 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
             <Button variant={'ghost'} disabled>
               {ids.length} item selected
             </Button>
-            <{{ Name }}BulkEditSheet {{ name }}Ids={ids}>
+            <{{ Name }}BulkEditSheet {{ name }}Ids={ids} onSuccess={() => setIds([])}>
               <Button>
                 <Edit /> Edit selected
               </Button>
             </{{ Name }}BulkEditSheet>
-            <{{ Name }}BulkDeleteDialog {{ name }}Ids={ids}>
+            <{{ Name }}BulkDeleteDialog {{ name }}Ids={ids} onSuccess={() => setIds([])}>
               <Button variant={'destructive'}>
                 <Trash2 /> Delete selected
               </Button>

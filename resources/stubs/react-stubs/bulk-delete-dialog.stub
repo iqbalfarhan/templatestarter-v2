@@ -18,9 +18,10 @@ import { toast } from 'sonner';
 
 type Props = PropsWithChildren & {
   {{ name }}Ids: {{ Name }}['id'][];
+  onSuccess?: () => void;
 };
 
-const {{ Name }}BulkDeleteDialog: FC<Props> = ({ children, {{ name }}Ids }) => {
+const {{ Name }}BulkDeleteDialog: FC<Props> = ({ children, {{ name }}Ids, onSuccess }) => {
   const [open, setOpen] = useState(false);
 
   const handleDelete = () => {
@@ -30,6 +31,7 @@ const {{ Name }}BulkDeleteDialog: FC<Props> = ({ children, {{ name }}Ids }) => {
       onSuccess: () => {
         toast.success('{{ Name }} deleted successfully');
         setOpen(false);
+        onSuccess?.();
       },
       onError: (e) => toast.error(em(e)),
     });

@@ -4,23 +4,29 @@ import { em } from '@/lib/utils';
 import { {{ Name }} } from '@/types/{{ name }}';
 import { useForm } from '@inertiajs/react';
 import { Check, X } from 'lucide-react';
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 import { toast } from 'sonner';
 
 type Props = PropsWithChildren & {
   {{ name }}Ids: {{ Name }}['id'][];
+  onSuccess?: () => void;
 };
 
-const {{ Name }}BulkEditSheet: FC<Props> = ({ children, {{ name }}Ids }) => {
+const {{ Name }}BulkEditSheet: FC<Props> = ({ children, {{ name }}Ids, onSuccess }) => {
   const { data, put } = useForm({
     {{ name }}_ids: {{ name }}Ids,
   });
+
+  useEffect(() => {
+    setData('{{ name }}_ids', {{ name }}Ids);
+  }, [{{ name }}Ids, setData]);
 
   const handleSubmit = () => {
     put(route('{{ name }}.bulk.update'), {
       preserveScroll: true,
       onSuccess: () => {
         toast.success('{{ Name }} updated successfully');
+        onSuccess?.();
       },
       onError: (e) => toast.error(em(e)),
     });

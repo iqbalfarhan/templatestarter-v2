@@ -29,22 +29,72 @@ class GenerateRModel extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
-        $feature = $this->argument('name')
-            ?: text(
-                label: 'Nama Model atau type yang mau lo buat',
-                placeholder: 'E.g. Customer',
-                required: true,
-            );
+        $feature = $this->getFeatureName();
+        $options = $this->getOptionsSelection();
+        $fields = $this->getFieldsList();
 
-        $opsi = multiselect(
+        $name = Str::snake($feature);
+        $Name = Str::studly($feature);
+
+        $softDelete = in_array('soft delete', $options, true);
+        $media = in_array('media', $options, true);
+        $fieldsCsv = $this->fieldsToCsv($fields);
+
+        $this->info("🚀 Running generate:amodel {$Name} ...");
+        $this->call('generate:amodel', [
+            'name' => $Name,
+            '--softDelete' => $softDelete,
+            '--fields' => $fieldsCsv,
+            '--media' => $media,
+        ]);
+
+        $this->info("🎨 Running generate:rview {$name} ...");
+        $this->call('generate:rview', [
+            'name' => $name,
+            '--softDelete' => $softDelete,
+            '--fields' => $fieldsCsv,
+            '--media' => $media,
+        ]);
+
+        $this->info("✅ Done! {$Name} model + React view generated successfully!");
+
+        return self::SUCCESS;
+    }
+
+    protected function getFeatureName(): string
+    {
+        $arg = $this->argument('name');
+        if (is_string($arg) && trim($arg) !== '') {
+            return trim($arg);
+        }
+
+        return text(
+            label: 'Nama Model atau type yang mau lo buat',
+            placeholder: 'E.g. Customer',
+            required: true,
+        );
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function getOptionsSelection(): array
+    {
+        return multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
             options: ['soft delete', 'media'],
             hint: 'Pilihlah pilihan yang mau di pakai, soft delete akan nambahin fitur soft delete di model dan controller, media akan nambahin fitur upload media'
         );
+    }
 
-        $kolom = textarea(
+    /**
+     * @return array<int, string>
+     */
+    protected function getFieldsList(): array
+    {
+        $input = textarea(
             label: 'Kolom apa aja yang mau di buat?',
             placeholder: 'E.g. name:string',
             required: true,
@@ -52,29 +102,16 @@ class GenerateRModel extends Command
             hint: 'gunakan format name:type. Pisahin pakai enter'
         );
 
-        $name = Str::snake($feature); // article
-        $Name = Str::studly($feature); // Article
+        $rows = array_map('trim', explode(PHP_EOL, $input));
+        $rows = array_values(array_filter($rows, fn($r) => $r !== ''));
+        return $rows;
+    }
 
-        $softDelete = in_array('soft delete', $opsi);
-        $fields = explode(PHP_EOL, $kolom);
-        $media = in_array('media', $opsi);
-
-        $this->info("🚀 Running generate:amodel {$Name} ...");
-        $this->call('generate:amodel', [
-            'name' => $Name,
-            '--softDelete' => $softDelete,
-            '--fields' => implode(',', $fields),
-            '--media' => $media,
-        ]);
-        
-        $this->info("🎨 Running generate:rview {$name} ...");
-        $this->call('generate:rview', [
-            'name' => $name,
-            '--softDelete' => $softDelete,
-            '--fields' => implode(',', $fields),
-            '--media' => $media,
-        ]);
-
-        $this->info("✅ Done! {$Name} model + React view generated successfully!");
+    /**
+     * @param array<int, string> $fields
+     */
+    protected function fieldsToCsv(array $fields): string
+    {
+        return implode(',', $fields);
     }
 }
