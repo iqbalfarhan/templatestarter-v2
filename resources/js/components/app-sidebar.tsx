@@ -24,6 +24,7 @@ const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
   const { menus } = usePage<{ menus: Record<string, boolean> }>().props;
+  // configure menus "available" in HandleInertiaRequest.php
 
   return (
     <Sidebar collapsible="icon" variant="sidebar">
@@ -40,7 +41,18 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="space-y-4">
-        <NavMain items={mainNavItems} label="Dashboard" />
+        <NavMain
+          items={[
+            ...mainNavItems,
+            // {
+            //   title: '',
+            //   href: '',
+            //   icon: BookOpen,
+            //   available: menus.featurename,
+            // },
+          ]}
+          label="Dashboard"
+        />
         <NavMain
           items={[
             {
