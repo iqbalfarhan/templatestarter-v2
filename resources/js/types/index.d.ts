@@ -7,6 +7,8 @@ export interface Auth {
   roles: string[];
 }
 
+export type ViewMode = 'table' | 'grid';
+
 export interface BreadcrumbItem {
   title: string;
   href: string;
@@ -36,6 +38,7 @@ export interface SharedData {
   ziggy: Config & { location: string };
   sidebarOpen: boolean;
   permissions?: Record<string, boolean>;
+  viewMode: ViewMode;
   [key: string]: unknown;
 }
 
