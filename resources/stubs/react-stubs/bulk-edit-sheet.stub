@@ -13,7 +13,7 @@ type Props = PropsWithChildren & {
 };
 
 const {{ Name }}BulkEditSheet: FC<Props> = ({ children, {{ name }}Ids, onSuccess }) => {
-  const { data, put } = useForm({
+  const { data, setData, put, processing } = useForm({
     {{ name }}_ids: {{ name }}Ids,
   });
 
@@ -41,9 +41,7 @@ const {{ Name }}BulkEditSheet: FC<Props> = ({ children, {{ name }}Ids, onSuccess
           <SheetDescription>Ubah data {data.{{ name }}_ids.length} {{ name }}</SheetDescription>
         </SheetHeader>
         <SheetFooter>
-          <Button type="submit" onClick={handleSubmit}>
-            <Check /> Simpan {{ name }}
-          </Button>
+          <SubmitButton onClick={handleSubmit} label={`Simpan {{ name }}`} loading={processing} disabled={processing} />
           <SheetClose asChild>
             <Button variant={'outline'}>
               <X /> Batalin
