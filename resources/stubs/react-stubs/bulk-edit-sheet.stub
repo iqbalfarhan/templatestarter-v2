@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import SubmitButton from '@/components/submit-button';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { em } from '@/lib/utils';
 import { {{ Name }} } from '@/types/{{ name }}';
@@ -41,7 +42,7 @@ const {{ Name }}BulkEditSheet: FC<Props> = ({ children, {{ name }}Ids, onSuccess
           <SheetDescription>Ubah data {data.{{ name }}_ids.length} {{ name }}</SheetDescription>
         </SheetHeader>
         <SheetFooter>
-          <SubmitButton onClick={handleSubmit} label={`Simpan {{ name }}`} loading={processing} disabled={processing} />
+          <SubmitButton icon={Check} onClick={handleSubmit} label={`Simpan {{ name }}`} loading={processing} disabled={processing} />
           <SheetClose asChild>
             <Button variant={'outline'}>
               <X /> Batalin

@@ -94,6 +94,9 @@ class {{ Name }}Controller extends Controller
         $this->pass("update {{ name }}");
 
         $data = $request->validated();
+        $ids = $data['{{ name }}_ids'];
+        unset($data['{{ name }}_ids']);
+
         {{ Name }}::whereIn('id', $data['{{ name }}_ids'])->update($data);
     }
 
