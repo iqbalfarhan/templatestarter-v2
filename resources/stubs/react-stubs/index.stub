@@ -9,7 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import { capitalizeWords } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { {{ Name }} } from '@/types/{{ name }}';
-import { Link, usePage} from '@inertiajs/react';
+import { Link, usePage, router} from '@inertiajs/react';
 import { Archive, Edit, Filter, Folder, Grid2X2, Image, Plus, TableIcon, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import {{ Name }}DeleteDialog from './components/{{ name }}-delete-dialog';
