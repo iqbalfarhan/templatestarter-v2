@@ -4,11 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
-import { capitalizeWords, em, groupBy } from '@/lib/utils';
+import { backAction, capitalizeWords, em, groupBy } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { Permission, Role } from '@/types/role';
 import { Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowLeft, Check, Edit, Plus, RefreshCcw } from 'lucide-react';
+import { Check, Plus, RefreshCcw } from 'lucide-react';
 import { FC } from 'react';
 import { toast } from 'sonner';
 import PermissionFormSheet from '../permission/components/permission-form-sheet';
@@ -42,33 +42,25 @@ const ShowRole: FC<Props> = ({ role, permits }) => {
     <AppLayout
       title="Detail Role"
       description="Detail role"
-      actions={
-        <>
-          <Link href={route('role.index')}>
-            <Button variant={'secondary'}>
-              <ArrowLeft />
-              Back to route list
-            </Button>
-          </Link>
-          <RoleFormSheet purpose="edit" role={role}>
-            <Button>
-              <Edit /> Edit nama role
-            </Button>
-          </RoleFormSheet>
-          <Button onClick={handleSubmit}>
-            <Check /> Simpan
-          </Button>
-        </>
-      }
+      actions={[
+        backAction(),
+        {
+          title: 'Simpan',
+          icon: Check,
+          onClick: handleSubmit,
+        },
+      ]}
     >
-      <Card>
-        <CardHeader>
-          <CardTitle>{capitalizeWords(role.name)}</CardTitle>
-          <CardDescription>
-            {(role.permissions ?? []).length ? role.permissions?.map((permission) => permission.name).join(', ') : 'Belum ada permission'}
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <RoleFormSheet purpose="edit" role={role}>
+        <Card>
+          <CardHeader>
+            <CardTitle>{capitalizeWords(role.name)}</CardTitle>
+            <CardDescription>
+              {(role.permissions ?? []).length ? role.permissions?.map((permission) => permission.name).join(', ') : 'Belum ada permission'}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </RoleFormSheet>
 
       <HeadingSmall
         title="Permission"

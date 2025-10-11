@@ -13,7 +13,7 @@ const {{ Name }}ItemCard: FC<Props> = ({ {{ name }}, className }) => {
       <CardHeader>
         <CardTitle>{ {{ name }}.name }</CardTitle>
         <CardDescription>
-            ID: { {{ name }}.id }
+          ID: { {{ name }}.id }
         </CardDescription>
       </CardHeader>
     </Card>

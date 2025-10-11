@@ -1,5 +1,7 @@
+import { ActionItem } from '@/types';
 import { type ClassValue, clsx } from 'clsx';
 import dayjs from 'dayjs';
+import { ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
 
@@ -11,6 +13,20 @@ export const em = (e: { [key: string]: string }) => {
   return Object.entries(e)
     .map(([, v]) => v)
     .join(', ');
+};
+
+export const goBack = () => {
+  window.history.back();
+};
+
+export const backAction = (): ActionItem => {
+  return {
+    title: 'Kembali',
+    icon: ChevronLeft,
+    onClick: () => {
+      goBack();
+    },
+  };
 };
 
 export function strLimit(text: string = '', limit: number = 50, end: string = '...'): string {

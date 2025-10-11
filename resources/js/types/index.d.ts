@@ -27,6 +27,13 @@ export interface NavItem {
   available?: boolean;
 }
 
+export type ActionItem = {
+  title: string;
+  icon?: LucideIcon | null;
+  onClick: () => void;
+  available?: boolean;
+};
+
 export type NestedNavItem = NavItem & {
   items?: NavItem[];
 };

@@ -6,8 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { Role } from '@/types/role';
-import { Link } from '@inertiajs/react';
-import { Edit, Filter, Folder, List, Plus, Trash2 } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { Edit, Filter, Folder, Plus, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import RoleDeleteDialog from './components/role-delete-dialog';
 import RoleFilterSheet from './components/role-filter-sheet';
@@ -26,22 +26,13 @@ const RoleList: FC<Props> = ({ roles, query }) => {
     <AppLayout
       title="Roles"
       description="Manage your roles"
-      actions={
-        <>
-          <RoleFormSheet purpose="create">
-            <Button>
-              <Plus />
-              Create new role
-            </Button>
-          </RoleFormSheet>
-          <Button asChild>
-            <Link href={route('permission.index')}>
-              <List />
-              Lihat permission
-            </Link>
-          </Button>
-        </>
-      }
+      actions={[
+        {
+          title: 'Lihat permission',
+          icon: Plus,
+          onClick: () => router.visit(route('permission.index')),
+        },
+      ]}
     >
       <div className="flex gap-2">
         <Input placeholder="Search roles..." value={cari} onChange={(e) => setCari(e.target.value)} />
@@ -67,7 +58,9 @@ const RoleList: FC<Props> = ({ roles, query }) => {
             </Button>
           </>
         )}
+        <RoleFormSheet purpose="create" buttonLabel="Create role" />
       </div>
+
       <Table>
         <TableHeader>
           <TableRow>

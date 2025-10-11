@@ -1,19 +1,19 @@
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Toaster } from '@/components/ui/sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout';
-import { type BreadcrumbItem } from '@/types';
+import { ActionItem, type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { EllipsisVertical } from 'lucide-react';
-import { PropsWithChildren, type ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 
 type AppLayoutProps = PropsWithChildren & {
   title?: string;
   description?: string;
   breadcrumbs?: BreadcrumbItem[];
-  actions?: ReactNode;
+  actions?: ActionItem[];
 };
 
 export default ({
@@ -47,12 +47,26 @@ export default ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent side="bottom" align="end" className="flex flex-col gap-1.5">
-                      <>{actions}</>
+                      <>
+                        {actions.map((a) => (
+                          <DropdownMenuItem key={a.title} onClick={a.onClick}>
+                            {a.icon && <a.icon />}
+                            {a.title}
+                          </DropdownMenuItem>
+                        ))}
+                      </>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </>
               ) : (
-                <div className="ml-auto flex items-center gap-2">{actions}</div>
+                <div className="ml-auto flex items-center gap-2">
+                  {actions.map((a) => (
+                    <Button onClick={a.onClick}>
+                      {a.icon && <a.icon />}
+                      {a.title}
+                    </Button>
+                  ))}
+                </div>
               )}
             </>
           )}

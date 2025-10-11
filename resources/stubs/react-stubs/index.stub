@@ -36,19 +36,14 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
     <AppLayout
       title="{{ Name }}s"
       description="Manage your {{ names }}"
-      actions={
-        <>
-          {permissions?.canAdd && (
-            <{{ Name }}FormSheet purpose="create">
-              <Button>
-                <Plus />
-                Create new {{ name }}
-              </Button>
-            </{{ Name }}FormSheet>
-          )}
-          {{ archivedButton }}
-        </>
-      }
+      actions={[
+        {
+          title: capitalizeWords(mode) + ' view',
+          icon: mode === 'grid' ? Grid2X2 : TableIcon,
+          onClick: toggle,
+        },
+        {{ archivedButton }}
+      ]}
     >
       <div className="flex gap-2">
         <Input placeholder="Search {{ names }}..." value={cari} onChange={(e) => setCari(e.target.value)} />
@@ -82,6 +77,9 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
           <TableIcon />
           {capitalizeWords(mode)}
         </Button>
+        {permissions?.canAdd && (
+          <{{ Name }}FormSheet purpose="create" buttonLabel="Create new {{ name }}" />
+        )}
       </div>
       {mode === 'table' ? (
         <Table>
@@ -140,11 +138,7 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
                     {permissions?.canUpdate && (
                       <>
                         {{ uploadButton }}
-                        <{{ Name }}FormSheet purpose="edit" {{ name }}={{{ name }}}>
-                          <Button variant={'ghost'} size={'icon'}>
-                            <Edit />
-                          </Button>
-                        </{{ Name }}FormSheet>
+                        <{{ Name }}FormSheet purpose="edit" {{ name }}={{{ name }}} variant="icon" />
                       </>
                     )}
                     {permissions?.canDelete && (

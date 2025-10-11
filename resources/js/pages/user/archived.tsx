@@ -4,10 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { em } from '@/lib/utils';
+import { backAction, em } from '@/lib/utils';
 import { User } from '@/types/user';
-import { Link, router } from '@inertiajs/react';
-import { ArrowLeft, Trash2, Undo2 } from 'lucide-react';
+import { router } from '@inertiajs/react';
+import { Trash2, Undo2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -40,18 +40,7 @@ const ArchivedUserList: FC<Props> = ({ users }) => {
   };
 
   return (
-    <AppLayout
-      title="Users"
-      description="Manage your users"
-      actions={
-        <Button variant={'secondary'} asChild>
-          <Link href={route('user.index')}>
-            <ArrowLeft />
-            Kembali ke list
-          </Link>
-        </Button>
-      }
-    >
+    <AppLayout title="Users" description="Manage your users" actions={[backAction()]}>
       <div className="flex gap-2">
         <Input placeholder="Search users..." value={cari} onChange={(e) => setCari(e.target.value)} />
         {ids.length > 0 && (

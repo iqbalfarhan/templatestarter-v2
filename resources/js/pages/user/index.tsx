@@ -8,8 +8,8 @@ import { useViewMode } from '@/hooks/use-view-mode';
 import AppLayout from '@/layouts/app-layout';
 import { capitalizeWords } from '@/lib/utils';
 import { User } from '@/types/user';
-import { Link } from '@inertiajs/react';
-import { Edit, Filter, Folder, FolderArchive, Plus, TableIcon, Trash2 } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { Archive, Edit, Filter, Folder, Grid2X2, TableIcon, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import UserBulkDeleteDialog from './components/user-bulk-delete.dialog';
 import UserBulkEditSheet from './components/user-bulk-edit-sheet';
@@ -33,22 +33,18 @@ const UserList: FC<Props> = ({ users, query }) => {
     <AppLayout
       title="Users"
       description="Manage your users"
-      actions={
-        <>
-          <UserFormSheet purpose="create">
-            <Button>
-              <Plus />
-              Create new user
-            </Button>
-          </UserFormSheet>
-          <Button variant={'destructive'} asChild>
-            <Link href={route('user.archived')}>
-              <FolderArchive />
-              Archived
-            </Link>
-          </Button>
-        </>
-      }
+      actions={[
+        {
+          title: capitalizeWords(mode) + ' view',
+          icon: mode === 'grid' ? Grid2X2 : TableIcon,
+          onClick: toggle,
+        },
+        {
+          title: 'Archived',
+          icon: Archive,
+          onClick: () => router.visit(route('user.archived')),
+        },
+      ]}
     >
       <div className="flex gap-2">
         <Input placeholder="Search users..." value={cari} onChange={(e) => setCari(e.target.value)} />
@@ -78,10 +74,7 @@ const UserList: FC<Props> = ({ users, query }) => {
             </UserBulkDeleteDialog>
           </>
         )}
-        <Button onClick={toggle}>
-          <TableIcon />
-          {capitalizeWords(mode)}
-        </Button>
+        <UserFormSheet purpose="create" buttonLabel="Create new user" />
       </div>
       {mode === 'table' ? (
         <Table>
@@ -139,11 +132,8 @@ const UserList: FC<Props> = ({ users, query }) => {
                         <Folder />
                       </Link>
                     </Button>
-                    <UserFormSheet purpose="edit" user={user}>
-                      <Button variant={'ghost'} size={'icon'}>
-                        <Edit />
-                      </Button>
-                    </UserFormSheet>
+                    <UserFormSheet purpose="duplicate" user={user} variant="icon" />
+                    <UserFormSheet purpose="edit" user={user} variant="icon" />
                     <UserDeleteDialog user={user}>
                       <Button variant={'ghost'} size={'icon'}>
                         <Trash2 />
@@ -155,7 +145,7 @@ const UserList: FC<Props> = ({ users, query }) => {
           </TableBody>
         </Table>
       ) : (
-        <div className="grid-responsive grid gap-4">
+        <div className="grid-responsive grid gap-6">
           {users.map((user) => (
             <UserItemCard key={user.id} user={user} />
           ))}

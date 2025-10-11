@@ -8,16 +8,19 @@ import { capitalizeWords, em } from '@/lib/utils';
 import { FormPurpose } from '@/types';
 import { Role } from '@/types/role';
 import { useForm } from '@inertiajs/react';
-import { X } from 'lucide-react';
+import { Copy, Edit, LucideIcon, PlusSquare, X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
 
 type Props = PropsWithChildren & {
   role?: Role;
+  icon?: LucideIcon;
+  buttonLabel?: string;
   purpose: FormPurpose;
+  variant?: 'default' | 'icon';
 };
 
-const RoleFormSheet: FC<Props> = ({ children, role, purpose }) => {
+const RoleFormSheet: FC<Props> = ({ children, role, purpose, variant = 'default', icon: Icon, buttonLabel }) => {
   const [open, setOpen] = useState(false);
 
   const { data, setData, put, post, reset, processing } = useForm({
@@ -48,7 +51,16 @@ const RoleFormSheet: FC<Props> = ({ children, role, purpose }) => {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
+      {children ? (
+        <SheetTrigger asChild>{children}</SheetTrigger>
+      ) : (
+        <SheetTrigger asChild>
+          <Button variant={variant == 'default' ? 'default' : 'ghost'} size={variant == 'default' ? 'default' : 'icon'}>
+            {Icon ? <Icon /> : purpose == 'create' ? <PlusSquare /> : purpose == 'edit' ? <Edit /> : <Copy />}
+            {variant == 'default' && buttonLabel}
+          </Button>
+        </SheetTrigger>
+      )}
       <SheetContent>
         <SheetHeader>
           <SheetTitle>{capitalizeWords(purpose)} data role</SheetTitle>

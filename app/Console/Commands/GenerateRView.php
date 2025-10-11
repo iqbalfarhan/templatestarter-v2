@@ -116,12 +116,11 @@ class GenerateRView extends Command
     {
         $archivedButton = $isSoftDelete
             ? <<<EOT
-                        <Button variant={'destructive'} asChild>
-                            <Link href={route('{$name}.archived')}>
-                                <FolderArchive />
-                                Archived
-                            </Link>
-                        </Button>
+                        {
+                            title: 'Archived',
+                            icon: Archive,
+                            onClick: () => router.visit(route('{$name}.archived')),
+                        },
                         EOT
             : '';
 

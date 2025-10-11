@@ -5,11 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { groupBy } from '@/lib/utils';
+import { backAction, groupBy } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { Permission } from '@/types/role';
-import { Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, Edit, Filter, Folder, Plus, RefreshCcw, Trash2 } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Edit, Filter, Folder, RefreshCcw, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
 import PermissionBulkDeleteDialog from './components/permission-bulk-delete-dialog';
 import PermissionBulkEditSheet from './components/permission-bulk-edit-sheet';
@@ -34,29 +34,38 @@ const PermissionList: FC<Props> = ({ permits, query }) => {
       title="Permissions"
       description="Manage your permits"
       actions={
-        <>
-          <Button asChild variant={'secondary'}>
-            <Link href={route('role.index')}>
-              <ArrowLeft />
-              Kembali ke list role
-            </Link>
-          </Button>
-          {permissions?.canResync && (
-            <Button variant={'secondary'} asChild>
-              <Link method="post" href={route('permission.resync')}>
-                <RefreshCcw /> Resycn permits
-              </Link>
-            </Button>
-          )}
-          {permissions?.canAdd && (
-            <PermissionFormSheet purpose="create">
-              <Button>
-                <Plus />
-                Create new permission
-              </Button>
-            </PermissionFormSheet>
-          )}
-        </>
+        [
+          backAction(),
+          {
+            title: 'Resync Permits',
+            icon: RefreshCcw,
+            onClick: () => router.visit(route('permission.resync')),
+            available: permissions?.canResync,
+          },
+        ]
+        // <>
+        //   <Button asChild variant={'secondary'}>
+        //     <Link href={route('role.index')}>
+        //       <ArrowLeft />
+        //       Kembali ke list role
+        //     </Link>
+        //   </Button>
+        //   {permissions?.canResync && (
+        //     <Button variant={'secondary'} asChild>
+        //       <Link method="post" href={route('permission.resync')}>
+        //         <RefreshCcw /> Resycn permits
+        //       </Link>
+        //     </Button>
+        //   )}
+        //   {permissions?.canAdd && (
+        //     <PermissionFormSheet purpose="create">
+        //       <Button>
+        //         <Plus />
+        //         Create new permission
+        //       </Button>
+        //     </PermissionFormSheet>
+        //   )}
+        // </>
       }
     >
       <div className="flex gap-2">
