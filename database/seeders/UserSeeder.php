@@ -14,9 +14,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $superadmin = User::create([
+        $superadmin = User::updateOrCreate([
             'name' => 'Super administrator',
             'email' => 'admin@gmail.com',
+        ],[
             'password' => 'password',
         ]);
         $superadmin->assignRole('superadmin');
