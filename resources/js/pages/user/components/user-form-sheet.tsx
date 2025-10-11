@@ -24,7 +24,7 @@ type Props = PropsWithChildren & {
 };
 
 const UserFormSheet: FC<Props> = ({ children, user, purpose, variant = 'default', icon: Icon, buttonLabel }) => {
-  const { roles } = usePage<{ roles: Role[] }>().props;
+  const { roles = [] } = usePage<{ roles: Role[] }>().props;
 
   const [open, setOpen] = useState(false);
 

@@ -5,12 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { backAction, groupBy } from '@/lib/utils';
+import { backAction, em, groupBy } from '@/lib/utils';
 import { SharedData } from '@/types';
 import { Permission } from '@/types/role';
 import { Link, router, usePage } from '@inertiajs/react';
 import { Edit, Filter, Folder, RefreshCcw, Trash2 } from 'lucide-react';
 import { FC, useState } from 'react';
+import { toast } from 'sonner';
 import PermissionBulkDeleteDialog from './components/permission-bulk-delete-dialog';
 import PermissionBulkEditSheet from './components/permission-bulk-edit-sheet';
 import PermissionDeleteDialog from './components/permission-delete-dialog';
@@ -33,40 +34,26 @@ const PermissionList: FC<Props> = ({ permits, query }) => {
     <AppLayout
       title="Permissions"
       description="Manage your permits"
-      actions={
-        [
-          backAction(),
-          {
-            title: 'Resync Permits',
-            icon: RefreshCcw,
-            onClick: () => router.visit(route('permission.resync')),
-            available: permissions?.canResync,
-          },
-        ]
-        // <>
-        //   <Button asChild variant={'secondary'}>
-        //     <Link href={route('role.index')}>
-        //       <ArrowLeft />
-        //       Kembali ke list role
-        //     </Link>
-        //   </Button>
-        //   {permissions?.canResync && (
-        //     <Button variant={'secondary'} asChild>
-        //       <Link method="post" href={route('permission.resync')}>
-        //         <RefreshCcw /> Resycn permits
-        //       </Link>
-        //     </Button>
-        //   )}
-        //   {permissions?.canAdd && (
-        //     <PermissionFormSheet purpose="create">
-        //       <Button>
-        //         <Plus />
-        //         Create new permission
-        //       </Button>
-        //     </PermissionFormSheet>
-        //   )}
-        // </>
-      }
+      actions={[
+        backAction(),
+        {
+          title: 'Resync Permits',
+          icon: RefreshCcw,
+          onClick: () =>
+            router.post(
+              route('permission.resync'),
+              {},
+              {
+                preserveScroll: true,
+                onSuccess: () => {
+                  toast.success('Permits resynced successfully');
+                },
+                onError: (e) => toast.error(em(e)),
+              },
+            ),
+          available: permissions?.canResync,
+        },
+      ]}
     >
       <div className="flex gap-2">
         <Input placeholder="Search permits..." value={cari} onChange={(e) => setCari(e.target.value)} />

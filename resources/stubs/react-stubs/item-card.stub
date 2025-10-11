@@ -11,7 +11,7 @@ const {{ Name }}ItemCard: FC<Props> = ({ {{ name }}, className }) => {
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>{ {{ name }}.name }</CardTitle>
+        <CardTitle className="leading-normal">{ {{ name }}.name }</CardTitle>
         <CardDescription>
           ID: { {{ name }}.id }
         </CardDescription>

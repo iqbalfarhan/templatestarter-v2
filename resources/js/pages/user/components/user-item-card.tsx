@@ -23,8 +23,8 @@ const UserItemCard: FC<Props> = ({ user, onClick }) => {
         </Avatar>
 
         <div className="flex flex-col items-center">
-          <CardTitle>{user.name}</CardTitle>
-          <CardDescription>{user.email}</CardDescription>
+          <CardTitle className="line-clamp-1">{user.name}</CardTitle>
+          <CardDescription className="line-clamp-1">{user.email}</CardDescription>
         </div>
 
         <div className="flex justify-center">
