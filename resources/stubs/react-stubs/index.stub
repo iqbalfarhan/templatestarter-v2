@@ -73,12 +73,8 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
             </{{ Name }}BulkDeleteDialog>
           </>
         )}
-        <Button onClick={toggle}>
-          <TableIcon />
-          {capitalizeWords(mode)}
-        </Button>
         {permissions?.canAdd && (
-          <{{ Name }}FormSheet purpose="create" buttonLabel="Create new {{ name }}" />
+          <{{ Name }}FormSheet purpose="create" buttonLabel="New {{ name }}" />
         )}
       </div>
       {mode === 'table' ? (
