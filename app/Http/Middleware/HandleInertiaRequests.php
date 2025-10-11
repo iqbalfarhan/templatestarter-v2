@@ -62,6 +62,7 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'useSocialite' => config('template-starter.enable_socialite'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'viewMode' => $request->hasCookie('viewMode') ? $request->cookie('viewMode') : 'table',
         ];

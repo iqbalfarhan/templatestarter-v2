@@ -1,11 +1,12 @@
 import FormControl from '@/components/form-control';
+import GoogleButton from '@/components/google-button';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
 interface LoginProps {
@@ -14,6 +15,8 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+  const { useSocialite } = usePage<{ useSocialite: boolean }>().props;
+
   const { data, setData, post, processing } = useForm({
     email: 'admin@gmail.com',
     password: 'password',
@@ -67,6 +70,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
               Sign up
             </TextLink>
           </div>
+
+          {useSocialite && <GoogleButton />}
         </>
       </form>
 

@@ -1,6 +1,7 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, usePage } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
+import GoogleButton from '@/components/google-button';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
 export default function Register() {
+  const { useSocialite } = usePage<{ useSocialite: boolean }>().props;
+
   return (
     <AuthLayout title="Create an account" description="Enter your details below to create your account">
       <Head title="Register" />
@@ -66,6 +69,8 @@ export default function Register() {
                 Log in
               </TextLink>
             </div>
+
+            {useSocialite && <GoogleButton />}
           </>
         )}
       </Form>

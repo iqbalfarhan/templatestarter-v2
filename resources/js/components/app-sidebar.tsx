@@ -27,7 +27,7 @@ export function AppSidebar() {
   // configure menus "available" in HandleInertiaRequest.php
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar">
+    <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

@@ -159,7 +159,7 @@ category_id:fk
 
 ---
 
-### 3. Generate permission
+### 4. Generate permission
 
 Generate permission dengan:
 
@@ -178,10 +178,35 @@ Akan otomatis bikin permission untuk user.
 atau kalau mau lebih lazy lagi, lu bisa pake flag `--all` untuk generate semua permission dari semua model di `app/Models`:
 
 ```bash
-php artisan generate:permission --all
+php artisan generate:permission --all --softDelete
 ```
 
 ini akan otomatis bikin permission untuk semua model di `app/Models`. ini juga udah ngeceka apakah model tersebut pakai SoftDeletes atau tidak, jadi kalau pakai SoftDeletes akan otomatis bikin permission 'archived', 'restore', 'force delete' untuk soft delete.
+
+---
+
+### 5. Menggunakan Laravel Socialite
+
+Kalau lo mau login pakai socialite laravel disini udah bisa, tapi gw masih bikin untuk login dengan google aja.
+tapi lo masih bisa pakai platform lainnya yang disupport socialite dengan custom sendiri di file config/services.php
+dan SocialiteController.php
+
+Cara ngaktifin fitur socialite gampang, tinggal:
+
+- masuk ke config/template-starter.php
+- ubah value enable_socialite ke true
+- tambahin GOOGLE_CLIENT_ID dan GOOGLE_CLIENT_SECRET di file .env
+
+```
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
+
+Kalu lo udah ubah config enable_socialite, akan muncul button `Sign in with google` di halaman login
+dan register.
+
+Untuk buat client_id dan secret lo bisa baca petunjukan di file config/template-starter.php di bagian
+enable_socialite.
 
 ---
 
@@ -189,7 +214,7 @@ ini akan otomatis bikin permission untuk semua model di `app/Models`. ini juga u
 
 - [x] Auto generate model, view, rmodel
 - [x] RBAC dengan Spatie
-- [ ] Login via Socialite
+- [x] Login via Socialite
 - [ ] Auto generate menu sidebar
 - [ ] API Pagination + Search ready
 
