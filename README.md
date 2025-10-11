@@ -1,69 +1,73 @@
-# iqbalfarhan: laravel template starter v2
+# Laravel + React Template Starter v2
 
-Starter kit **Laravel 12 + React** (Inertia v2, Tailwind v4, Shadcn UI) buat bikin project kecil lebih cepat ⚡.
-Sekali generate, langsung dapet **Model + CRUD API + React View** → tinggal atur table & form aja.
-
----
-
-## ✨ Fitur Utama
-
-- 🚀 Auto generate CRUD (Model, Migration, Controller, Request, React View)
-- 🔒 Role Based Access Control (RBAC) via [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
-- 📸 Media handling pakai [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction)
-- 🛠 Internal DB management dengan [laravel-adminer](https://github.com/onecentlin/laravel-adminer)
-- 🎨 Sudah include Tailwind v4 + Shadcn + React + Inertia v2
+Starter kit **Laravel 12 + React (Inertia v2, Tailwind v4, Shadcn UI)** buat bikin project kecil–menengah dengan cepat.
+Sekali generate, langsung dapet **Model + CRUD API + React View** — tinggal atur field dan form aja.
 
 ---
 
-## 🚀 Installation Steps
+## Fitur Utama
 
-### 1. Create project
+- **Auto Generate CRUD**
+  Model, Migration, Controller, Request, dan React View otomatis.
+- **Role Based Access Control (RBAC)**
+  Menggunakan [spatie/laravel-permission](https://spatie.be/docs/laravel-permission/v6/introduction)
+- **Media Handling**
+  Support [spatie/laravel-medialibrary](https://spatie.be/docs/laravel-medialibrary/v11/introduction)
+- **Database Management**
+  Built-in [laravel-adminer](https://github.com/onecentlin/laravel-adminer)
+- **Modern Frontend Stack**
+  Tailwind CSS v4, Shadcn, React, dan Inertia v2 sudah siap pakai.
+
+---
+
+## Instalasi
+
+### 1. Buat Project Baru
 
 ```bash
 composer create-project iqbalfarhan/templatestarter-v2 nama_project
 cd nama_project
 ```
 
-> Ganti `nama_project` sesuai nama project lu.
+> Ganti `nama_project` sesuai nama project kamu.
 
-### 2. Config awal
+### 2. Setup Awal
 
 ```bash
-# Install PHP dependencies
+# Install dependencies
 composer install
-
-# Install Node.js dependencies
 pnpm install
 
 # Copy env & generate key
 cp .env.example .env
 php artisan key:generate
 
-# Setting database di .env lalu bikin database
-# Run migrations & seeders
+# Setup database & seed data
 php artisan migrate
 php artisan db:seed
 
-# Build assets & start dev server
+# Build assets & jalankan dev server
 composer dev
-
-# Access app at http://127.0.0.1:8000
 ```
 
-### 3. File konfigurasi
+Akses aplikasi di: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-Cek file `config/template-starter.php` untuk pengaturan:
+---
 
-- `default-roles` → default role aplikasi (`['superadmin', 'admin', 'user']`)
-- `default-role` → role default user baru (misal `user`)
-- `with-landingpage` → aktifkan / matiin landing page
-- `generated-react-files-path` → path hasil generate file React
+## Konfigurasi
 
-> ⚠️ `default-role` harus salah satu dari `default-roles`
+File konfigurasi utama ada di: `config/template-starter.php`
 
-### 4. Migrate ulang
+| Key                          | Fungsi                                                    |
+| ---------------------------- | --------------------------------------------------------- |
+| `default-roles`              | Role default aplikasi (`['superadmin', 'admin', 'user']`) |
+| `default-role`               | Role default user baru                                    |
+| `with-landingpage`           | Aktif/nonaktif landing page                               |
+| `generated-react-files-path` | Path hasil generate file React                            |
 
-Kalau ubah config ditengah development:
+> Pastikan `default-role` ada di daftar `default-roles`.
+
+Kalau ada perubahan konfigurasi di tengah development:
 
 ```bash
 php artisan migrate:fresh --seed
@@ -71,49 +75,45 @@ php artisan migrate:fresh --seed
 
 ---
 
-## 🛠 Development Guide
+## Panduan Development
 
-### 1. Membuat Model
-
-Gunakan command khusus:
+### 1. Generate Model
 
 ```bash
 php artisan generate:amodel NamaModel
 ```
 
-Ini otomatis bikin:
+Akan membuat otomatis:
 
-- Model (dengan fillable)
-- Factory & Seeder
-- StoreRequest & UpdateRequest
-- Controller API full method
+- Model (fillable ready)
+- Factory dan Seeder
+- StoreRequest dan UpdateRequest
+- Controller API full CRUD
 - Route::apiResource di `web.php`
 
-> Penting: gunakan **PascalCase** untuk nama model.
+Gunakan **PascalCase** untuk nama model (contoh: `Project`, `UserProfile`).
 
 ---
 
-### 2. Membuat React View
-
-Generate full React view dengan:
+### 2. Generate React View
 
 ```bash
-php artisan generate:rview {nama_fitur}
+php artisan generate:rview nama_fitur
 # contoh
 php artisan generate:rview project
 ```
 
 Yang dibuat:
 
-- Index (table)
+- Index (tabel)
 - Detail page
 - Dialog delete
-- Sheet create & edit
+- Sheet create/edit
 - Sheet filter
 - Item component
-- Type untuk model
+- Type definition (TypeScript)
 
-Tambahkan menu di `app-sidebar.tsx` + route di `web.php`:
+Tambahkan route di `web.php` dan menu di `app-sidebar.tsx`:
 
 ```php
 Route::apiResource('project', ProjectController::class);
@@ -121,20 +121,18 @@ Route::apiResource('project', ProjectController::class);
 
 ---
 
-### 3. Generate All Sekaligus
-
-Satu command untuk generate model + view:
+### 3. Generate Model + View Sekaligus
 
 ```bash
 php artisan generate:rmodel NamaFitur
 ```
 
-Akan muncul pertanyaan:
+CLI akan menanyakan:
 
 - SoftDelete?
 - Media?
 
-Lalu input field model dalam format `field:datatype` (enter untuk baris baru):
+Lalu masukkan field model seperti berikut:
 
 ```txt
 name:string
@@ -144,101 +142,83 @@ published_at:datetime
 category_id:fk
 ```
 
-> ❌ Jangan kasih enter kosong di akhir input field
+> Jangan tekan enter kosong di akhir input.
 
-| datatype | type.d.ts | migration | description                        |
-| -------- | --------- | --------- | ---------------------------------- |
-| integer  | number    | integer   | angka                              |
-| string   | string    | string    | varchar/string                     |
-| text     | string    | text      | text panjang                       |
-| date     | string    | date      | tanggal                            |
-| datetime | string    | datetime  | tanggal & waktu                    |
-| boolean  | boolean   | boolean   | true/false                         |
-| fk       | Object    | foreignId | relasi belongsTo (wajib)           |
-| nfk      | Object    | foreignId | relasi belongsTo nullable/optional |
+| Datatype | TypeScript | Migration | Keterangan        |
+| -------- | ---------- | --------- | ----------------- |
+| integer  | number     | integer   | Angka             |
+| string   | string     | string    | Teks pendek       |
+| text     | string     | text      | Teks panjang      |
+| date     | string     | date      | Tanggal           |
+| datetime | string     | datetime  | Tanggal dan waktu |
+| boolean  | boolean    | boolean   | True/False        |
+| fk       | Object     | foreignId | Relasi wajib      |
+| nfk      | Object     | foreignId | Relasi nullable   |
 
 ---
 
-### 4. Generate permission
-
-Generate permission dengan:
-
-```bash
-php artisan generate:permission {nama_fitur}
-```
-
-Contoh:
+### 4. Generate Permission
 
 ```bash
 php artisan generate:permission user
 ```
 
-Akan otomatis bikin permission untuk user.
-
-atau kalau mau lebih lazy lagi, lu bisa pake flag `--all` untuk generate semua permission dari semua model di `app/Models`:
+Atau generate semua sekaligus:
 
 ```bash
 php artisan generate:permission --all --softDelete
 ```
 
-ini akan otomatis bikin permission untuk semua model di `app/Models`. ini juga udah ngeceka apakah model tersebut pakai SoftDeletes atau tidak, jadi kalau pakai SoftDeletes akan otomatis bikin permission 'archived', 'restore', 'force delete' untuk soft delete.
+Perintah ini otomatis membuat permission untuk semua model di `app/Models`, termasuk yang menggunakan SoftDeletes.
 
 ---
 
-### 5. Menggunakan Laravel Socialite
+### 5. Login dengan Socialite (Google)
 
-Kalau lo mau login pakai socialite laravel disini udah bisa, tapi gw masih bikin untuk login dengan google aja.
-tapi lo masih bisa pakai platform lainnya yang disupport socialite dengan custom sendiri di file config/services.php
-dan SocialiteController.php
+Sudah mendukung login via Google menggunakan Laravel Socialite.
+Cara mengaktifkan:
 
-Cara ngaktifin fitur socialite gampang, tinggal:
+1. Ubah `enable_socialite` menjadi `true` di `config/template-starter.php`
+2. Tambahkan di `.env`:
 
-- masuk ke config/template-starter.php
-- ubah value enable_socialite ke true
-- tambahin GOOGLE_CLIENT_ID dan GOOGLE_CLIENT_SECRET di file .env
+   ```env
+   GOOGLE_CLIENT_ID=
+   GOOGLE_CLIENT_SECRET=
+   ```
 
-```
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-```
+3. Rebuild project, lalu buka halaman login. Tombol “Sign in with Google” akan muncul.
 
-Kalu lo udah ubah config enable_socialite, akan muncul button `Sign in with google` di halaman login
-dan register.
-
-Untuk buat client_id dan secret lo bisa baca petunjukan di file config/template-starter.php di bagian
-enable_socialite.
+Untuk menambahkan platform lain, sesuaikan di `config/services.php` dan `SocialiteController.php`.
 
 ---
 
-## 🧭 Roadmap
+## Roadmap
 
 - [x] Auto generate model, view, rmodel
 - [x] RBAC dengan Spatie
 - [x] Login via Socialite
 - [ ] Auto generate menu sidebar
-- [ ] API Pagination + Search ready
+- [ ] API Pagination + Search
 
 ---
 
-## 💡 Tips
+## Tips
 
-- Kalau ada perubahan config roles → jalankan `php artisan migrate:fresh --seed`
-- Untuk dev cepat → tambahin menu di `app-sidebar.tsx` langsung setelah generate
+- Kalau ubah konfigurasi role → jalankan `php artisan migrate:fresh --seed`
+- Untuk development cepat → tambahkan menu langsung di `app-sidebar.tsx` setelah generate
 
 ---
 
-## 📜 License
+## Lisensi
 
 MIT License © [Iqbal Farhan](https://github.com/iqbalfarhan)
 
 ---
 
-## ☕ Dukung Gue
+## Dukung Pengembangan
 
-Kalau lo merasa package ini bermanfaat, lo bisa support gue lewat donasi seikhlasnya 🙏
-Donasi berapapun sangat berarti buat bantu gue terus ngembangin project ini. lu bisa klik disini :
+Kalau template ini bermanfaat buat kamu, dukung pengembangannya dengan donasi seikhlasnya.
+Setiap dukungan sangat berarti agar project ini bisa terus dikembangkan.
 
 [![Donate via Saweria](https://img.shields.io/badge/Donate-Saweria-yellow?style=for-the-badge)](https://saweria.co/iqbalfarhan08)
 [![Donate via DANA](https://img.shields.io/badge/Donate-DANA-blue?style=for-the-badge)](https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012012022050160996242)
-
-Makasih banyak sebelumnya! ❤️
