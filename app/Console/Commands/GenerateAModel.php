@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -102,6 +103,8 @@ class GenerateAModel extends Command
 
         // Add routes to routes/web.php
         $this->addRoute($softDelete, $withMedia, $name, $Name);
+
+        Artisan::call('generate:permission -as');
 
         return self::SUCCESS;
     }
@@ -354,7 +357,7 @@ class GenerateAModel extends Command
                 \$this->pass("update {$name}");
 
                 \$data = \$request->validated();
-                \${$name}->addMedia(\$data['file'])->toMediaCollection();
+                \${$name}->addMedia(\$data['file'])->toMediaCollection(\$data['collection_name']);
             }
         PHP;
     }

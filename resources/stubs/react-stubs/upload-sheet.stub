@@ -20,6 +20,7 @@ const {{ Name }}UploadMediaSheet: FC<Props> = ({ {{ name }}, children }) => {
 
   const { data, setData, post, processing } = useForm({
     file: undefined as File | undefined,
+    collection_name: 'default',
   });
 
   const handleUploadMedia = () => {
