@@ -282,17 +282,35 @@ class GenerateRView extends Command
 
     protected function generateFormField(array $parsedFields, $name): string
     {
-        $template = "";
+        $template = [];
         foreach ($parsedFields as [$fieldName, $fieldType]) {
             $displayName = Str::title(str_replace('_', ' ', $fieldName));
             
             if ($fieldType === 'text') {
-                $template .= <<<PHP
-            <FormControl label="{$displayName}">
-                <Textarea placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
-            </FormControl>
-            PHP;
-            } else {
+                $template[] = <<<PHP
+                    <FormControl label="{$displayName}">
+                        <Textarea placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
+                    </FormControl>
+                PHP;
+            } 
+            elseif(in_array($fieldType, ['fk', 'nfk'])){
+                $template[] = <<<PHP
+                    <FormControl label="{$displayName}">
+                        <Select value={data.{$fieldName}.toString()} onValueChange={(value) => setData('{$fieldName}', value)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Pilih {$displayName}" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {/* {items.map((item) => (
+                                    <SelectItem key={item.id} value={item.id.toString()}>{item.name}</SelectItem>
+                                ))}  */}
+                                <SelectItem value={data.{$fieldName}.toString()}>{data.{$fieldName}}</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </FormControl>
+                PHP;
+            }
+            else {
                 $inputType = match($fieldType) {
                     'boolean' => 'checkbox',
                     'integer' => 'number',
@@ -300,15 +318,15 @@ class GenerateRView extends Command
                     default => 'text'
                 };
                 
-                $template .= <<<PHP
-            <FormControl label="{$displayName}">
-                <Input type="{$inputType}" placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
-            </FormControl>
-            PHP;
+                $template[] = <<<PHP
+                    <FormControl label="{$displayName}">
+                        <Input type="{$inputType}" placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
+                    </FormControl>
+                PHP;
             }
         }
 
-        return $template;
+        return implode("\n", $template);
     }
 
     protected function updateFormField(string $basePath, array $parsedFields, string $name): void

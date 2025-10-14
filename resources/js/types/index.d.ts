@@ -66,3 +66,8 @@ export type Media = {
   original_url: string;
   preview_url: string;
 };
+
+export type Item = {
+  id: number;
+  name: string;
+};

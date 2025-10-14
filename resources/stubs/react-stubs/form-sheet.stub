@@ -2,12 +2,14 @@ import FormControl from '@/components/form-control';
 import SubmitButton from '@/components/submit-button';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { capitalizeWords, em } from '@/lib/utils';
-import { FormPurpose } from '@/types';
+import { FormPurpose, Item } from '@/types';
 import { {{ Name }} } from '@/types/{{ name }}';
 import { useForm, usePage } from '@inertiajs/react';
 import { Copy, Edit, LucideIcon, PlusSquare, X } from 'lucide-react';
@@ -36,6 +38,8 @@ const {{ Name }}FormSheet: FC<ComponentProps<typeof Sheet> & Props> = ({
   onOpenChange,
   withChildren = true,
 }) => {
+
+  // const { items = [] } = usePage<{ items: Item[] }>().props;
 
   const { data, setData, put, post, processing } = useForm({
     {{ useFormObject }}
