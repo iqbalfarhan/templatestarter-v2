@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('documentation', [DashboardController::class, 'documentation'])->name('documentation');
 
+    Route::post('user/{user}/upload-media', [UserController::class, 'uploadMedia'])->name('user.upload-media');
     Route::put('user/bulk', [UserController::class, 'bulkUpdate'])->name('user.bulk.update');
     Route::delete('user/bulk', [UserController::class, 'bulkDelete'])->name('user.bulk.destroy');
     Route::get('user/archived', [UserController::class, 'archived'])->name('user.archived');

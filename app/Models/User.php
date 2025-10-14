@@ -56,7 +56,8 @@ class User extends Authenticatable implements HasMedia
 
     public function getAvatarAttribute()
     {
-        return "https://api.dicebear.com/9.x/dylan/png?seed={$this->email}";
+        $firstMedia = $this->getLastMediaUrl("avatar");
+        return $firstMedia !== "" ? $firstMedia : "https://api.dicebear.com/9.x/dylan/png?seed={$this->email}";
     }
 
     public function registerMediaConversions(?Media $media = null): void

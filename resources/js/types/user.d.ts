@@ -5,6 +5,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
+  media?: Media[];
   roles?: Role[];
   email_verified_at: string | null;
   created_at: string;

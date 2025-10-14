@@ -6,6 +6,7 @@ use App\Http\Requests\BulkDeleteUserRequest;
 use App\Http\Requests\BulkUpdateUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UploadUserMediaRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -119,5 +120,13 @@ class UserController extends Controller
 
         $user = User::onlyTrashed()->find($user);
         $user->forceDelete();
+    }
+
+    public function uploadMedia(UploadUserMediaRequest $request, User $user)
+    {
+        $this->pass('profile');
+
+        $data = $request->validated();
+        $user->addMedia($data['file'])->toMediaCollection($data['collection_name']);
     }
 }
