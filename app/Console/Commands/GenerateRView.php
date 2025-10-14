@@ -62,6 +62,7 @@ class GenerateRView extends Command
 
         // Update table content in index.tsx
         $this->updateTableContent($basePath, $parsedFields, $name);
+        $this->updateFormField($basePath, $parsedFields, $name);
 
         return self::SUCCESS;
     }
@@ -262,6 +263,65 @@ class GenerateRView extends Command
             $content = File::get($indexFilePath);
             $content = str_replace('{{ TableHeads }}', $tableHeads, $content);
             $content = str_replace('{{ TableCells }}', $tableCells, $content);
+            File::put($indexFilePath, $content);
+            $this->info("Updated table content in: {$indexFilePath}");
+        } else {
+            $this->warn("Index file not found: {$indexFilePath}");
+        }
+    }
+
+    protected function generateUseFormObject(array $parsedFields, string $name):string
+    {
+        $template = "";
+        foreach ($parsedFields as [$fieldName, $fieldType]) {
+            $template .= "{$fieldName} : {$name}?.{$fieldName} ?? '',\n";
+        }
+
+        return $template;
+    }
+
+    protected function generateFormField(array $parsedFields, $name): string
+    {
+        $template = "";
+        foreach ($parsedFields as [$fieldName, $fieldType]) {
+            $displayName = Str::title(str_replace('_', ' ', $fieldName));
+            
+            if ($fieldType === 'text') {
+                $template .= <<<PHP
+            <FormControl label="{$displayName}">
+                <Textarea placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
+            </FormControl>
+            PHP;
+            } else {
+                $inputType = match($fieldType) {
+                    'boolean' => 'checkbox',
+                    'integer' => 'number',
+                    'datetime' => 'datetime-local',
+                    default => 'text'
+                };
+                
+                $template .= <<<PHP
+            <FormControl label="{$displayName}">
+                <Input type="{$inputType}" placeholder="Enter {$displayName}" value={data.{$fieldName}} onChange={(e) => setData('{$fieldName}', e.target.value)} />
+            </FormControl>
+            PHP;
+            }
+        }
+
+        return $template;
+    }
+
+    protected function updateFormField(string $basePath, array $parsedFields, string $name): void
+    {
+        $useFormObject = $this->generateUseFormObject($parsedFields, $name);
+        $formFields = $this->generateFormField($parsedFields, $name);
+
+        // Update index.tsx with table replacements
+        $indexFilePath = $basePath . "/components/$name-form-sheet.tsx";
+        if (File::exists($indexFilePath)) {
+            $content = File::get($indexFilePath);
+            $content = str_replace('{{ useFormObject }}', $useFormObject, $content);
+            $content = str_replace('{{ formFields }}', $formFields, $content);
             File::put($indexFilePath, $content);
             $this->info("Updated table content in: {$indexFilePath}");
         } else {

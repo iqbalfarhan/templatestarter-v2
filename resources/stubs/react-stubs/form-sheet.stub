@@ -38,7 +38,7 @@ const {{ Name }}FormSheet: FC<ComponentProps<typeof Sheet> & Props> = ({
 }) => {
 
   const { data, setData, put, post, processing } = useForm({
-    name: {{ name }}?.name ?? '',
+    {{ useFormObject }}
   });
 
   const handleSubmit = () => {
@@ -47,7 +47,6 @@ const {{ Name }}FormSheet: FC<ComponentProps<typeof Sheet> & Props> = ({
         preserveScroll: true,
         onSuccess: () => {
           toast.success('User created successfully');
-          reset();
           onOpenChange?.(false);
           onSuccess?.();
         },
@@ -94,9 +93,7 @@ const {{ Name }}FormSheet: FC<ComponentProps<typeof Sheet> & Props> = ({
               handleSubmit();
             }}
           >
-            <FormControl label="Nama {{ name }}">
-              <Input type="text" placeholder="Name" value={data.name} onChange={(e) => setData('name', e.target.value)} />
-            </FormControl>
+            {{ formFields }}
           </form>
         </ScrollArea>
         <SheetFooter>
