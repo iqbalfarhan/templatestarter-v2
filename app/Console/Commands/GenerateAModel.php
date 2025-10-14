@@ -81,6 +81,7 @@ class GenerateAModel extends Command
                 '{{ factoryImport }}' => $this->generateFactoryImport($fields),
                 '{{ request }}' => $this->generateRequest($fields),
                 '{{ migrationFields }}' => $this->generateMigrationFields($fields, $softDelete),
+                '{{ relationMethods }}' => $this->generateRelationMethods($fields),
             ]);
         }
 
@@ -377,6 +378,29 @@ class GenerateAModel extends Command
                     ->nonQueued();
             }
         PHP;
+    }
+
+    protected function generateRelationMethods(array $fields): string
+    {
+        $methods = [];
+        
+        foreach ($fields as $fieldName => $fieldType) {
+            if (in_array($fieldType, ['fk', 'nfk'])) {
+                // Extract the related model name from the field name
+                $relatedModelName = Str::studly(Str::singular(Str::replaceLast('_id', '', $fieldName)));
+                $relationName = Str::camel(Str::singular(Str::replaceLast('_id', '', $fieldName)));
+                
+                // Generate the belongsTo relation method
+                $methods[] = <<<PHP
+                    public function {$relationName}()
+                    {
+                        return \$this->belongsTo({$relatedModelName}::class);
+                    }
+                PHP;
+            }
+        }
+        
+        return implode("\n\n", $methods);
     }
 
 }

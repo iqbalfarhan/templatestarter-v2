@@ -28,4 +28,5 @@ class {{ Name }} extends Model {{ hasMediaImplement }}
     ];
 
     {{ hasMediaMethods }}
+    {{ relationMethods }}
 }

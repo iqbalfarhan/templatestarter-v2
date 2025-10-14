@@ -97,7 +97,7 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
                   </Label>
                 </Button>
               </TableHead>
-              <TableHead>Name</TableHead>
+              {{ TableHeads }}
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -122,7 +122,7 @@ const {{ Name }}List: FC<Props> = ({ {{ names }}, query }) => {
                       </Label>
                     </Button>
                   </TableCell>
-                  <TableCell>{ {{ name }}.name }</TableCell>
+                  {{ TableCells }}
                   <TableCell>
                     {permissions?.canShow && (
                       <Button variant={'ghost'} size={'icon'}>

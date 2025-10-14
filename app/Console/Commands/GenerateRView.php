@@ -60,6 +60,9 @@ class GenerateRView extends Command
         $importLines = $this->buildImportLines($imports, $withMedia);
         $this->updateTypeDefinition($name, $importLines, $typeLines);
 
+        // Update table content in index.tsx
+        $this->updateTableContent($basePath, $parsedFields, $name);
+
         return self::SUCCESS;
     }
 
@@ -216,6 +219,53 @@ class GenerateRView extends Command
             $this->info("Updated type definition: {$dtsPath}");
         } else {
             $this->warn("Type file not found: {$dtsPath}");
+        }
+    }
+
+    protected function generateTableHeading(array $parsedFields): string
+    {
+        $template = "";
+        
+        foreach ($parsedFields as [$fieldName, $fieldType]) {
+            $displayName = Str::title(str_replace('_', ' ', $fieldName));
+            $template .= "                <TableHead>{$displayName}</TableHead>\n";
+        }
+
+        return $template;
+    }
+
+    protected function generateTableCell(array $parsedFields, string $name): string
+    {
+        $template = "";
+        
+        foreach ($parsedFields as [$fieldName, $fieldType]) {
+            if (in_array($fieldType, ['fk', 'nfk'])) {
+                $propName = Str::replaceLast('_id', '', $fieldName);
+                $template .= "                <TableCell>{{$name}.{$propName}?.name || '-'}</TableCell>\n";
+            } else {
+                $template .= "                <TableCell>{{$name}.{$fieldName}}</TableCell>\n";
+            }
+        }
+
+        return $template;
+    }
+
+    protected function updateTableContent(string $basePath, array $parsedFields, string $name): void
+    {
+        // Generate table headings and cells
+        $tableHeads = $this->generateTableHeading($parsedFields);
+        $tableCells = $this->generateTableCell($parsedFields, $name);
+
+        // Update index.tsx with table replacements
+        $indexFilePath = $basePath . '/index.tsx';
+        if (File::exists($indexFilePath)) {
+            $content = File::get($indexFilePath);
+            $content = str_replace('{{ TableHeads }}', $tableHeads, $content);
+            $content = str_replace('{{ TableCells }}', $tableCells, $content);
+            File::put($indexFilePath, $content);
+            $this->info("Updated table content in: {$indexFilePath}");
+        } else {
+            $this->warn("Index file not found: {$indexFilePath}");
         }
     }
 
