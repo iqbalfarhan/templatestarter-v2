@@ -7,7 +7,7 @@ import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHe
 import { em } from '@/lib/utils';
 import { {{ Name }} } from '@/types/{{ name }}';
 import { Link, useForm } from '@inertiajs/react';
-import { X } from 'lucide-react';
+import { Trash2, X } from 'lucide-react';
 import { FC, PropsWithChildren, useState } from 'react';
 import { toast } from 'sonner';
 
