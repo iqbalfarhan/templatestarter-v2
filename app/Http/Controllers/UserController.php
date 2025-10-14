@@ -52,7 +52,8 @@ class UserController extends Controller
         $this->pass('show user');
 
         return Inertia::render('user/show', [
-            'user' => $user
+            'user' => $user,
+            'roles' => Role::whereNot('name', "superadmin")->get()
         ]);
     }
 

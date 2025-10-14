@@ -12,7 +12,7 @@ import { Role } from '@/types/role';
 import { User } from '@/types/user';
 import { useForm, usePage } from '@inertiajs/react';
 import { Copy, Edit, LucideIcon, PlusSquare, X } from 'lucide-react';
-import { FC, PropsWithChildren, useState } from 'react';
+import { ComponentProps, FC, PropsWithChildren } from 'react';
 import { toast } from 'sonner';
 
 type Props = PropsWithChildren & {
@@ -21,12 +21,23 @@ type Props = PropsWithChildren & {
   buttonLabel?: string;
   purpose: FormPurpose;
   variant?: 'default' | 'icon';
+  onSuccess?: () => void;
+  withChildren?: boolean;
 };
 
-const UserFormSheet: FC<Props> = ({ children, user, purpose, variant = 'default', icon: Icon, buttonLabel }) => {
+const UserFormSheet: FC<ComponentProps<typeof Sheet> & Props> = ({
+  children,
+  user,
+  purpose,
+  variant = 'default',
+  icon: Icon,
+  buttonLabel,
+  onSuccess,
+  open,
+  onOpenChange,
+  withChildren = true,
+}) => {
   const { roles = [] } = usePage<{ roles: Role[] }>().props;
-
-  const [open, setOpen] = useState(false);
 
   const { data, setData, put, post, reset, processing } = useForm({
     name: user?.name ?? '',
@@ -43,7 +54,8 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose, variant = 'default'
         onSuccess: () => {
           toast.success('User created successfully');
           reset();
-          setOpen(false);
+          onOpenChange?.(false);
+          onSuccess?.();
         },
         onError: (e) => toast.error(em(e)),
       });
@@ -52,6 +64,7 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose, variant = 'default'
         preserveScroll: true,
         onSuccess: () => {
           toast.success('User updated successfully');
+          onSuccess?.();
         },
         onError: (e) => toast.error(em(e)),
       });
@@ -59,16 +72,20 @@ const UserFormSheet: FC<Props> = ({ children, user, purpose, variant = 'default'
   };
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      {children ? (
-        <SheetTrigger asChild>{children}</SheetTrigger>
-      ) : (
-        <SheetTrigger asChild>
-          <Button variant={variant == 'default' ? 'default' : 'ghost'} size={variant == 'default' ? 'default' : 'icon'}>
-            {Icon ? <Icon /> : purpose == 'create' ? <PlusSquare /> : purpose == 'edit' ? <Edit /> : <Copy />}
-            {variant == 'default' && buttonLabel}
-          </Button>
-        </SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      {withChildren && (
+        <>
+          {children ? (
+            <SheetTrigger asChild>{children}</SheetTrigger>
+          ) : (
+            <SheetTrigger asChild>
+              <Button variant={variant == 'default' ? 'default' : 'ghost'} size={variant == 'default' ? 'default' : 'icon'}>
+                {Icon ? <Icon /> : purpose == 'create' ? <PlusSquare /> : purpose == 'edit' ? <Edit /> : <Copy />}
+                {variant == 'default' && buttonLabel}
+              </Button>
+            </SheetTrigger>
+          )}
+        </>
       )}
       <SheetContent>
         <SheetHeader>

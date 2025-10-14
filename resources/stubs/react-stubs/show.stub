@@ -1,21 +1,43 @@
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { {{ Name }} } from '@/types/{{ name }}';
-import { FC } from 'react';
+import { Edit } from 'lucide-react';
+import { FC, useState } from 'react';
 import { SharedData } from '@/types';
 import { Link, usePage, router} from '@inertiajs/react';
 import { backAction } from '@/lib/utils';
 import {{ Name }}ItemCard from './components/{{ name }}-item-card';
+import {{ Name }}FormSheet from './components/{{ name }}-form-sheet';
 
 type Props = {
   {{ name }}: {{ Name }};
 };
 
 const Show{{ Name }}: FC<Props> = ({ {{ name }} }) => {
-  const { permissions } = usePage<SharedData>().props;
+  // const { permissions } = usePage<SharedData>().props;
+  const [openEditSheet, setOpenEditSheet] = useState(false);
 
   return (
-    <AppLayout title="Detail {{ Name }}" description="Detail {{ name }}" actions={[backAction()]}>
+    <AppLayout
+      title="Detail {{ Name }}"
+      description="Detail {{ name }}"
+      actions={[
+        backAction(),
+        {
+          title: 'Edit {{ name }}',
+          onClick: () => setOpenEditSheet(true),
+          icon: Edit,
+        },
+      ]}
+    >
+      <{{ Name }}FormSheet
+        open={openEditSheet}
+        onOpenChange={setOpenEditSheet}
+        purpose="edit"
+        {{ name }}={{{ name }}}
+        onSuccess={() => setOpenEditSheet(false)}
+        withChildren={false}
+      />
       <{{ Name }}ItemCard {{ name }}={{{ name }}} />
     </AppLayout>
   );

@@ -84,7 +84,7 @@ class GenerateRModel extends Command
     {
         return multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
-            options: ['soft delete', 'media'],
+            options: ['soft delete', 'media', 'stat-widget'],
             hint: 'Pilihlah pilihan yang mau di pakai, soft delete akan nambahin fitur soft delete di model dan controller, media akan nambahin fitur upload media'
         );
     }
