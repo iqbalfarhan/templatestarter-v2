@@ -49,33 +49,22 @@ class GenerateStatWidget extends Command
             return self::FAILURE;
         }
 
-        $componentName = Str::studly($feature) . 'StatWidget';
-        $fileContents = <<<TSX
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatData } from '@/types';
-import { FC } from 'react';
+        $componentName = Str::studly($feature);
 
-type Props = {
-  data: StatData[];
-};
+        $stubPath = resource_path('stubs/react-stubs/stat-widget.stub');
+        if (!file_exists($stubPath)) {
+            $this->error('Stub tidak ditemukan: ' . $stubPath);
+            return self::FAILURE;
+        }
 
-const {$componentName}: FC<Props> = ({ data }) => {
-  return (
-    <div className="grid-responsive grid gap-6">
-      {data.map((item) => (
-        <Card>
-          <CardHeader>
-            <CardDescription>{item.label}</CardDescription>
-            <CardTitle>{item.value}</CardTitle>
-          </CardHeader>
-        </Card>
-      ))}
-    </div>
-  );
-};
-
-export default {$componentName};
-TSX;
+        $stub = file_get_contents($stubPath);
+        $fileContents = str_replace([
+            '{{ Name }}',
+            '{{ name }}',
+        ], [
+            $componentName,
+            strtolower($feature),
+        ], $stub);
 
         if (file_put_contents($filePath, $fileContents) === false) {
             $this->error('Gagal menulis file: ' . $filePath);
