@@ -40,6 +40,7 @@ class GenerateRModel extends Command
 
         $softDelete = in_array('soft delete', $options, true);
         $media = in_array('media', $options, true);
+        $statWidget = in_array('stat widget', $options, true);
         $fieldsCsv = $this->fieldsToCsv($fields);
 
         $this->info("🚀 Running generate:amodel {$Name} ...");
@@ -56,6 +57,11 @@ class GenerateRModel extends Command
             '--softDelete' => $softDelete,
             '--fields' => $fieldsCsv,
             '--media' => $media,
+        ]);
+
+        $this->info("🎨 Running generate:statwidget {$name} ...");
+        $this->call('generate:statwidget', [
+            'name' => $name,
         ]);
 
         $this->info("✅ Done! {$Name} model + React view generated successfully!");
@@ -84,7 +90,7 @@ class GenerateRModel extends Command
     {
         return multiselect(
             label: 'Option apa aja nih yang mau di pakai?',
-            options: ['soft delete', 'media', 'stat-widget'],
+            options: ['soft delete', 'media', 'stat widget'],
             hint: 'Pilihlah pilihan yang mau di pakai, soft delete akan nambahin fitur soft delete di model dan controller, media akan nambahin fitur upload media'
         );
     }
