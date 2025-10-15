@@ -1,5 +1,6 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useInitials } from '@/hooks/use-initials';
 import { SharedData } from '@/types';
 import { router, usePage } from '@inertiajs/react';
 
@@ -8,12 +9,15 @@ const UserInfoWidget = () => {
     auth: { user },
   } = usePage<SharedData>().props;
 
+  const getInitials = useInitials();
+
   return (
     <Card onClick={() => router.visit(route('profile.edit'))} className="cursor-pointer">
       <div className="flex justify-between">
         <CardHeader>
           <Avatar className="size-10">
             <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
         </CardHeader>
         <CardHeader className="flex-1 pl-0">

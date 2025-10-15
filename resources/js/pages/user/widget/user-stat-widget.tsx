@@ -1,0 +1,24 @@
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { StatData } from '@/types';
+import { FC } from 'react';
+
+type Props = {
+  data: StatData[];
+};
+
+const UserStatWidget: FC<Props> = ({ data }) => {
+  return (
+    <div className="grid-responsive grid gap-6">
+      {data.map((item) => (
+        <Card>
+          <CardHeader>
+            <CardDescription>{item.label}</CardDescription>
+            <CardTitle>{item.value}</CardTitle>
+          </CardHeader>
+        </Card>
+      ))}
+    </div>
+  );
+};
+
+export default UserStatWidget;

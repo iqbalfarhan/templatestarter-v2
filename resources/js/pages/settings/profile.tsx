@@ -6,10 +6,11 @@ import DeleteUser from '@/components/delete-user';
 import FormControl from '@/components/form-control';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useInitials } from '@/hooks/use-initials';
 import SettingsLayout from '@/layouts/settings/layout';
 import { User } from '@/types/user';
 import UserUploadMediaSheet from '../user/components/user-upload-media-sheet';
@@ -28,6 +29,8 @@ type Props = {
 };
 
 export default function Profile({ mustVerifyEmail, status, user }: Props) {
+  const getInitials = useInitials();
+
   return (
     <SettingsLayout breadcrumbs={breadcrumbs}>
       <div className="space-y-6">
@@ -37,6 +40,7 @@ export default function Profile({ mustVerifyEmail, status, user }: Props) {
           <UserUploadMediaSheet user={user} collection_name={'avatar'}>
             <Avatar className="size-24">
               <AvatarImage src={user.avatar} />
+              <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
             </Avatar>
           </UserUploadMediaSheet>
         </FormControl>

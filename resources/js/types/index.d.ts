@@ -71,3 +71,8 @@ export type Item = {
   id: number;
   name: string;
 };
+
+export type StatData = {
+  label: string;
+  value?: string;
+};
